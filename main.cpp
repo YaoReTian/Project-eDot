@@ -1,8 +1,8 @@
-#include "mainwindow.h"
-
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+
+#include "view.h"
 
 int main(int argc, char *argv[])
 {
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    MainWindow w;
-    w.show();
+    View v;
+    v.show();
     return a.exec();
 }
