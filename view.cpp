@@ -1,3 +1,7 @@
 #include "view.h"
 
-View::View() {}
+View::View() :
+    m_gamescene(new GameScene)
+{
+    m_gamescene.testOutput();
+}
