@@ -7,8 +7,3 @@ GameScene::GameScene(QObject *parent) :
 {
 
 }
-
-void GameScene::testOutput()
-{
-    qDebug() << "Testing";
-}
