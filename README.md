@@ -5,7 +5,6 @@
 - C++ 13+
 
 ## Build instructions
-Linux:
 1. Clone the repository
 ```
 git clone https://github.com/YaoReTian/Project-eDot.git
