@@ -2,6 +2,7 @@
 
 ## Dependencies
 - Qt6
+- C++ 13+
 
 ## Build instructions
 Linux:
