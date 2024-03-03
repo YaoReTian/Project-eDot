@@ -23,13 +23,14 @@ make
 ./Project-eDot
 ```  
 ### Windows:  
-2. Locate the file location of qmake.exe (usually by default located at ```C:\Qt\{qt-version}\{c++ compiler version}\bin\qmake.exe``` 
-3. Compile with qmake and MSVC or MinGW  
+2. Locate the file location of qmake.exe (usually by default located at ```C:\Qt\{qt-version}\{c++ compiler version}\bin\qmake.exe```) 
+3. Compile with qmake and MSVC or MinGW
+
 MSVC
 ```
 {file_path_to_qmake}\qmake.exe Project-eDot.pro -spec win32-msvc {current directory} qmake_all
 ```
-MinGW  
+MinGW
 ```
 {file_path_to_qmake}\qmake.exe Project-eDot.pro
 make
