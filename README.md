@@ -3,7 +3,7 @@
 ## Dependencies
 - Qt6 <
 - QMake 3 <
-- C++ compiler for C++ 13 < (gcc for linux, msvc for windows)
+- C++ 13 < 
 
 ## Build instructions
 1. Clone the repository and enter into the directory
