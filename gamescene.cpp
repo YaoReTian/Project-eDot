@@ -2,6 +2,7 @@
 
 #include <QDebug>
 #include <QString>
+#include <QGraphicsPixmapItem>
 
 #include "database.h"
 
@@ -21,4 +22,8 @@ void GameScene::testOutput() {
     } else {
         qDebug() << "Database is not open";
     }
+
+    QGraphicsPixmapItem *pItem = new QGraphicsPixmapItem;
+    pItem->setPixmap(filepath);
+    addItem(pItem);
 }

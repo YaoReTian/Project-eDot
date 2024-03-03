@@ -8,7 +8,7 @@
 Database::Database()
 {
     m_db = QSqlDatabase::addDatabase("QSQLITE");
-    m_db.setDatabaseName("res/GameDatabase.db");
+    m_db.setDatabaseName("GameDatabase.db");
 
     if (!m_db.open()) {
         qDebug() << "Error: database failed to open";
