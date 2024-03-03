@@ -11,7 +11,7 @@
 git clone https://github.com/YaoReTian/Project-eDot.git
 cd Project-eDot
 ```  
-Linux:  
+### Linux:  
 2. Enter into the directory and build
 ```
 qmake
@@ -21,7 +21,7 @@ make
 ```
 ./Project-eDot
 ```  
-Windows:  
+### Windows:  
 2. Locate the file location of qmake.exe (usually by default located at ```C:\Qt\{qt-version}\msvc{msvc date and version}\bin\qmake.exe```
 3. Build with qmake
 ```
