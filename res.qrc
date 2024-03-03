@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/image"/>
+    <qresource prefix="/image/sprite"/>
+    <qresource prefix="/image/tile">
+        <file>res/test_tile_1.png</file>
+    </qresource>
+</RCC>

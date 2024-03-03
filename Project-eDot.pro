@@ -33,5 +33,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     README.md \
-    res/GameDatabase.db \
-    res/test_tile_1.png
+    res/GameDatabase.db
+
+RESOURCES += \
+    res.qrc

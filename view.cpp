@@ -3,5 +3,5 @@
 View::View() :
     m_gamescene(new GameScene)
 {
-
+    m_gamescene->testOutput();
 }

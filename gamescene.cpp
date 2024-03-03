@@ -8,14 +8,15 @@
 GameScene::GameScene(QObject *parent) :
     QGraphicsScene(parent)
 {
-    testOutput();
+
 }
 
 void GameScene::testOutput() {
     Database db;
+    QString filepath;
 
     if (db.isOpen()) {
-        QString filepath = db.getTestTilePath();
+        filepath = db.getTestTilePath();
         qDebug() << filepath;
     } else {
         qDebug() << "Database is not open";
