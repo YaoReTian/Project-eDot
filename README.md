@@ -1,8 +1,9 @@
 # Project-eDot
 
 ## Dependencies
-- Qt6
-- C++ 13+
+- Qt6 <
+- QMake 3 <
+- C++ 13 <
 
 ## Build instructions
 1. Clone the repository
