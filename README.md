@@ -3,7 +3,8 @@
 ## Dependencies
 - Qt6 <
 - QMake 3 <
-- C++ 13 < 
+- Linux: gcc 13 <
+- Windows: MSVC 2019 < or MinGW 11.2 <
 
 ## Build instructions
 1. Clone the repository and enter into the directory
@@ -22,13 +23,18 @@ make
 ./Project-eDot
 ```  
 ### Windows:  
-2. Locate the file location of qmake.exe (usually by default located at ```C:\Qt\{qt-version}\msvc{msvc date and version}\bin\qmake.exe```
-3. Build with qmake
+2. Locate the file location of qmake.exe (usually by default located at ```C:\Qt\{qt-version}\{c++ compiler version}\bin\qmake.exe``` 
+3. Compile with qmake and MSVC or MinGW  
+MSVC
+```
+{file_path_to_qmake}\qmake.exe Project-eDot.pro -spec win32-msvc {current directory} qmake_all
+```
+MinGW  
 ```
 {file_path_to_qmake}\qmake.exe Project-eDot.pro
 make
 ```
-4. Run the compiled binary
+4. Execute compiled binary 
 ```
 ./Project-eDot.exe
 ```
