@@ -30,7 +30,7 @@ make
 
 MSVC
 ```
-{file_path_to_qmake}\qmake.exe Project-eDot.pro -spec win32-msvc {current directory} qmake_all
+{file_path_to_qmake}\qmake.exe Project-eDot.pro -spec win32-msvc {path to current directory} qmake_all
 ```
 MinGW
 ```
