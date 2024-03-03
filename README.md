@@ -41,5 +41,3 @@ make
 ```
 ./Project-eDot.exe
 ```
-
-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
