@@ -8,7 +8,7 @@
 Database::Database()
 {
     m_db = QSqlDatabase::addDatabase("QSQLITE");
-    m_db.setDatabaseName(QDir::toNativeSeparators("res/GameDatabase.db"));
+    m_db.setDatabaseName(QDir::currentPath() + QDir::toNativeSeparators("/res/GameDatabase.db"));
 
     if (!m_db.open()) {
         qDebug() << "Error: database failed to open";
@@ -35,6 +35,6 @@ QString Database::getTestTilePath()
     QSqlQuery query("SELECT * FROM Tile WHERE TileID = 1");
     int pathIndex = query.record().indexOf("PathToTileSheet");
     query.next();
-    QString filePath = QDir::toNativeSeparators(query.value(pathIndex).toString());
+    QString filePath = QDir::currentPath() + QDir::separator() + QDir::toNativeSeparators(query.value(pathIndex).toString());
     return filePath;
 }
