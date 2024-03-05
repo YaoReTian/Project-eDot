@@ -13,5 +13,5 @@ GameScene::GameScene(QObject *parent) :
 }
 
 void GameScene::testOutput() {
-    Tilemap tilemap(1, *this);
+    Tilemap tilemap(2, *this);
 }

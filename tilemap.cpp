@@ -84,7 +84,7 @@ void Tilemap::generateTiles(QGraphicsScene &scene)
     if (m_mapSizeX * m_mapSizeY != m_tiles.size()) {
         qDebug() << m_mapSizeX * m_mapSizeY;
         qDebug() << m_tiles.size();
-        qDebug() << "ERROR: LESS TILES THAN AREA";
+        qDebug() << "ERROR: NUMBER OF TILES != AREA";
     }
 
     int tileIndex = 0;
