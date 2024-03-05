@@ -4,7 +4,7 @@
 namespace GLOBAL {
 
 int FPS = 60;
-int ObjectSize = 16;
+int ObjectSize = 32;
 
 }
 
