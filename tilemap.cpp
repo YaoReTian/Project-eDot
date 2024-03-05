@@ -65,10 +65,12 @@ void Tilemap::generateTiles(QGraphicsScene &scene)
         NumberOfTiles = query.value("NumberOfTiles").toInt();
         image.load(filePath);
 
+        qDebug() << image.size();
+
         for (int n = 0; n < NumberOfTiles; n++)
         {
             m_tiles.append(new Tile);
-            m_tiles.back()->setPixmap(image);
+            m_tiles.back()->setPixmap(image.scaled(GLOBAL::ObjectSize));
             m_tiles.back()->setID(query.value("Tile.TileID").toInt());
             m_tiles.back()->setDescription(query.value("TileDescription").toString());
             m_tiles.back()->setName(query.value("TileName").toString());
@@ -87,9 +89,9 @@ void Tilemap::generateTiles(QGraphicsScene &scene)
 
     int tileIndex = 0;
 
-    for (int y = 0; y < GLOBAL::ObjectSize*m_mapSizeY; y += GLOBAL::ObjectSize)
+    for (int y = 0; y < GLOBAL::ObjectLength*m_mapSizeY; y += GLOBAL::ObjectLength)
     {
-        for (int x = 0; x < GLOBAL::ObjectSize*m_mapSizeX; x += GLOBAL::ObjectSize)
+        for (int x = 0; x < GLOBAL::ObjectLength*m_mapSizeX; x += GLOBAL::ObjectLength)
         {
             qDebug() << "Position:" << x << y;
             m_tiles[tileIndex]->setPos(x,y);
