@@ -47,7 +47,7 @@ QSqlQuery Database::getMapInfo(int MapID)
 
 QSqlQuery Database::getMapTiles(int MapID)
 {
-    QSqlQuery query(QString("SELECT TileInMapID, Tile.TileID, TileName, TileDescription, PathToTileSheet, NumberOfTiles "
+    QSqlQuery query(QString("SELECT TileInMapIndex, Tile.TileID, TileName, TileDescription, PathToTileSheet, NumberOfTiles "
                             "FROM TileInMap, Tile "
                             "WHERE (Tile.TileID = TileInMap.TileID) AND (MapID = %1) "
                             "ORDER BY TileInMapID ASC").arg(MapID));
