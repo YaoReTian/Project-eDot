@@ -12,11 +12,15 @@ SOURCES += \
     database.cpp \
     gamescene.cpp \
     main.cpp \
+    tile.cpp \
+    tilemap.cpp \
     view.cpp
 
 HEADERS += \
     database.h \
     gamescene.h \
+    tile.h \
+    tilemap.h \
     view.h
 
 FORMS +=

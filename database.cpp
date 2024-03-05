@@ -38,3 +38,27 @@ QString Database::getTestTilePath()
     QString filePath = query.value(pathIndex).toString();
     return filePath;
 }
+
+QSqlQuery Database::getMapInfo(int MapID)
+{
+    QSqlQuery query(QString("SELECT * FROM Map WHERE MapID = %1").arg(MapID));
+    return query;
+}
+
+QSqlQuery Database::getMapTiles(int MapID)
+{
+    QSqlQuery query(QString("SELECT TileInMapID, Tile.TileID, TileName, TileDescription, PathToTileSheet, NumberOfTiles "
+                            "FROM TileInMap, Tile "
+                            "WHERE (Tile.TileID = TileInMap.TileID) AND (MapID = %1) "
+                            "ORDER BY TileInMapID ASC").arg(MapID));
+    return query;
+}
+
+QSqlQuery Database::getMapSprites(int MapID)
+{
+    QSqlQuery query(QString("SELECT Sprite.SpriteID, SpriteName, SpriteType, PathToSpriteSheet, PositionX, PositionY "
+                            "FROM SpriteInMap, Sprite "
+                            "WHERE (Sprite.SpriteID = SpriteInMap.SpriteID) AND (MapID = %1) "
+                            "ORDER BY PositionX ASC, PositionY ASC").arg(MapID));
+    return query;
+}
