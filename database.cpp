@@ -50,7 +50,13 @@ QSqlQuery Database::getMapTiles(int MapID)
     QSqlQuery query(QString("SELECT TileInMapIndex, Tile.TileID, TileName, TileDescription, PathToTileSheet, NumberOfTiles "
                             "FROM TileInMap, Tile "
                             "WHERE (Tile.TileID = TileInMap.TileID) AND (MapID = %1) "
-                            "ORDER BY TileInMapID ASC").arg(MapID));
+                            "ORDER BY TileInMapIndex ASC").arg(MapID));
+
+    if (!query.isActive())
+    {
+        qDebug() << "Query is not active";
+    }
+
     return query;
 }
 

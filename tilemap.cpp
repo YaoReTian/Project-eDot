@@ -4,6 +4,8 @@
 #include <QSqlQuery>
 #include <QPixmap>
 
+#include "global.h"
+
 // Public methods
 Tilemap::Tilemap(int MapID, QGraphicsScene &scene)
 {
@@ -78,14 +80,16 @@ void Tilemap::generateTiles(QGraphicsScene &scene)
     }
 
     if (m_mapSizeX * m_mapSizeY != m_tiles.size()) {
+        qDebug() << m_mapSizeX * m_mapSizeY;
+        qDebug() << m_tiles.size();
         qDebug() << "ERROR: LESS TILES THAN AREA";
     }
 
     int tileIndex = 0;
 
-    for (int y = 0; y < 24*m_mapSizeY; y += 24)
+    for (int y = 0; y < GLOBAL::ObjectSize*m_mapSizeY; y += GLOBAL::ObjectSize)
     {
-        for (int x = 0; x < 24*m_mapSizeX; x += 24)
+        for (int x = 0; x < GLOBAL::ObjectSize*m_mapSizeX; x += GLOBAL::ObjectSize)
         {
             qDebug() << "Position:" << x << y;
             m_tiles[tileIndex]->setPos(x,y);
