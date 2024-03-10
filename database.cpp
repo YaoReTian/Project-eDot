@@ -51,9 +51,17 @@ QSqlQuery Database::getMapTiles(int MapID)
 
 QSqlQuery Database::getMapSprites(int MapID)
 {
-    QSqlQuery query(QString("SELECT Sprite.SpriteID, SpriteName, SpriteType, PathToSpriteSheet, PositionX, PositionY "
+    QSqlQuery query(QString("SELECT Sprite.SpriteID, SpriteName, SpriteType, SpriteSizeX, SpriteSizeY, PathToSpriteSheet, Interactable, InteractText, InteractDialogue, PositionX, PositionY "
                             "FROM SpriteInMap, Sprite "
                             "WHERE (Sprite.SpriteID = SpriteInMap.SpriteID) AND (MapID = %1) "
                             "ORDER BY PositionX ASC, PositionY ASC").arg(MapID));
+    return query;
+}
+
+QSqlQuery Database::getSpriteAnimations(int SpriteID)
+{
+    QSqlQuery query(QString("SELECT StateName, StartFrame, EndFrame, FrameTime "
+                            "FROM SpriteAnimations "
+                            "WHERE (SpriteID = %1)").arg(SpriteID));
     return query;
 }

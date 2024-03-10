@@ -2,12 +2,20 @@
 
 #include <QDebug>
 #include <QSqlQuery>
+#include <QSqlError>
 #include <QPixmap>
 
 #include "global.h"
 
 // Public methods
-Tilemap::Tilemap(int MapID, QGraphicsScene &scene)
+Tilemap::Tilemap(){}
+
+Tilemap::~Tilemap()
+{
+    qDebug() << "Tilemap destroyed";
+}
+
+void Tilemap::setMap(int MapID)
 {
     QSqlQuery query;
 
@@ -24,7 +32,8 @@ Tilemap::Tilemap(int MapID, QGraphicsScene &scene)
     m_mapSizeX = query.value("MapSizeX").toInt();
     m_mapSizeY = query.value("MapSizeY").toInt();
 
-    generateTiles(scene);
+    setTiles();
+    setSprites();
 }
 
 QString Tilemap::getMapDesc()
@@ -37,13 +46,15 @@ QString Tilemap::getMapName()
     return m_mapName;
 }
 
-void Tilemap::update()
+void Tilemap::update(int deltatime)
 {
-
+    for (const auto &s : m_sprites)
+    {
+        s->update(deltatime);
+    }
 }
 
-// Private methods
-void Tilemap::generateTiles(QGraphicsScene &scene)
+void Tilemap::setTiles()
 {
     QSqlQuery query;
     QString filePath;
@@ -65,8 +76,6 @@ void Tilemap::generateTiles(QGraphicsScene &scene)
         NumberOfTiles = query.value("NumberOfTiles").toInt();
         image.load(filePath);
 
-        qDebug() << image.size();
-
         for (int n = 0; n < NumberOfTiles; n++)
         {
             m_tiles.append(new Tile);
@@ -74,10 +83,6 @@ void Tilemap::generateTiles(QGraphicsScene &scene)
             m_tiles.back()->setID(query.value("Tile.TileID").toInt());
             m_tiles.back()->setDescription(query.value("TileDescription").toString());
             m_tiles.back()->setName(query.value("TileName").toString());
-
-            qDebug() << m_tiles.back()->getID();
-            qDebug() << m_tiles.back()->getName();
-            qDebug() << m_tiles.back()->getDescription();
         }
     }
 
@@ -86,15 +91,71 @@ void Tilemap::generateTiles(QGraphicsScene &scene)
         qDebug() << m_tiles.size();
         qDebug() << "ERROR: NUMBER OF TILES != AREA";
     }
+}
 
+void Tilemap::setSprites()
+{
+    QSqlQuery query;
+    QSqlQuery animationQuery;
+    QPixmap image;
+
+    if (m_db.isOpen())
+    {
+        query = m_db.getMapSprites(m_mapID);
+    }
+    else
+    {
+        qDebug() << "Database is not open";
+    }
+
+    if (!query.isActive())
+    {
+        qDebug() << "Error: query is not active" << query.lastError();
+    }
+
+    while(query.next())
+    {
+        m_sprites.append(new Sprite);
+        m_sprites.back()->setID(query.value("Sprite.SpriteID").toInt());
+        m_sprites.back()->setName(query.value("SpriteName").toString());
+        m_sprites.back()->setType(query.value("SpriteType").toString());
+        m_sprites.back()->setFrameSize(QSize(query.value("SpriteSizeX").toInt(),
+                                             query.value("SpriteSizeY").toInt()));
+
+        image.load(query.value("PathToSpriteSheet").toString());
+        m_sprites.back()->setSpriteSheet(image);
+
+        if (query.value("Interactable").toBool())
+        {
+            m_sprites.back()->setInteraction(query.value("InteractText").toString(),
+                                             query.value("InteractDialogue").toString());
+        }
+        m_sprites.back()->setPos(query.value("PositionX").toInt()*GLOBAL::ObjectLength,
+                                 query.value("PositionY").toInt()*GLOBAL::ObjectLength);
+        m_sprites.back()->setZValue(GLOBAL::SPRITE_LAYER);
+
+        animationQuery = m_db.getSpriteAnimations(m_sprites.back()->getID());
+        while (animationQuery.next()) {
+            m_sprites.back()->addAnimationState(animationQuery.value("StateName").toString(),
+                                                animationQuery.value("StartFrame").toInt(),
+                                                animationQuery.value("EndFrame").toInt(),
+                                                animationQuery.value("FrameTime").toFloat());
+        }
+    }
+
+
+}
+
+void Tilemap::generateTiles(QGraphicsScene &scene)
+{
     int tileIndex = 0;
 
     for (int y = 0; y < GLOBAL::ObjectLength*m_mapSizeY; y += GLOBAL::ObjectLength)
     {
         for (int x = 0; x < GLOBAL::ObjectLength*m_mapSizeX; x += GLOBAL::ObjectLength)
         {
-            qDebug() << "Position:" << x << y;
             m_tiles[tileIndex]->setPos(x,y);
+            m_tiles[tileIndex]->setZValue(GLOBAL::TILE_LAYER);
             scene.addItem(m_tiles[tileIndex]);
             tileIndex++;
         }
@@ -103,7 +164,11 @@ void Tilemap::generateTiles(QGraphicsScene &scene)
 
 void Tilemap::generateSprites(QGraphicsScene &scene)
 {
-
+    for (const auto &n : m_sprites)
+    {
+        n->update(0);
+        scene.addItem(n);
+    }
 }
 
 void Tilemap::updateTiles()

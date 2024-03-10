@@ -2,7 +2,12 @@
 
 Tile::Tile(QGraphicsItem *parent) : QObject(), QGraphicsPixmapItem(parent)
 {
-    qDebug() << "Tile created";
+
+}
+
+Tile::~Tile()
+{
+    qDebug() << "Item destroyed";
 }
 
 void Tile::setID(int TileID)

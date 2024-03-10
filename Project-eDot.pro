@@ -12,6 +12,7 @@ SOURCES += \
     database.cpp \
     gamescene.cpp \
     main.cpp \
+    sprite.cpp \
     tile.cpp \
     tilemap.cpp \
     view.cpp
@@ -20,6 +21,7 @@ HEADERS += \
     database.h \
     gamescene.h \
     global.h \
+    sprite.h \
     tile.h \
     tilemap.h \
     view.h

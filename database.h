@@ -16,6 +16,7 @@ public:
     QSqlQuery getMapInfo(int MapID);
     QSqlQuery getMapTiles(int MapID);
     QSqlQuery getMapSprites(int MapID);
+    QSqlQuery getSpriteAnimations(int SpriteID);
 
 private:
     QSqlDatabase m_db;

@@ -4,21 +4,26 @@
 #include <QGraphicsScene>
 
 #include "tile.h"
-
 #include "database.h"
+#include "sprite.h"
+
 class Tilemap
 {
 public:
-    Tilemap(int MapID, QGraphicsScene &scene);
+    Tilemap();
+    ~Tilemap();
+    void setMap(int MapID);
     QString getMapName();
     QString getMapDesc();
 
-    void update();
+    void update(int deltatime);
+    void generateTiles(QGraphicsScene &scene);
+    void generateSprites(QGraphicsScene &scene);
 
 private:
     // Methods for creating the map
-    void generateTiles(QGraphicsScene &scene);
-    void generateSprites(QGraphicsScene &scene);
+    void setTiles();
+    void setSprites();
 
     // Methods for updating the map
     void updateSprites();
@@ -28,7 +33,7 @@ private:
     Database m_db;
 
     // Attributes of objects on the map
-    QList<QGraphicsPixmapItem> m_sprites;
+    QList<Sprite*> m_sprites;
     QList<Tile*> m_tiles;
 
     // Map info

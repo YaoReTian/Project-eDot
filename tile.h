@@ -9,6 +9,7 @@ class Tile : public QObject, public QGraphicsPixmapItem
     Q_OBJECT
 public:
     Tile(QGraphicsItem * parent=0);
+    ~Tile();
 
     void setID(int TileID);
     void setName(QString TileName);
