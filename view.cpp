@@ -4,4 +4,7 @@ View::View() :
     m_gamescene(new GameScene)
 {
     setScene(m_gamescene);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
 }

@@ -7,6 +7,7 @@ Sprite::Sprite(QGraphicsItem * parent) : QObject(), QGraphicsPixmapItem(parent)
     m_currentStateIndex = 0;
     m_currentFrame = 0;
     m_interactable = false;
+    m_type = "Sprite";
 }
 
 void Sprite::setID(int ID)
@@ -93,8 +94,15 @@ void Sprite::transition(QString stateName)
 
 void Sprite::update(int deltaTime)
 {
-    qDebug() << m_name <<" updated";
     m_elapsed_time += deltaTime;
+
+    QList<QGraphicsItem *> colliding_items = collidingItems();
+
+    for (auto n : colliding_items) {
+        //if (typeid(*n) == typeid(Enemy)) {
+        //}
+    }
+
     if (m_states[m_currentStateIndex]->frameTime <= m_elapsed_time)
     {
         m_elapsed_time = 0;

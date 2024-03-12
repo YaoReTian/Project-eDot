@@ -19,7 +19,6 @@ public:
 
     void setID(int ID);
     void setName(QString name);
-    void setType(QString type);
     void setSpriteSheet(QString spriteSheet);
     void update(int deltaTime);
 
@@ -35,6 +34,10 @@ public:
     void transition(QString stateName);
 
     bool isInteractable();
+
+protected:
+    void setType(QString type);
+
 private:
     // Sprite data
     int m_SpriteID;

@@ -6,15 +6,18 @@
 #include "tile.h"
 #include "database.h"
 #include "sprite.h"
+#include "movingsprite.h"
 
 class Tilemap
 {
 public:
-    Tilemap();
+    Tilemap(Database* db);
     ~Tilemap();
     void setMap(int MapID);
     QString getMapName();
     QString getMapDesc();
+    int getMapSizeX();
+    int getMapSizeY();
 
     void update(int deltatime);
     void generateTiles(QGraphicsScene &scene);
@@ -30,10 +33,11 @@ private:
     void updateTiles();
 
     // Attributes for creating the map
-    Database m_db;
+    Database* m_db;
 
     // Attributes of objects on the map
     QList<Sprite*> m_sprites;
+    QList<MovingSprite*> m_movingSprites;
     QList<Tile*> m_tiles;
 
     // Map info

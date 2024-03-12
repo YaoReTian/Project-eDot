@@ -11,7 +11,10 @@ CONFIG += c++17
 SOURCES += \
     database.cpp \
     gamescene.cpp \
+    keymap.cpp \
     main.cpp \
+    movingsprite.cpp \
+    player.cpp \
     sprite.cpp \
     tile.cpp \
     tilemap.cpp \
@@ -21,6 +24,9 @@ HEADERS += \
     database.h \
     gamescene.h \
     global.h \
+    keymap.h \
+    movingsprite.h \
+    player.h \
     sprite.h \
     tile.h \
     tilemap.h \
