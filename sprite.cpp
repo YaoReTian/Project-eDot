@@ -111,6 +111,6 @@ void Sprite::update(int deltaTime)
         {
             m_currentFrame = 0;
         }
+        setPixmap(m_states[m_currentStateIndex]->frames[m_currentFrame]);
     }
-    setPixmap(m_states[m_currentStateIndex]->frames[m_currentFrame]);
 }
