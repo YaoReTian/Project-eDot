@@ -28,10 +28,6 @@ private:
     void setTiles();
     void setSprites();
 
-    // Methods for updating the map
-    void updateSprites();
-    void updateTiles();
-
     // Attributes for creating the map
     Database* m_db;
 

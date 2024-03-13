@@ -120,13 +120,3 @@ void Tilemap::generateSprites(QGraphicsScene &scene)
         scene.addItem(n);
     }
 }
-
-void Tilemap::updateTiles()
-{
-
-}
-
-void Tilemap::updateSprites()
-{
-
-}
