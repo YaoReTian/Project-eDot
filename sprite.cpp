@@ -4,7 +4,7 @@
 Sprite::Sprite(QGraphicsItem * parent) : QObject(), QGraphicsPixmapItem(parent)
 {
     m_elapsed_time = 0;
-    m_currentStateIndex = 0;
+    m_currentStateName = "idle";
     m_currentFrame = 0;
     m_interactable = false;
     m_type = "Sprite";
@@ -58,14 +58,14 @@ void Sprite::setInteraction(QString text, QString dialogue)
 
 void Sprite::addAnimationState(QString stateName, int startFrame, int endFrame, float frameTime)
 {
-    m_states.append(new AnimationState);
-    m_states.back()->stateName = stateName;
-    m_states.back()->frameTime = frameTime;
+    m_states[stateName] = new AnimationState;
+    m_states[stateName]->stateName = stateName;
+    m_states[stateName]->frameTime = frameTime;
     int y = 0;
     int x = 0;
     for (int n = startFrame; n < endFrame; n++)
     {
-        m_states.back()->frames.append(m_spriteSheet.copy(x*m_frameSize.width(),y*m_frameSize.height(),m_frameSize.width(),m_frameSize.height())
+        m_states[stateName]->frames.append(m_spriteSheet.copy(x*m_frameSize.width(),y*m_frameSize.height(),m_frameSize.width(),m_frameSize.height())
                                 .scaled(GLOBAL::ObjectSize));
         x++;
         if (x*m_frameSize.width() >= m_spriteSheet.width())
@@ -76,41 +76,40 @@ void Sprite::addAnimationState(QString stateName, int startFrame, int endFrame, 
     }
 }
 
-void Sprite::transition(QString stateName)
+void Sprite::addTransition(QString startStateName, GLOBAL::Action action, QString endStateName)
 {
-    int n = 0;
-    bool found = false;
-    while (n != m_states.size() && found == false)
-    {
-        if (m_states[n]->stateName == stateName) {
-            m_currentStateIndex = n;
-            m_currentFrame = 0;
-            found = true;
-        } else {
-            n++;
-        }
-    }
+    m_states[startStateName]->transitions[action] = endStateName;
 }
 
 void Sprite::update(int deltaTime)
 {
+    qDebug() << m_currentStateName;
     m_elapsed_time += deltaTime;
 
-    QList<QGraphicsItem *> colliding_items = collidingItems();
+    //QList<QGraphicsItem *> colliding_items = collidingItems();
 
-    for (auto n : colliding_items) {
+    //for (auto n : colliding_items) {
         //if (typeid(*n) == typeid(Enemy)) {
         //}
-    }
+    //}
 
-    if (m_states[m_currentStateIndex]->frameTime <= m_elapsed_time)
+    if (m_states[m_currentStateName]->frameTime != -1 &&
+        m_states[m_currentStateName]->frameTime <= m_elapsed_time)
     {
         m_elapsed_time = 0;
         m_currentFrame++;
-        if (m_currentFrame  == m_states[m_currentStateIndex]->frames.size())
+        if (m_currentFrame  == m_states[m_currentStateName]->frames.size())
         {
             m_currentFrame = 0;
         }
-        setPixmap(m_states[m_currentStateIndex]->frames[m_currentFrame]);
+        setPixmap(m_states[m_currentStateName]->frames[m_currentFrame]);
+    }
+}
+
+void Sprite::setAction(GLOBAL::Action action)
+{
+    if (m_states[m_currentStateName]->transitions.contains(action))
+    {
+        m_currentStateName = m_states[m_currentStateName]->transitions[action];
     }
 }

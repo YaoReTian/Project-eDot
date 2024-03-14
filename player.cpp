@@ -15,21 +15,30 @@ Player::Player(Database* db)
 
 void Player::update(int deltatime, KeyMap* keys)
 {
+    bool actionTaken = false;
     if (keys->getHeldStatus(GLOBAL::MOVE_LEFT))
     {
+        actionTaken = true;
         m_party[m_activeCharacterIndex]->move(deltatime, GLOBAL::MOVE_LEFT);
     }
     if (keys->getHeldStatus(GLOBAL::MOVE_RIGHT))
     {
+        actionTaken = true;
         m_party[m_activeCharacterIndex]->move(deltatime, GLOBAL::MOVE_RIGHT);
     }
     if (keys->getHeldStatus(GLOBAL::MOVE_UP))
     {
+        actionTaken = true;
         m_party[m_activeCharacterIndex]->move(deltatime, GLOBAL::MOVE_UP);
     }
     if (keys->getHeldStatus(GLOBAL::MOVE_DOWN))
     {
+        actionTaken = true;
         m_party[m_activeCharacterIndex]->move(deltatime, GLOBAL::MOVE_DOWN);
+    }
+    if (!actionTaken)
+    {
+        m_party[m_activeCharacterIndex]->move(deltatime, GLOBAL::NONE);
     }
     m_party[m_activeCharacterIndex]->update(deltatime);
 }

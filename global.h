@@ -2,6 +2,7 @@
 #define GLOBAL_H
 
 #include <QSize>
+#include <QString>
 
 namespace GLOBAL {
 

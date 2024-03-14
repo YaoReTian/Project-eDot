@@ -64,6 +64,7 @@ void Tilemap::update(int deltatime)
 {
     for (const auto &s : m_sprites)
     {
+        s->setAction(GLOBAL::NONE);
         s->update(deltatime);
     }
     for (const auto &s : m_movingSprites)

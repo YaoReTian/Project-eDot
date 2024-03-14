@@ -4,11 +4,14 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 
+#include "global.h"
+
 struct AnimationState
 {
     QString stateName;
     float frameTime;
     QList<QPixmap> frames;
+    QMap<GLOBAL::Action, QString> transitions;
 };
 
 class Sprite : public QObject, public QGraphicsPixmapItem
@@ -21,6 +24,7 @@ public:
     void setName(QString name);
     void setSpriteSheet(QString spriteSheet);
     void update(int deltaTime);
+    void setAction(GLOBAL::Action action);
 
     int getID();
     QString getName();
@@ -31,7 +35,7 @@ public:
     void setFrameSize(QSize frameSize);
     void setInteraction(QString text, QString dialogue);
     void addAnimationState(QString stateName, int startFrame, int endFrame, float frameTime);
-    void transition(QString stateName);
+    void addTransition(QString startStateName, GLOBAL::Action triggerAction, QString endStateName);
 
     bool isInteractable();
 
@@ -50,10 +54,10 @@ private:
     // For animations
     QSize m_frameSize;
     int m_elapsed_time;
-    int m_currentStateIndex;
     int m_currentFrame;
+    QString m_currentStateName;
     QPixmap m_spriteSheet;
-    QList<AnimationState*> m_states;
+    QMap<QString, AnimationState*> m_states;
 
 };
 

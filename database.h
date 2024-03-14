@@ -7,6 +7,7 @@
 #include "sprite.h"
 #include "tile.h"
 #include "movingsprite.h"
+#include "global.h"
 
 class Database
 {
@@ -24,6 +25,8 @@ public:
     QList<MovingSprite*> getMovingSpritesFromMap(int MapID);
     MovingSprite* getMovingSprite(int SpriteID);
     QSqlQuery getSpriteAnimations(int SpriteID);
+    QSqlQuery getSpriteTransitions(int AnimationID);
+    GLOBAL::Action stringToAction(QString string);
 
 private:
     QSqlDatabase m_db;

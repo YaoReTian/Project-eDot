@@ -72,6 +72,7 @@ QList<Sprite*> Database::getWorldSprites(int MapID)
                           "WHERE (Sprite.SpriteID = SpriteInMap.SpriteID) AND (MapID = %1)  AND (SpriteType = 'WorldSprite') "
                             "ORDER BY PositionX ASC, PositionY ASC").arg(MapID));
     QSqlQuery animationQuery;
+    QSqlQuery transitionQuery;
     QPixmap image;
 
     QList<Sprite*> sprites;
@@ -101,6 +102,14 @@ QList<Sprite*> Database::getWorldSprites(int MapID)
                                                 animationQuery.value("StartFrame").toInt(),
                                                 animationQuery.value("EndFrame").toInt(),
                                                 animationQuery.value("FrameTime").toFloat());
+
+            transitionQuery = getSpriteTransitions(animationQuery.value("AnimationID").toInt());
+            while (transitionQuery.next())
+            {
+                sprites.back()->addTransition(animationQuery.value("StateName").toString(),
+                                              stringToAction(transitionQuery.value("Action").toString()),
+                                              transitionQuery.value("StateName").toString());
+            }
         }
     }
 
@@ -114,6 +123,7 @@ QList<MovingSprite*> Database::getMovingSpritesFromMap(int MapID)
                             "WHERE (Sprite.SpriteID = SpriteInMap.SpriteID) AND (MapID = %1) AND (SpriteType = 'MovingSprite') "
                             "ORDER BY PositionX ASC, PositionY ASC").arg(MapID));
     QSqlQuery animationQuery;
+    QSqlQuery transitionQuery;
     QPixmap image;
 
     QList<MovingSprite*> sprites;
@@ -143,6 +153,14 @@ QList<MovingSprite*> Database::getMovingSpritesFromMap(int MapID)
                                               animationQuery.value("StartFrame").toInt(),
                                               animationQuery.value("EndFrame").toInt(),
                                               animationQuery.value("FrameTime").toFloat());
+
+            transitionQuery = getSpriteTransitions(animationQuery.value("AnimationID").toInt());
+            while (transitionQuery.next())
+            {
+                sprites.back()->addTransition(animationQuery.value("StateName").toString(),
+                                              stringToAction(transitionQuery.value("Action").toString()),
+                                              transitionQuery.value("StateName").toString());
+            }
         }
     }
 
@@ -155,6 +173,7 @@ MovingSprite* Database::getMovingSprite(int SpriteID)
                             "WHERE (SpriteID = %1)").arg(SpriteID));
 
     QSqlQuery animationQuery;
+    QSqlQuery transitionQuery;
     QPixmap image;
     MovingSprite* sprite = new MovingSprite;
 
@@ -173,6 +192,14 @@ MovingSprite* Database::getMovingSprite(int SpriteID)
                                   animationQuery.value("StartFrame").toInt(),
                                   animationQuery.value("EndFrame").toInt(),
                                   animationQuery.value("FrameTime").toFloat());
+
+        transitionQuery = getSpriteTransitions(animationQuery.value("AnimationID").toInt());
+        while (transitionQuery.next())
+        {
+            sprite->addTransition(animationQuery.value("StateName").toString(),
+                                  stringToAction(transitionQuery.value("Action").toString()),
+                                  transitionQuery.value("StateName").toString());
+        }
     }
 
     return sprite;
@@ -180,8 +207,40 @@ MovingSprite* Database::getMovingSprite(int SpriteID)
 
 QSqlQuery Database::getSpriteAnimations(int SpriteID)
 {
-    QSqlQuery query(QString("SELECT StateName, StartFrame, EndFrame, FrameTime "
+    QSqlQuery query(QString("SELECT AnimationID, StateName, StartFrame, EndFrame, FrameTime "
                             "FROM SpriteAnimations "
                             "WHERE (SpriteID = %1)").arg(SpriteID));
     return query;
+}
+
+QSqlQuery Database::getSpriteTransitions(int AnimationID)
+{
+    QSqlQuery query(QString("SELECT Action, StateName "
+                            "FROM StateTransition, SpriteAnimations "
+                            "WHERE (EndAnimationID = AnimationID) AND (StartAnimationID = %1)").arg(AnimationID));
+    return query;
+}
+
+GLOBAL::Action Database::stringToAction(QString string)
+{
+    if (string == "MOVE_LEFT")
+    {
+        return GLOBAL::MOVE_LEFT;
+    }
+    else if (string == "MOVE_RIGHT")
+    {
+        return GLOBAL::MOVE_RIGHT;
+    }
+    else if (string == "MOVE_UP")
+    {
+        return GLOBAL::MOVE_UP;
+    }
+    else if (string == "MOVE_DOWN")
+    {
+        return GLOBAL::MOVE_DOWN;
+    }
+    else
+    {
+        return GLOBAL::NONE;
+    }
 }
