@@ -64,10 +64,10 @@ void Tile::update()
 
 void Tile::blockSprite(QGraphicsItem* item)
 {
-    bool north_out = false;
-    bool south_out = false;
-    bool east_out = false;
-    bool west_out = false;
+    bool north = false;
+    bool south = false;
+    bool east = false;
+    bool west = false;
     qreal value = QRandomGenerator::global()->generateDouble() * 0.2f;
 
     float item_mid_x = item->x() + item->boundingRect().width()/2;
@@ -76,85 +76,85 @@ void Tile::blockSprite(QGraphicsItem* item)
     if (item->y() + item->boundingRect().height() >= y() &&
         item_mid_y < y())
     {
-        north_out = true;
+        north = true;
     }
 
     if (item->y() <= y() + boundingRect().height() &&
         item_mid_y > y() + boundingRect().height())
     {
-        south_out = true;
+        south = true;
     }
 
     if (item->x() <= x() + boundingRect().width() &&
         item_mid_x > x() + boundingRect().width())
     {
-        east_out = true;
+        east = true;
     }
 
     if (item->x() + item->boundingRect().width() >= x() &&
         item_mid_x < x())
     {
-        west_out = true;
+        west = true;
     }
 
-    if (north_out && east_out)
+    if (north && east)
     {
         if (abs(item_mid_y - y()) > abs(item_mid_x - (x() + boundingRect().width())))
         {
-            east_out = false;
+            east = false;
         }
         else
         {
-            north_out = false;
+            north = false;
         }
     }
-    else if (north_out && west_out)
+    else if (north && west)
     {
         if (abs(item_mid_y - y()) > abs(item_mid_x - x()))
         {
-            west_out = false;
+            west = false;
         }
         else
         {
-            north_out = false;
+            north = false;
         }
     }
-    else if (south_out && east_out)
+    else if (south && east)
     {
         if (abs(item_mid_y - (y() + boundingRect().height())) > abs(item_mid_x - (x() + boundingRect().width())))
         {
-            east_out = false;
+            east = false;
         }
         else
         {
-            south_out = false;
+            south = false;
         }
     }
-    else if (south_out && west_out)
+    else if (south && west)
     {
         if (abs(item_mid_y - (y() + boundingRect().height())) > abs(item_mid_x - (x())))
         {
-            west_out = false;
+            west = false;
         }
         else
         {
-            south_out = false;
+            south = false;
         }
     }
 
-    if (north_out)
+    if (north)
     {
         item->setPos(item->x(), y() - item->boundingRect().height() - value);
     }
-    else if (south_out)
+    else if (south)
     {
         item->setPos(item->x(), y() + boundingRect().height() + value);
     }
-    else if (east_out)
+    else if (east)
     {
         item->setPos(x() + boundingRect().width() + value, item->y());
     }
-    else if (west_out)
+    else if (west)
     {
         item->setPos(x() - item->boundingRect().width() - value, item->y());
     }
