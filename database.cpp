@@ -37,7 +37,7 @@ QSqlQuery Database::getMapInfo(int MapID)
 
 QList<Tile*> Database::getMapTiles(int MapID)
 {
-    QSqlQuery query(QString("SELECT TileInMapIndex, Tile.TileID, TileName, TileDescription, PathToTileSheet, NumberOfTiles "
+    QSqlQuery query(QString("SELECT TileInMapIndex, Tile.TileID, TileName, TileDescription, PathToTileSheet, NumberOfTiles, Solid  "
                             "FROM TileInMap, Tile "
                             "WHERE (Tile.TileID = TileInMap.TileID) AND (MapID = %1) "
                             "ORDER BY TileInMapIndex ASC").arg(MapID));
@@ -59,6 +59,8 @@ QList<Tile*> Database::getMapTiles(int MapID)
             tiles.back()->setID(query.value("Tile.TileID").toInt());
             tiles.back()->setDescription(query.value("TileDescription").toString());
             tiles.back()->setName(query.value("TileName").toString());
+
+            tiles.back()->setSolid(query.value("Solid").toBool());
         }
     }
 

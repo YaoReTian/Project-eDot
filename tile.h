@@ -14,15 +14,21 @@ public:
     void setID(int TileID);
     void setName(QString TileName);
     void setDescription(QString TileDescription);
+    void setSolid(bool value = true);
 
     int getID();
     QString getName();
     QString getDescription();
+    void update();
 
 private:
+    void blockSprite(QGraphicsItem* item);
+
     int m_TileID;
     QString m_TileName;
     QString m_TileDescription;
+
+    bool m_solid;
 };
 
 #endif // TILE_H

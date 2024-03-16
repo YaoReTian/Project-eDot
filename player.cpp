@@ -9,7 +9,7 @@ Player::Player(Database* db)
     {
         m_party.append(nullptr);
     }
-    m_party[0] = m_db->getMovingSprite(1);
+    m_party[0] = m_db->getMovingSprite(2);
     m_activeCharacterIndex = 0;
 }
 

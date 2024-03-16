@@ -72,6 +72,10 @@ void Tilemap::update(int deltatime)
         s->move(deltatime, GLOBAL::MOVE_LEFT);
         s->update(deltatime);
     }
+    for (const auto &t : m_tiles)
+    {
+        t->update();
+    }
 }
 
 void Tilemap::setTiles()

@@ -1,5 +1,6 @@
 #include "sprite.h"
 #include "global.h"
+#include "tile.h"
 
 Sprite::Sprite(QGraphicsItem * parent) : QObject(), QGraphicsPixmapItem(parent)
 {
@@ -8,6 +9,7 @@ Sprite::Sprite(QGraphicsItem * parent) : QObject(), QGraphicsPixmapItem(parent)
     m_currentFrame = 0;
     m_interactable = false;
     m_type = "Sprite";
+    setZValue(GLOBAL::TILE_LAYER);
 }
 
 void Sprite::setID(int ID)
@@ -63,10 +65,25 @@ void Sprite::addAnimationState(QString stateName, int startFrame, int endFrame, 
     m_states[stateName]->frameTime = frameTime;
     int y = 0;
     int x = 0;
+
+    endFrame++;
+
+    // initialise coordinates
+    for (int n = 0; n < startFrame; n++)
+    {
+        x++;
+        if (x*m_frameSize.width() >= m_spriteSheet.width())
+        {
+            x = 0;
+            y ++;
+        }
+    }
+
+    // Adds pixmaps
     for (int n = startFrame; n < endFrame; n++)
     {
         m_states[stateName]->frames.append(m_spriteSheet.copy(x*m_frameSize.width(),y*m_frameSize.height(),m_frameSize.width(),m_frameSize.height())
-                                .scaled(GLOBAL::ObjectSize));
+                                               .scaled(m_frameSize.width()*GLOBAL::Scale, m_frameSize.height()*GLOBAL::Scale));
         x++;
         if (x*m_frameSize.width() >= m_spriteSheet.width())
         {
@@ -83,15 +100,7 @@ void Sprite::addTransition(QString startStateName, GLOBAL::Action action, QStrin
 
 void Sprite::update(int deltaTime)
 {
-    qDebug() << m_currentStateName;
     m_elapsed_time += deltaTime;
-
-    //QList<QGraphicsItem *> colliding_items = collidingItems();
-
-    //for (auto n : colliding_items) {
-        //if (typeid(*n) == typeid(Enemy)) {
-        //}
-    //}
 
     if (m_states[m_currentStateName]->frameTime != -1 &&
         m_states[m_currentStateName]->frameTime <= m_elapsed_time)
@@ -102,6 +111,10 @@ void Sprite::update(int deltaTime)
         {
             m_currentFrame = 0;
         }
+        setPixmap(m_states[m_currentStateName]->frames[m_currentFrame]);
+    }
+    else if (m_states[m_currentStateName]->frameTime == -1)
+    {
         setPixmap(m_states[m_currentStateName]->frames[m_currentFrame]);
     }
 }

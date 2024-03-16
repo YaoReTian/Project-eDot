@@ -2,6 +2,7 @@
     <qresource prefix="/image"/>
     <qresource prefix="/image/sprite">
         <file>res/test_sprite_1.png</file>
+        <file>res/test_sprite_2.png</file>
     </qresource>
     <qresource prefix="/image/tile">
         <file>res/test_tile_1.png</file>

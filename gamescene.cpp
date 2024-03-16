@@ -18,11 +18,10 @@ GameScene::GameScene(QObject *parent) :
 
     // Add functionality
     m_keymap->setDefaultBindings();
-    m_tilemap->setMap(1);
+    m_tilemap->setMap(2);
     m_tilemap->generateTiles(*this);
     m_tilemap->generateSprites(*this);
     m_player->getActiveCharacter()->setPos(m_tilemap->getMapSizeX()/2, m_tilemap->getMapSizeY()/2);
-    m_player->getActiveCharacter()->setZValue(GLOBAL::PLAYER_LAYER);
     addItem(m_player->getActiveCharacter());
 
     // Timer to handle game loop
