@@ -18,11 +18,11 @@ GameScene::GameScene(QObject *parent) :
 
     // Add functionality
     m_keymap->setDefaultBindings();
-    m_tilemap->setMap(2);
+    m_tilemap->setMap(1);
     m_tilemap->generateTiles(*this);
     m_tilemap->generateSprites(*this);
-    m_player->getActiveCharacter()->setPos(m_tilemap->getMapSizeX()/2, m_tilemap->getMapSizeY()/2);
-    addItem(m_player->getActiveCharacter());
+    m_player->activeCharacter()->setPos(0,0);
+    addItem(m_player->activeCharacter());
 
     // Timer to handle game loop
     connect(&m_timer, &QTimer::timeout, this, &GameScene::loop);
@@ -34,8 +34,12 @@ void GameScene::loop()
 {
     m_deltaTime = m_elapsedTimer.elapsed();
     m_elapsedTimer.restart();
-    m_tilemap->update(m_deltaTime);
+    m_tilemap->update(m_deltaTime, m_player->activeCharacter(), *this, m_keymap);
     m_player->update(m_deltaTime, m_keymap);
+
+    // Reset mouse and key status
+    m_keymap->resetStatus();
+
 }
 
 void GameScene::keyPressEvent(QKeyEvent *event)
@@ -45,7 +49,7 @@ void GameScene::keyPressEvent(QKeyEvent *event)
     if (m_keymap->contains(key))
     {
         GLOBAL::Action action = m_keymap->getAction(key);
-        m_keymap->setHeld(action, true);
+        m_keymap->keyHeld(action);
     }
     QGraphicsScene::keyPressEvent(event);
 }
@@ -57,8 +61,20 @@ void GameScene::keyReleaseEvent(QKeyEvent *event)
     if (m_keymap->contains(key))
     {
         GLOBAL::Action action = m_keymap->getAction(key);
-        m_keymap->setHeld(action, false);
-        m_keymap->setReleased(action, true);
+        m_keymap->keyHeld(action);
+        m_keymap->keyReleased(action);
     }
     QGraphicsScene::keyReleaseEvent(event);
+}
+
+void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    m_keymap->mouseHeld();
+    QGraphicsScene::mousePressEvent(event);
+}
+
+void GameScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    m_keymap->mouseReleased();
+    QGraphicsScene::mouseReleaseEvent(event);
 }

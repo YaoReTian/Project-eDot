@@ -8,4 +8,7 @@
         <file>res/test_tile_1.png</file>
         <file>res/test_tile_2.png</file>
     </qresource>
+    <qresource prefix="/image/UI">
+        <file>res/Button.png</file>
+    </qresource>
 </RCC>

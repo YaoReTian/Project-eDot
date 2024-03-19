@@ -14,7 +14,7 @@ public:
     void editParty();
     void update(int deltatime, KeyMap* keys);
     void setCharacter(int partyIndex, int SpriteID);
-    MovingSprite* getActiveCharacter();
+    MovingSprite* activeCharacter();
 
 private:
     Database *m_db;

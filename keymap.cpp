@@ -8,6 +8,7 @@ KeyMap::KeyMap()
     {
         m_keyStatus[static_cast<GLOBAL::Action>(n)] = new KeyStatus;
     }
+    m_mouseStatus = new MouseStatus;
 }
 
 void KeyMap::setDefaultBindings()
@@ -37,30 +38,67 @@ bool KeyMap::contains(Qt::Key key)
     return m_keys.contains(key);
 }
 
-void KeyMap::resetKeyStatus()
+void KeyMap::resetStatus()
 {
     for (auto [key, value] : m_keyStatus.asKeyValueRange())
     {
         value->m_released = false;
     }
+
+    if (m_mouseStatus->m_held)
+    {
+        m_mouseStatus->m_framesHeld++;
+    }
+    else
+    {
+        m_mouseStatus->m_framesHeld = 0;
+    }
+    m_mouseStatus->m_released = false;
 }
 
-void KeyMap::setHeld(GLOBAL::Action action, bool value)
+void KeyMap::keyHeld(GLOBAL::Action action)
 {
-    m_keyStatus[action]->m_held = value;
+    m_keyStatus[action]->m_held = true;
 }
 
-void KeyMap::setReleased(GLOBAL::Action action, bool value)
+void KeyMap::keyReleased(GLOBAL::Action action)
 {
-    m_keyStatus[action]->m_released = value;
+    m_keyStatus[action]->m_released = true;
+    m_keyStatus[action]->m_held = false;
 }
 
-bool KeyMap::getHeldStatus(GLOBAL::Action action)
+bool KeyMap::keyHeldStatus(GLOBAL::Action action)
 {
     return m_keyStatus[action]->m_held;
 }
 
-bool KeyMap::getReleasedStatus(GLOBAL::Action action)
+bool KeyMap::keyReleasedStatus(GLOBAL::Action action)
 {
     return m_keyStatus[action]->m_released;
+}
+
+void KeyMap::mouseHeld()
+{
+    m_mouseStatus->m_held= true;
+}
+
+void KeyMap::mouseReleased()
+{
+    m_mouseStatus->m_held = false;
+    m_mouseStatus->m_released = true;
+}
+
+bool KeyMap::mouseHeldStatus()
+{
+    return m_mouseStatus->m_held;
+}
+
+bool KeyMap::mouseReleasedStatus()
+{
+    return m_mouseStatus->m_released;
+}
+
+int KeyMap::mouseFramesHeld()
+{
+    return m_mouseStatus->m_framesHeld;
 }

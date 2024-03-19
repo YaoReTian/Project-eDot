@@ -7,6 +7,7 @@
 #include "database.h"
 #include "sprite.h"
 #include "movingsprite.h"
+#include "keymap.h"
 
 class Tilemap
 {
@@ -19,7 +20,7 @@ public:
     int getMapSizeX();
     int getMapSizeY();
 
-    void update(int deltatime);
+    void update(int deltatime, QGraphicsItem* activeCharacter, QGraphicsScene &scene, KeyMap * keys);
     void generateTiles(QGraphicsScene &scene);
     void generateSprites(QGraphicsScene &scene);
 

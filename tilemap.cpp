@@ -60,17 +60,31 @@ int Tilemap::getMapSizeY()
     return m_mapSizeY;
 }
 
-void Tilemap::update(int deltatime)
+void Tilemap::update(int deltatime, QGraphicsItem* activeCharacter, QGraphicsScene &scene, KeyMap * keys)
 {
     for (const auto &s : m_sprites)
     {
         s->setAction(GLOBAL::NONE);
-        s->update(deltatime);
+        if (s->isInteractable())
+        {
+            s->update(deltatime, scene, activeCharacter, keys);
+        }
+        else
+        {
+            s->update(deltatime);
+        }
     }
     for (const auto &s : m_movingSprites)
     {
-        s->move(deltatime, GLOBAL::MOVE_LEFT);
-        s->update(deltatime);
+        s->setAction(deltatime, GLOBAL::NONE);
+        if (s->isInteractable())
+        {
+            s->update(deltatime, scene, activeCharacter, keys);
+        }
+        else
+        {
+            s->update(deltatime);
+        }
     }
     for (const auto &t : m_tiles)
     {
@@ -116,12 +130,12 @@ void Tilemap::generateSprites(QGraphicsScene &scene)
 {
     for (const auto &n : m_sprites)
     {
-        n->update(0);
+        n->update(0, scene);
         scene.addItem(n);
     }
     for (const auto &n : m_movingSprites)
     {
-        n->update(0);
+        n->update(0, scene);
         scene.addItem(n);
     }
 }

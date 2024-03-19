@@ -8,7 +8,7 @@ class MovingSprite : public Sprite
 {
 public:
     MovingSprite();
-    void move(int deltatime, GLOBAL::Action action = GLOBAL::NONE);
+    void setAction(int deltatime, GLOBAL::Action action = GLOBAL::NONE);
 private:
     bool m_sprinting;
     const float m_WALK_SPEED = 1.3f/1000.0f;

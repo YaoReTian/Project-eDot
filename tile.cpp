@@ -53,11 +53,11 @@ void Tile::update()
 
     QList<QGraphicsItem*> list = collidingItems();
 
-    for (auto n : list)
+    if (m_solid)
     {
-        if (typeid(*n) == typeid(MovingSprite))
+        for (auto n : list)
         {
-            blockSprite(n);
+            if (typeid(*n) == typeid(MovingSprite)) blockSprite(n);
         }
     }
 }

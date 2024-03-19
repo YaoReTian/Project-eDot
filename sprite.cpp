@@ -1,6 +1,5 @@
 #include "sprite.h"
 #include "global.h"
-#include "tile.h"
 
 Sprite::Sprite(QGraphicsItem * parent) : QObject(), QGraphicsPixmapItem(parent)
 {
@@ -54,8 +53,12 @@ void Sprite::setFrameSize(QSize frameSize)
 void Sprite::setInteraction(QString text, QString dialogue)
 {
     m_interactable = true;
-    m_interactText = text;
+    m_interactText = (text == "") ? m_name : text;
     m_interactDialogue = dialogue;
+    m_buttonRendered = false;
+
+    m_button = new Button;
+    m_button->setText(m_interactText);
 }
 
 void Sprite::addAnimationState(QString stateName, int startFrame, int endFrame, float frameTime)
@@ -119,10 +122,44 @@ void Sprite::update(int deltaTime)
     }
 }
 
+void Sprite::update(int deltaTime, QGraphicsScene &scene, QGraphicsItem* activeCharacter, KeyMap * keys)
+{
+    update(deltaTime);
+
+    if (m_interactable)
+    {
+        if (collidesWithItem(activeCharacter))
+        {
+            if (!m_buttonRendered && !m_button->isClicked())
+            {
+                m_button->render(scene);
+                m_buttonRendered = true;
+                m_button->setPos(x() + boundingRect().width() + 2 * GLOBAL::Scale, y());
+                m_button->setZValue(GLOBAL::UI_LAYER);
+            }
+            else
+            {
+                m_button->update(keys);
+            }
+        }
+        else if (m_buttonRendered)
+        {
+            m_button->removeFromScene(scene);
+            m_button->reset();
+            m_buttonRendered = false;
+        }
+    }
+}
+
 void Sprite::setAction(GLOBAL::Action action)
 {
     if (m_states[m_currentStateName]->transitions.contains(action))
     {
         m_currentStateName = m_states[m_currentStateName]->transitions[action];
     }
+}
+
+bool Sprite::isInteractable()
+{
+    return m_interactable;
 }

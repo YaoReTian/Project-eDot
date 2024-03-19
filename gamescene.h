@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 #include <QTimer>
 #include <QElapsedTimer>
+#include <QMouseEvent>
 
 #include "tilemap.h"
 #include "keymap.h"
@@ -32,6 +33,8 @@ protected:
     // Overridden functions
     virtual void keyPressEvent(QKeyEvent *event) override;
     virtual void keyReleaseEvent(QKeyEvent *event) override;
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 };
 
 #endif // GAMESCENE_H

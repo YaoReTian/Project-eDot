@@ -6,11 +6,11 @@ MovingSprite::MovingSprite() : Sprite()
     setType("MovingSprite");
 }
 
-void MovingSprite::move(int deltatime, GLOBAL::Action action)
+void MovingSprite::setAction(int deltatime, GLOBAL::Action action)
 {
     m_velocityX = 0;
     m_velocityY = 0;
-    setAction(action);
+    Sprite::setAction(action);
     if (action == GLOBAL::MOVE_LEFT)
     {
         m_velocityX = -(m_sprinting ? m_SPRINT_SPEED : m_WALK_SPEED) * deltatime * GLOBAL::ObjectLength;

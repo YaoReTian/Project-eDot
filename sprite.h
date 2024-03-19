@@ -5,6 +5,8 @@
 #include <QGraphicsScene>
 
 #include "global.h"
+#include "button.h"
+#include "keymap.h"
 
 struct AnimationState
 {
@@ -23,7 +25,11 @@ public:
     void setID(int ID);
     void setName(QString name);
     void setSpriteSheet(QString spriteSheet);
+
+    // Overloaded update functions
     void update(int deltaTime);
+    void update(int deltaTime, QGraphicsScene &scene, QGraphicsItem* activeCharacter = 0, KeyMap * keys = 0);
+
     void setAction(GLOBAL::Action action);
 
     int getID();
@@ -59,6 +65,9 @@ private:
     QPixmap m_spriteSheet;
     QMap<QString, AnimationState*> m_states;
 
+    // For interactions
+    Button * m_button;
+    bool m_buttonRendered;
 };
 
 #endif // SPRITE_H
