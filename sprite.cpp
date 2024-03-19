@@ -126,28 +126,27 @@ void Sprite::update(int deltaTime, QGraphicsScene &scene, QGraphicsItem* activeC
 {
     update(deltaTime);
 
-    if (m_interactable)
+    if (!m_interactable) return;
+
+    if (collidesWithItem(activeCharacter))
     {
-        if (collidesWithItem(activeCharacter))
+        if (!m_buttonRendered && !m_button->isClicked())
         {
-            if (!m_buttonRendered && !m_button->isClicked())
-            {
-                m_button->render(scene);
-                m_buttonRendered = true;
-                m_button->setPos(x() + boundingRect().width() + 2 * GLOBAL::Scale, y());
-                m_button->setZValue(GLOBAL::UI_LAYER);
-            }
-            else
-            {
-                m_button->update(keys);
-            }
+            m_button->render(scene);
+            m_buttonRendered = true;
+            m_button->setPos(x() + boundingRect().width() + 2 * GLOBAL::Scale, y());
+            m_button->setZValue(GLOBAL::UI_LAYER);
         }
-        else if (m_buttonRendered)
+        else
         {
-            m_button->removeFromScene(scene);
-            m_button->reset();
-            m_buttonRendered = false;
+            m_button->update(keys);
         }
+    }
+    else if (m_buttonRendered)
+    {
+        m_button->removeFromScene(scene);
+        m_button->reset();
+        m_buttonRendered = false;
     }
 }
 
