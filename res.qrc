@@ -9,6 +9,8 @@
         <file>res/test_tile_2.png</file>
     </qresource>
     <qresource prefix="/image/UI">
-        <file>res/Button.png</file>
+        <file>res/PopupButtonDefault.png</file>
+        <file>res/PopupButtonClicked.png</file>
+        <file>res/PopupButtonHover.png</file>
     </qresource>
 </RCC>

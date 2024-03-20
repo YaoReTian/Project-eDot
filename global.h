@@ -28,6 +28,7 @@ enum Action
     MOVE_UP,
     MOVE_DOWN,
     SPRINT,
+    WALK,
     NONE
 };
 

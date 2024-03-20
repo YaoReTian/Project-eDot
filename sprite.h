@@ -43,6 +43,7 @@ public:
     void addAnimationState(QString stateName, int startFrame, int endFrame, float frameTime);
     void addTransition(QString startStateName, GLOBAL::Action triggerAction, QString endStateName);
 
+    // For interactions with the player
     bool isInteractable();
 
 protected:

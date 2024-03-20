@@ -135,6 +135,7 @@ void Tilemap::generateSprites(QGraphicsScene &scene)
     }
     for (const auto &n : m_movingSprites)
     {
+        n->setDefaultToWalk();
         n->update(0, scene);
         scene.addItem(n);
     }

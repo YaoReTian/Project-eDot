@@ -1,7 +1,6 @@
 #include "button.h"
 
 #include <QFont>
-#include <QPixmap>
 
 #include "global.h"
 
@@ -13,17 +12,22 @@ Button::Button(QGraphicsItem* parent) : QObject(), QGraphicsPixmapItem(parent)
     font.setBold(true);
     m_textBox->setFont(font);
 
-    QPixmap buttonPixmap;
-    buttonPixmap.load(":/image/UI/res/Button.png");
-    setPixmap(buttonPixmap.scaled(buttonPixmap.width() * GLOBAL::Scale,
-                                  buttonPixmap.height() * GLOBAL::Scale));
+    m_defaultPixmap.load(":/image/UI/res/PopupButtonDefault.png");
+    m_clickedPixmap.load(":/image/UI/res/PopupButtonClicked.png");
+    m_hoverPixmap.load(":/image/UI/res/PopupButtonHover.png");
+
+    setPixmap(m_defaultPixmap.scaled(m_defaultPixmap.width() * GLOBAL::Scale,
+                                     m_defaultPixmap.height() * GLOBAL::Scale));
     m_textBox->setTextWidth(boundingRect().width()/2);
 
     m_clicked = false;
 }
 
-void Button::update(KeyMap * keys)
+void Button::update(int deltatime, KeyMap * keys)
 {
+
+
+    // Check clicked
     if (isUnderMouse() && keys->mouseHeldStatus() && keys->mouseFramesHeld() == 1)
     {
         m_clicked = true;
@@ -31,6 +35,28 @@ void Button::update(KeyMap * keys)
     else if (m_clicked && !keys->mouseHeldStatus())
     {
         m_clicked = false;
+        m_elapsedTime = 0;
+    }
+    else if (m_clicked && keys->mouseHeldStatus())
+    {
+        m_elapsedTime += deltatime;
+    }
+
+    // Render according to status
+    if (m_clicked)
+    {
+        setPixmap(m_clickedPixmap.scaled(m_defaultPixmap.width() * GLOBAL::Scale,
+                                             m_defaultPixmap.height() * GLOBAL::Scale));
+    }
+    else if (isUnderMouse())
+    {
+        setPixmap(m_hoverPixmap.scaled(m_defaultPixmap.width() * GLOBAL::Scale,
+                                       m_defaultPixmap.height() * GLOBAL::Scale));
+    }
+    else if (!isUnderMouse())
+    {
+        setPixmap(m_defaultPixmap.scaled(m_defaultPixmap.width() * GLOBAL::Scale,
+                                         m_defaultPixmap.height() * GLOBAL::Scale));
     }
 }
 

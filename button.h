@@ -4,6 +4,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsTextItem>
 #include <QGraphicsScene>
+#include <QPixmap>
 #include "keymap.h"
 
 class Button : public QObject, public QGraphicsPixmapItem
@@ -12,7 +13,7 @@ class Button : public QObject, public QGraphicsPixmapItem
 public:
     Button(QGraphicsItem* parent = 0);
 
-    void update(KeyMap * keys);
+    void update(int deltatime, KeyMap * keys);
     void reset();
     void setText(QString text);
     void render(QGraphicsScene &scene);
@@ -24,6 +25,11 @@ public:
 private:
     QGraphicsTextItem* m_textBox;
     bool m_clicked;
+
+    int m_elapsedTime;
+    QPixmap m_defaultPixmap;
+    QPixmap m_hoverPixmap;
+    QPixmap m_clickedPixmap;
 };
 
 #endif // BUTTON_H

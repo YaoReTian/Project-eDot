@@ -2,7 +2,8 @@
 
 MovingSprite::MovingSprite() : Sprite()
 {
-    m_sprinting = false;
+    m_defaultSpeed = m_RUN_SPEED;
+    m_currentSpeed = m_defaultSpeed;
     setType("MovingSprite");
 }
 
@@ -13,19 +14,39 @@ void MovingSprite::setAction(int deltatime, GLOBAL::Action action)
     Sprite::setAction(action);
     if (action == GLOBAL::MOVE_LEFT)
     {
-        m_velocityX = -(m_sprinting ? m_SPRINT_SPEED : m_WALK_SPEED) * deltatime * GLOBAL::ObjectLength;
+        m_velocityX = -m_currentSpeed * deltatime * GLOBAL::ObjectLength;
     }
-    if (action == GLOBAL::MOVE_RIGHT)
+    else if (action == GLOBAL::MOVE_RIGHT)
     {
-        m_velocityX = (m_sprinting ? m_SPRINT_SPEED : m_WALK_SPEED) * deltatime * GLOBAL::ObjectLength;
+        m_velocityX = m_currentSpeed * deltatime * GLOBAL::ObjectLength;
     }
-    if (action == GLOBAL::MOVE_UP)
+    else if (action == GLOBAL::MOVE_UP)
     {
-        m_velocityY = -(m_sprinting ? m_SPRINT_SPEED : m_WALK_SPEED) * deltatime * GLOBAL::ObjectLength;
+        m_velocityY = -m_currentSpeed * deltatime * GLOBAL::ObjectLength;
     }
-    if (action == GLOBAL::MOVE_DOWN)
+    else if (action == GLOBAL::MOVE_DOWN)
     {
-        m_velocityY = (m_sprinting ? m_SPRINT_SPEED : m_WALK_SPEED) * deltatime * GLOBAL::ObjectLength;
+        m_velocityY = m_currentSpeed * deltatime * GLOBAL::ObjectLength;
+    }
+    else if (action == GLOBAL::SPRINT)
+    {
+        m_currentSpeed = (m_currentSpeed == m_SPRINT_SPEED) ? m_defaultSpeed : m_SPRINT_SPEED;
+    }
+    else if (action == GLOBAL::WALK)
+    {
+        m_currentSpeed = (m_currentSpeed == m_WALK_SPEED) ? m_defaultSpeed : m_SPRINT_SPEED;
     }
     setPos((pos().x()+m_velocityX), (pos().y()+m_velocityY));
+}
+
+void MovingSprite::setDefaultToWalk()
+{
+    m_defaultSpeed = m_WALK_SPEED;
+    m_currentSpeed = m_defaultSpeed;
+}
+
+void MovingSprite::setDefaultToRun()
+{
+    m_defaultSpeed = m_RUN_SPEED;
+    m_currentSpeed = m_defaultSpeed;
 }

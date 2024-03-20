@@ -139,7 +139,8 @@ void Sprite::update(int deltaTime, QGraphicsScene &scene, QGraphicsItem* activeC
         }
         else
         {
-            m_button->update(keys);
+            m_button->setPos(x() + boundingRect().width() + 2 * GLOBAL::Scale, y());
+            m_button->update(deltaTime, keys);
         }
     }
     else if (m_buttonRendered)
