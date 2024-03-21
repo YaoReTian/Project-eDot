@@ -11,6 +11,6 @@
     <qresource prefix="/image/UI">
         <file>res/PopupButtonDefault.png</file>
         <file>res/PopupButtonClicked.png</file>
-        <file>res/PopupButtonHover.png</file>
+        <file>res/PopupButtonFocused.png</file>
     </qresource>
 </RCC>

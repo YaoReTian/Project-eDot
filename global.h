@@ -18,8 +18,7 @@ const int TILE_LAYER        = 10;
 const int SPRITE_LAYER      = 15;
 const int PARTICLE_LAYER    = 40;
 const int UI_LAYER          = 50;
-
-const int FONT_SIZE         = 5 * Scale;
+const int RENDER_LAYER      = 60;
 
 enum Action
 {
@@ -29,6 +28,7 @@ enum Action
     MOVE_DOWN,
     SPRINT,
     WALK,
+    SELECT,
     NONE
 };
 

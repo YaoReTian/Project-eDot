@@ -158,6 +158,7 @@ void Sprite::update(int deltaTime, UserInterface* UI, QGraphicsItem* activeChara
 
 void Sprite::setAction(GLOBAL::Action action)
 {
+    if (m_interactable && m_button->isClicked()) action = GLOBAL::NONE;
     if (m_states[m_currentStateName]->transitions.contains(action))
     {
         m_currentStateName = m_states[m_currentStateName]->transitions[action];

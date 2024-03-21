@@ -30,6 +30,7 @@ void UserInterface::addPopupInteraction(int SpriteID, Button * button, QString i
 void UserInterface::renderPopupInteraction(int SpriteID)
 {
     m_popupInteractions[SpriteID]->m_button->render(*m_scene);
+    m_popupInteractions[SpriteID]->m_button->setFocused();
     m_popupInteractions[SpriteID]->m_rendered = true;
 }
 

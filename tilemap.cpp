@@ -77,7 +77,7 @@ void Tilemap::update(int deltatime, UserInterface* UI, QGraphicsItem* activeChar
     }
     for (const auto &s : m_movingSprites)
     {
-        s->setAction(deltatime, GLOBAL::NONE);
+        s->setAction(deltatime, GLOBAL::MOVE_LEFT);
         if (s->isInteractable())
         {
             s->update(deltatime, UI, activeCharacter);

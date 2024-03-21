@@ -1,4 +1,5 @@
 #include "keymap.h"
+#include "qdebug.h"
 
 #include <QtGlobal>
 
@@ -14,13 +15,11 @@ KeyMap::KeyMap()
 void KeyMap::setDefaultBindings()
 {
     m_keys[Qt::Key_A]       = GLOBAL::MOVE_LEFT;
-    m_keys[Qt::Key_Left]    = GLOBAL::MOVE_LEFT;
     m_keys[Qt::Key_D]       = GLOBAL::MOVE_RIGHT;
-    m_keys[Qt::Key_Right]   = GLOBAL::MOVE_RIGHT;
     m_keys[Qt::Key_W]       = GLOBAL::MOVE_UP;
-    m_keys[Qt::Key_Up]      = GLOBAL::MOVE_UP;
     m_keys[Qt::Key_S]       = GLOBAL::MOVE_DOWN;
-    m_keys[Qt::Key_Down]    = GLOBAL::MOVE_DOWN;
+    m_keys[Qt::Key_Q]       = GLOBAL::SPRINT;
+    m_keys[Qt::Key_F]       = GLOBAL::SELECT;
 }
 
 void KeyMap::setBinding(Qt::Key key, GLOBAL::Action action)

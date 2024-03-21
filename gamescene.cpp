@@ -14,17 +14,17 @@ GameScene::GameScene(QObject *parent) :
     m_db = new Database;
     m_UI = new UserInterface(this);
     m_keymap = new KeyMap;
-
     m_tilemap = new Tilemap(m_db, m_UI);
     m_player = new Player(m_db);
 
     // Add functionality
     m_keymap->setDefaultBindings();
     m_tilemap->setMap(1);
+    m_player->activeCharacter()->setPos(0,0);
+
+    addItem(m_player->activeCharacter());
     m_tilemap->generateTiles(*this);
     m_tilemap->generateSprites(*this);
-    m_player->activeCharacter()->setPos(0,0);
-    addItem(m_player->activeCharacter());
 
     // Timer to handle game loop
     connect(&m_timer, &QTimer::timeout, this, &GameScene::loop);
