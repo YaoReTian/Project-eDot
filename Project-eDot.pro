@@ -20,6 +20,7 @@ SOURCES += \
     sprite.cpp \
     tile.cpp \
     tilemap.cpp \
+    userinterface.cpp \
     view.cpp
 
 HEADERS += \
@@ -34,6 +35,7 @@ HEADERS += \
     sprite.h \
     tile.h \
     tilemap.h \
+    userinterface.h \
     view.h
 
 FORMS +=

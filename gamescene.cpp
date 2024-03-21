@@ -12,8 +12,10 @@ GameScene::GameScene(QObject *parent) :
 {
     // Instantiate objects
     m_db = new Database;
-    m_tilemap = new Tilemap(m_db);
-    m_keymap = new KeyMap();
+    m_UI = new UserInterface(this);
+    m_keymap = new KeyMap;
+
+    m_tilemap = new Tilemap(m_db, m_UI);
     m_player = new Player(m_db);
 
     // Add functionality
@@ -34,8 +36,9 @@ void GameScene::loop()
 {
     m_deltaTime = m_elapsedTimer.elapsed();
     m_elapsedTimer.restart();
-    m_tilemap->update(m_deltaTime, m_player->activeCharacter(), *this, m_keymap);
+    m_tilemap->update(m_deltaTime, m_UI, m_player->activeCharacter());
     m_player->update(m_deltaTime, m_keymap);
+    m_UI->update(m_deltaTime, m_keymap, m_player->activeCharacter());
 
     // Reset mouse and key status
     m_keymap->resetStatus();

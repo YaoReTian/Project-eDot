@@ -7,12 +7,12 @@
 #include "database.h"
 #include "sprite.h"
 #include "movingsprite.h"
-#include "keymap.h"
+#include "userinterface.h"
 
 class Tilemap
 {
 public:
-    Tilemap(Database* db);
+    Tilemap(Database* db, UserInterface* UI);
     ~Tilemap();
     void setMap(int MapID);
     QString getMapName();
@@ -20,7 +20,7 @@ public:
     int getMapSizeX();
     int getMapSizeY();
 
-    void update(int deltatime, QGraphicsItem* activeCharacter, QGraphicsScene &scene, KeyMap * keys);
+    void update(int deltatime, UserInterface* UI, QGraphicsItem* activeCharacter);
     void generateTiles(QGraphicsScene &scene);
     void generateSprites(QGraphicsScene &scene);
 
@@ -43,6 +43,9 @@ private:
     QString m_mapDesc;
     int m_mapSizeX;
     int m_mapSizeY;
+
+    // User interface
+    UserInterface * m_UI;
 };
 
 #endif // MAP_H

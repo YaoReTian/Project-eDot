@@ -6,7 +6,7 @@
 
 #include "global.h"
 #include "button.h"
-#include "keymap.h"
+#include "userinterface.h"
 
 struct AnimationState
 {
@@ -28,13 +28,15 @@ public:
 
     // Overloaded update functions
     void update(int deltaTime);
-    void update(int deltaTime, QGraphicsScene &scene, QGraphicsItem* activeCharacter = 0, KeyMap * keys = 0);
+    void update(int deltaTime, UserInterface* UI, QGraphicsItem* activeCharacter);
 
     void setAction(GLOBAL::Action action);
 
     int getID();
     QString getName();
     QString getType();
+    Button* getButton();
+    QString getDialogue();
 
     // For animations
     void setSpriteSheet(QPixmap spriteSheet);
@@ -45,6 +47,7 @@ public:
 
     // For interactions with the player
     bool isInteractable();
+    bool isInteractingWithPlayer();
 
 protected:
     void setType(QString type);
@@ -68,7 +71,7 @@ private:
 
     // For interactions
     Button * m_button;
-    bool m_buttonRendered;
+    bool m_interactingWithPlayer;
 };
 
 #endif // SPRITE_H

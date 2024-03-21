@@ -25,8 +25,6 @@ Button::Button(QGraphicsItem* parent) : QObject(), QGraphicsPixmapItem(parent)
 
 void Button::update(int deltatime, KeyMap * keys)
 {
-
-
     // Check clicked
     if (isUnderMouse() && keys->mouseHeldStatus() && keys->mouseFramesHeld() == 1)
     {
@@ -75,6 +73,8 @@ void Button::setPos(qreal x, qreal y)
 {
     QGraphicsPixmapItem::setPos(x, y);
     m_textBox->setPos(x + 2 * GLOBAL::Scale, y + boundingRect().height()/2 - m_textBox->boundingRect().height()/2);
+    setZValue(GLOBAL::UI_LAYER + y);
+    m_textBox->setZValue(zValue() + 1);
 }
 
 void Button::render(QGraphicsScene &scene)

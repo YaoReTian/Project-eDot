@@ -50,11 +50,9 @@ QString Tile::getDescription()
 
 void Tile::update()
 {
-
-    QList<QGraphicsItem*> list = collidingItems();
-
     if (m_solid)
     {
+        QList<QGraphicsItem*> list = collidingItems();
         for (auto n : list)
         {
             if (typeid(*n) == typeid(MovingSprite)) blockSprite(n);

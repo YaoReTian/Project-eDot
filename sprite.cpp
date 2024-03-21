@@ -8,7 +8,8 @@ Sprite::Sprite(QGraphicsItem * parent) : QObject(), QGraphicsPixmapItem(parent)
     m_currentFrame = 0;
     m_interactable = false;
     m_type = "Sprite";
-    setZValue(GLOBAL::TILE_LAYER);
+    setZValue(GLOBAL::SPRITE_LAYER + y());
+    m_interactingWithPlayer = false;
 }
 
 void Sprite::setID(int ID)
@@ -40,6 +41,17 @@ QString Sprite::getType()
 {
     return m_type;
 }
+
+Button* Sprite::getButton()
+{
+    return m_button;
+}
+
+QString Sprite::getDialogue()
+{
+    return m_interactDialogue;
+}
+
 void Sprite::setSpriteSheet(QPixmap spriteSheet)
 {
     m_spriteSheet = spriteSheet;
@@ -55,7 +67,6 @@ void Sprite::setInteraction(QString text, QString dialogue)
     m_interactable = true;
     m_interactText = (text == "") ? m_name : text;
     m_interactDialogue = dialogue;
-    m_buttonRendered = false;
 
     m_button = new Button;
     m_button->setText(m_interactText);
@@ -122,33 +133,27 @@ void Sprite::update(int deltaTime)
     }
 }
 
-void Sprite::update(int deltaTime, QGraphicsScene &scene, QGraphicsItem* activeCharacter, KeyMap * keys)
+void Sprite::update(int deltaTime, UserInterface* UI, QGraphicsItem* activeCharacter)
 {
     update(deltaTime);
 
-    if (!m_interactable) return;
-
     if (collidesWithItem(activeCharacter))
     {
-        if (!m_buttonRendered && !m_button->isClicked())
+        if (!UI->popupRendered(m_SpriteID))
         {
-            m_button->render(scene);
-            m_buttonRendered = true;
-            m_button->setPos(x() + boundingRect().width() + 2 * GLOBAL::Scale, y());
-            m_button->setZValue(GLOBAL::UI_LAYER);
+            UI->renderPopupInteraction(m_SpriteID);
         }
-        else
+        else if (UI->popupClicked(m_SpriteID))
         {
-            m_button->setPos(x() + boundingRect().width() + 2 * GLOBAL::Scale, y());
-            m_button->update(deltaTime, keys);
+            m_interactingWithPlayer = true;
         }
     }
-    else if (m_buttonRendered)
+    else if (UI->popupRendered(m_SpriteID))
     {
-        m_button->removeFromScene(scene);
-        m_button->reset();
-        m_buttonRendered = false;
+        UI->removePopupInteractionFromScene(m_SpriteID);
     }
+
+
 }
 
 void Sprite::setAction(GLOBAL::Action action)
@@ -156,10 +161,16 @@ void Sprite::setAction(GLOBAL::Action action)
     if (m_states[m_currentStateName]->transitions.contains(action))
     {
         m_currentStateName = m_states[m_currentStateName]->transitions[action];
+        m_currentFrame = 0;
     }
 }
 
 bool Sprite::isInteractable()
 {
     return m_interactable;
+}
+
+bool Sprite::isInteractingWithPlayer()
+{
+    return m_interactingWithPlayer;
 }

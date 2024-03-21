@@ -9,9 +9,10 @@
 #include "movingsprite.h"
 
 // Public methods
-Tilemap::Tilemap(Database* db)
+Tilemap::Tilemap(Database* db, UserInterface * UI)
 {
     m_db = db;
+    m_UI = UI;
 }
 
 Tilemap::~Tilemap()
@@ -60,14 +61,14 @@ int Tilemap::getMapSizeY()
     return m_mapSizeY;
 }
 
-void Tilemap::update(int deltatime, QGraphicsItem* activeCharacter, QGraphicsScene &scene, KeyMap * keys)
+void Tilemap::update(int deltatime, UserInterface* UI, QGraphicsItem* activeCharacter)
 {
     for (const auto &s : m_sprites)
     {
         s->setAction(GLOBAL::NONE);
         if (s->isInteractable())
         {
-            s->update(deltatime, scene, activeCharacter, keys);
+            s->update(deltatime, UI, activeCharacter);
         }
         else
         {
@@ -79,7 +80,7 @@ void Tilemap::update(int deltatime, QGraphicsItem* activeCharacter, QGraphicsSce
         s->setAction(deltatime, GLOBAL::NONE);
         if (s->isInteractable())
         {
-            s->update(deltatime, scene, activeCharacter, keys);
+            s->update(deltatime, UI, activeCharacter);
         }
         else
         {
@@ -108,6 +109,19 @@ void Tilemap::setSprites()
 {
     m_sprites = m_db->getWorldSprites(m_mapID);
     m_movingSprites = m_db->getMovingSpritesFromMap(m_mapID);
+
+    for (const auto s : m_sprites)
+    {
+        m_UI->addPopupInteraction(s->getID(),
+                                  s->getButton(),
+                                  s->getDialogue());
+    }
+    for (const auto s : m_movingSprites)
+    {
+        m_UI->addPopupInteraction(s->getID(),
+                                  s->getButton(),
+                                  s->getDialogue());
+    }
 }
 
 void Tilemap::generateTiles(QGraphicsScene &scene)
@@ -130,13 +144,14 @@ void Tilemap::generateSprites(QGraphicsScene &scene)
 {
     for (const auto &n : m_sprites)
     {
-        n->update(0, scene);
+        n->update(0);
+
         scene.addItem(n);
     }
     for (const auto &n : m_movingSprites)
     {
         n->setDefaultToWalk();
-        n->update(0, scene);
+        n->update(0);
         scene.addItem(n);
     }
 }

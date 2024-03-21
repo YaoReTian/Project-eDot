@@ -11,6 +11,8 @@ void MovingSprite::setAction(int deltatime, GLOBAL::Action action)
 {
     m_velocityX = 0;
     m_velocityY = 0;
+    if (isInteractingWithPlayer()) action = GLOBAL::NONE;
+
     Sprite::setAction(action);
     if (action == GLOBAL::MOVE_LEFT)
     {
@@ -37,6 +39,7 @@ void MovingSprite::setAction(int deltatime, GLOBAL::Action action)
         m_currentSpeed = (m_currentSpeed == m_WALK_SPEED) ? m_defaultSpeed : m_SPRINT_SPEED;
     }
     setPos((pos().x()+m_velocityX), (pos().y()+m_velocityY));
+    setZValue(GLOBAL::SPRITE_LAYER + y());
 }
 
 void MovingSprite::setDefaultToWalk()

@@ -10,6 +10,7 @@
 #include "keymap.h"
 #include "database.h"
 #include "player.h"
+#include "userinterface.h"
 
 class GameScene : public QGraphicsScene
 {
@@ -26,6 +27,7 @@ private:
     KeyMap *m_keymap;
     Database *m_db;
     Player *m_player;
+    UserInterface *m_UI;
     QElapsedTimer m_elapsedTimer;
     float m_deltaTime = 0.0f;
 
