@@ -10,6 +10,7 @@ Sprite::Sprite(QGraphicsItem * parent) : QObject(), QGraphicsPixmapItem(parent)
     m_type = "Sprite";
     setZValue(GLOBAL::SPRITE_LAYER + y());
     m_interactingWithPlayer = false;
+    m_identifier = NULL;
 }
 
 void Sprite::setID(int ID)
@@ -25,6 +26,11 @@ void Sprite::setName(QString name)
 void Sprite::setType(QString type)
 {
     m_type = type;
+}
+
+void Sprite::createIdentifier()
+{
+    m_identifier = QString("%1%2%3").arg(m_SpriteID).arg(x()).arg(y());
 }
 
 int Sprite::getID()
@@ -50,6 +56,11 @@ Button* Sprite::getButton()
 QString Sprite::getDialogue()
 {
     return m_interactDialogue;
+}
+
+QString Sprite::getIdentifier()
+{
+    return m_identifier;
 }
 
 void Sprite::setSpriteSheet(QPixmap spriteSheet)
@@ -135,30 +146,29 @@ void Sprite::update(int deltaTime)
 
 void Sprite::update(int deltaTime, UserInterface* UI, QGraphicsItem* activeCharacter)
 {
-    update(deltaTime);
-
     if (collidesWithItem(activeCharacter))
     {
-        if (!UI->popupRendered(m_SpriteID))
-        {
-            UI->renderPopupInteraction(m_SpriteID);
-        }
-        else if (UI->popupClicked(m_SpriteID))
+        if (UI->popupTriggered(m_identifier))
         {
             m_interactingWithPlayer = true;
         }
+        if (!UI->popupRendered(m_identifier) && !m_interactingWithPlayer)
+        {
+            m_button->reset();
+            UI->renderPopupInteraction(m_identifier);
+        }
     }
-    else if (UI->popupRendered(m_SpriteID))
+    else if (UI->popupRendered(m_identifier))
     {
-        UI->removePopupInteractionFromScene(m_SpriteID);
+        UI->removePopupInteractionFromScene(m_identifier);
     }
 
-
+    update(deltaTime);
 }
 
 void Sprite::setAction(GLOBAL::Action action)
 {
-    if (m_interactable && m_button->isClicked()) action = GLOBAL::NONE;
+    if (m_interactable && m_button->isTriggered()) action = GLOBAL::NONE;
     if (m_states[m_currentStateName]->transitions.contains(action))
     {
         m_currentStateName = m_states[m_currentStateName]->transitions[action];

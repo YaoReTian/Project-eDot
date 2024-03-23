@@ -13,7 +13,7 @@ class Button : public QObject, public QGraphicsPixmapItem
 public:
     Button(QGraphicsItem* parent = 0);
 
-    void update(int deltatime, KeyMap * keys);
+    void update(KeyMap * keys);
     void reset();
     void setText(QString text);
     void render(QGraphicsScene &scene);
@@ -21,16 +21,18 @@ public:
     void setPos(qreal x, qreal y);
     void setFocused();
     void removeFocus();
+    void setIconText(QString text);
 
-    bool isClicked();
+    bool isTriggered();
 
 private:
     QGraphicsTextItem* m_textBox;
     QGraphicsTextItem* m_iconText;
     bool m_clicked;
+    bool m_released;
     bool m_focused;
+    bool m_mouseMode;
 
-    int m_elapsedTime;
     QPixmap m_defaultPixmap;
     QPixmap m_focusedPixmap;
     QPixmap m_clickedPixmap;

@@ -38,7 +38,7 @@ void GameScene::loop()
     m_elapsedTimer.restart();
     m_tilemap->update(m_deltaTime, m_UI, m_player->activeCharacter());
     m_player->update(m_deltaTime, m_keymap);
-    m_UI->update(m_deltaTime, m_keymap, m_player->activeCharacter());
+    m_UI->update(m_keymap, m_player->activeCharacter());
 
     // Reset mouse and key status
     m_keymap->resetStatus();

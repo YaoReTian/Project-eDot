@@ -77,7 +77,7 @@ void Tilemap::update(int deltatime, UserInterface* UI, QGraphicsItem* activeChar
     }
     for (const auto &s : m_movingSprites)
     {
-        s->setAction(deltatime, GLOBAL::MOVE_LEFT);
+        s->setAction(deltatime, GLOBAL::NONE);
         if (s->isInteractable())
         {
             s->update(deltatime, UI, activeCharacter);
@@ -112,13 +112,13 @@ void Tilemap::setSprites()
 
     for (const auto s : m_sprites)
     {
-        m_UI->addPopupInteraction(s->getID(),
+        m_UI->addPopupInteraction(s->getIdentifier(),
                                   s->getButton(),
                                   s->getDialogue());
     }
     for (const auto s : m_movingSprites)
     {
-        m_UI->addPopupInteraction(s->getID(),
+        m_UI->addPopupInteraction(s->getIdentifier(),
                                   s->getButton(),
                                   s->getDialogue());
     }

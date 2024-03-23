@@ -29,6 +29,7 @@ enum Action
     SPRINT,
     WALK,
     SELECT,
+    NEXT_OPTION,
     NONE
 };
 

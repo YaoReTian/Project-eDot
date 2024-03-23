@@ -70,8 +70,8 @@ QList<Tile*> Database::getMapTiles(int MapID)
 QList<Sprite*> Database::getWorldSprites(int MapID)
 {
     QSqlQuery query(QString("SELECT Sprite.SpriteID, SpriteName, SpriteType, SpriteSizeX, SpriteSizeY, PathToSpriteSheet, Interactable, InteractText, InteractDialogue, PositionX, PositionY "
-                          "FROM SpriteInMap, Sprite "
-                          "WHERE (Sprite.SpriteID = SpriteInMap.SpriteID) AND (MapID = %1)  AND (SpriteType = 'WorldSprite') "
+                            "FROM SpriteInMap, Sprite "
+                            "WHERE (Sprite.SpriteID = SpriteInMap.SpriteID) AND (MapID = %1)  AND (SpriteType = 'WorldSprite') "
                             "ORDER BY PositionX ASC, PositionY ASC").arg(MapID));
     QSqlQuery animationQuery;
     QSqlQuery transitionQuery;
@@ -101,9 +101,9 @@ QList<Sprite*> Database::getWorldSprites(int MapID)
         animationQuery = getSpriteAnimations(sprites.back()->getID());
         while (animationQuery.next()) {
             sprites.back()->addAnimationState(animationQuery.value("StateName").toString(),
-                                                animationQuery.value("StartFrame").toInt(),
-                                                animationQuery.value("EndFrame").toInt(),
-                                                animationQuery.value("FrameTime").toFloat());
+                                              animationQuery.value("StartFrame").toInt(),
+                                              animationQuery.value("EndFrame").toInt(),
+                                              animationQuery.value("FrameTime").toFloat());
 
             transitionQuery = getSpriteTransitions(animationQuery.value("AnimationID").toInt());
             while (transitionQuery.next())
@@ -113,6 +113,7 @@ QList<Sprite*> Database::getWorldSprites(int MapID)
                                               transitionQuery.value("StateName").toString());
             }
         }
+        sprites.back()->createIdentifier();
     }
 
     return sprites;

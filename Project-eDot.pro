@@ -10,7 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     button.cpp \
-    combatsprite.cpp \
+    buttonmenu.cpp \
     database.cpp \
     gamescene.cpp \
     keymap.cpp \
@@ -25,7 +25,7 @@ SOURCES += \
 
 HEADERS += \
     button.h \
-    combatsprite.h \
+    buttonmenu.h \
     database.h \
     gamescene.h \
     global.h \

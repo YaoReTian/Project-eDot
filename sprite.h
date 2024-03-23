@@ -25,6 +25,7 @@ public:
     void setID(int ID);
     void setName(QString name);
     void setSpriteSheet(QString spriteSheet);
+    void createIdentifier();
 
     // Overloaded update functions
     void update(int deltaTime);
@@ -37,6 +38,7 @@ public:
     QString getType();
     Button* getButton();
     QString getDialogue();
+    QString getIdentifier();
 
     // For animations
     void setSpriteSheet(QPixmap spriteSheet);
@@ -55,6 +57,7 @@ protected:
 private:
     // Sprite data
     int m_SpriteID;
+    QString m_identifier;
     QString m_name;
     QString m_type;
     bool m_interactable;

@@ -15,7 +15,6 @@ Button::Button(QGraphicsItem* parent) : QObject(), QGraphicsPixmapItem(parent)
     m_textBox->setFont(font);
     font.setPointSize(8 * GLOBAL::Scale);
     m_iconText->setFont(font);
-    m_iconText->setPlainText("F");
 
     m_defaultPixmap.load(":/image/UI/res/PopupButtonDefault.png");
     m_clickedPixmap.load(":/image/UI/res/PopupButtonClicked.png");
@@ -29,31 +28,36 @@ Button::Button(QGraphicsItem* parent) : QObject(), QGraphicsPixmapItem(parent)
 
     m_clicked = false;
     m_focused = false;
+    m_mouseMode = true;
+    m_released = false;
 }
 
-void Button::update(int deltatime, KeyMap * keys)
+void Button::update(KeyMap * keys)
 {
-    // Check clicked
-    if ((isUnderMouse() && keys->mouseHeldStatus() && keys->mouseFramesHeld() == 1) ||
-        (keys->keyHeldStatus(GLOBAL::SELECT) && m_focused))
+    m_released = false;
+
+    // Check if focused
+    if (m_mouseMode && isUnderMouse())
+    {
+        m_focused = true;
+    }
+
+    // Check if clicked
+    if ((m_focused && ((m_mouseMode && keys->mouseHeldStatus() && keys->mouseFramesHeld() == 1) ||
+                       (keys->keyHeldStatus(GLOBAL::SELECT)))))
     {
         m_clicked = true;
     }
-    // Check clicked but then let go
-    else if (m_clicked && !keys->mouseHeldStatus())
+    // Check if keys are released
+    if (m_clicked && ((m_mouseMode && keys->mouseReleasedStatus() && isUnderMouse()) ||
+                      keys->keyReleasedStatus(GLOBAL::SELECT)))
+    {
+        m_released = true;
+        m_clicked = false;
+    }
+    else if (m_clicked && (m_mouseMode && keys->mouseReleasedStatus() && !isUnderMouse()))
     {
         m_clicked = false;
-        m_elapsedTime = 0;
-    }
-    // Check if button is held
-    else if (m_clicked && keys->mouseHeldStatus())
-    {
-        m_elapsedTime += deltatime;
-    }
-    // Check if focused
-    else if (isUnderMouse())
-    {
-        m_focused = true;
     }
 
     // Render according to status
@@ -64,11 +68,13 @@ void Button::update(int deltatime, KeyMap * keys)
     }
     else if (m_focused)
     {
+        if (!m_iconText->isVisible())   m_iconText->show();
         setPixmap(m_focusedPixmap.scaled(m_defaultPixmap.width() * GLOBAL::Scale,
                                        m_defaultPixmap.height() * GLOBAL::Scale));
     }
     else
     {
+        if (m_iconText->isVisible())    m_iconText->hide();
         setPixmap(m_defaultPixmap.scaled(m_defaultPixmap.width() * GLOBAL::Scale,
                                          m_defaultPixmap.height() * GLOBAL::Scale));
     }
@@ -77,11 +83,17 @@ void Button::update(int deltatime, KeyMap * keys)
 void Button::reset()
 {
     m_clicked = false;
+    m_released = false;
 }
 
 void Button::setText(QString text)
 {
     m_textBox->setPlainText(text);
+}
+
+void Button::setIconText(QString text)
+{
+    m_iconText->setPlainText(text);
 }
 
 void Button::setPos(qreal x, qreal y)
@@ -119,7 +131,7 @@ void Button::removeFromScene(QGraphicsScene &scene)
     scene.removeItem(m_iconText);
 }
 
-bool Button::isClicked()
+bool Button::isTriggered()
 {
-    return m_clicked;
+    return m_released;
 }

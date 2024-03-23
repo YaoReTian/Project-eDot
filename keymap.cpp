@@ -20,6 +20,7 @@ void KeyMap::setDefaultBindings()
     m_keys[Qt::Key_S]       = GLOBAL::MOVE_DOWN;
     m_keys[Qt::Key_Q]       = GLOBAL::SPRINT;
     m_keys[Qt::Key_F]       = GLOBAL::SELECT;
+    m_keys[Qt::Key_Tab]     = GLOBAL::NEXT_OPTION;
 }
 
 void KeyMap::setBinding(Qt::Key key, GLOBAL::Action action)
