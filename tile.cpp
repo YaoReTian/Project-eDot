@@ -78,7 +78,7 @@ void Tile::blockSprite(QGraphicsItem* item)
     }
 
     if (item->y() <= y() + boundingRect().height() &&
-        item_mid_y > y() + boundingRect().height())
+        item_mid_y + item->boundingRect().height() + 2*GLOBAL::Scale > y() + boundingRect().height())
     {
         south = true;
     }
@@ -119,7 +119,8 @@ void Tile::blockSprite(QGraphicsItem* item)
     }
     else if (south && east)
     {
-        if (abs(item_mid_y - (y() + boundingRect().height())) > abs(item_mid_x - (x() + boundingRect().width())))
+        if (abs(item_mid_y + item->boundingRect().height() + 2*GLOBAL::Scale - (y() + boundingRect().height())) >
+            abs(item_mid_x - (x() + boundingRect().width())))
         {
             east = false;
         }
@@ -130,7 +131,8 @@ void Tile::blockSprite(QGraphicsItem* item)
     }
     else if (south && west)
     {
-        if (abs(item_mid_y - (y() + boundingRect().height())) > abs(item_mid_x - (x())))
+        if (abs(item_mid_y + item->boundingRect().height() + 2*GLOBAL::Scale - (y() + boundingRect().height())) >
+            abs(item_mid_x - (x())))
         {
             west = false;
         }
@@ -146,7 +148,7 @@ void Tile::blockSprite(QGraphicsItem* item)
     }
     else if (south)
     {
-        item->setPos(item->x(), y() + boundingRect().height() + value);
+        item->setPos(item->x(), y() + boundingRect().height() + 2*GLOBAL::Scale - item->boundingRect().height() + value);
     }
     else if (east)
     {

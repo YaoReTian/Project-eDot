@@ -19,7 +19,7 @@ GameScene::GameScene(QObject *parent) :
 
     // Add functionality
     m_keymap->setDefaultBindings();
-    m_tilemap->setMap(1);
+    m_tilemap->setMap(2);
     m_player->activeCharacter()->setPos(0,0);
 
     addItem(m_player->activeCharacter());
