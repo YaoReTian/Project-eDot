@@ -5,7 +5,7 @@
 #include <QGraphicsPixmapItem>
 #include <QKeyEvent>
 
-#include "global.h"
+#include "Utils/global.h"
 
 GameScene::GameScene(QObject *parent) :
     QGraphicsScene(parent)

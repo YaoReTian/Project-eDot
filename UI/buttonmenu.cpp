@@ -38,7 +38,6 @@ void ButtonMenu::update(int deltatime, KeyMap* keys, QGraphicsScene &scene)
 
 void ButtonMenu::addButton(Button* button)
 {
-    qDebug() << "Button added";
     if (m_vertical)
     {
         button->setPos(m_x, m_rectSize.height() + 2 * GLOBAL::Scale);

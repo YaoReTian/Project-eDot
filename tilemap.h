@@ -5,9 +5,8 @@
 
 #include "tile.h"
 #include "database.h"
-#include "sprite.h"
-#include "movingsprite.h"
-#include "userinterface.h"
+#include "Entities/movingsprite.h"
+#include "UI/userinterface.h"
 
 class Tilemap
 {

@@ -7,10 +7,10 @@
 #include <QMouseEvent>
 
 #include "tilemap.h"
-#include "keymap.h"
+#include "Utils/keymap.h"
 #include "database.h"
-#include "player.h"
-#include "userinterface.h"
+#include "Entities/player.h"
+#include "UI/userinterface.h"
 
 class GameScene : public QGraphicsScene
 {

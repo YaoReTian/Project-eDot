@@ -1,5 +1,4 @@
 #include "sprite.h"
-#include "global.h"
 
 Sprite::Sprite(QGraphicsItem * parent) : QObject(), QGraphicsPixmapItem(parent)
 {

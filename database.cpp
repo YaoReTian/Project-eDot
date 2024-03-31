@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-#include "movingsprite.h"
+#include "Entities/movingsprite.h"
 
 Database::Database()
 {

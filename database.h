@@ -4,10 +4,9 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 
-#include "sprite.h"
 #include "tile.h"
-#include "movingsprite.h"
-#include "global.h"
+#include "Entities/movingsprite.h"
+#include "Utils/global.h"
 
 class Database
 {

@@ -4,9 +4,8 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 
-#include "global.h"
-#include "button.h"
-#include "userinterface.h"
+#include "../Utils/global.h"
+#include "../UI/userinterface.h"
 
 struct AnimationState
 {

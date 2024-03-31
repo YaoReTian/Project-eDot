@@ -9,33 +9,33 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    button.cpp \
-    buttonmenu.cpp \
+    UI/button.cpp \
+    UI/buttonmenu.cpp \
+    UI/userinterface.cpp \
     database.cpp \
     gamescene.cpp \
-    keymap.cpp \
+    Utils/keymap.cpp \
     main.cpp \
-    movingsprite.cpp \
-    player.cpp \
-    sprite.cpp \
+    Entities/movingsprite.cpp \
+    Entities/player.cpp \
+    Entities/sprite.cpp \
     tile.cpp \
     tilemap.cpp \
-    userinterface.cpp \
     view.cpp
 
 HEADERS += \
-    button.h \
-    buttonmenu.h \
+    UI/button.h \
+    UI/buttonmenu.h \
+    UI/userinterface.h \
     database.h \
     gamescene.h \
-    global.h \
-    keymap.h \
-    movingsprite.h \
-    player.h \
-    sprite.h \
+    Utils/global.h \
+    Utils/keymap.h \
+    Entities/movingsprite.h \
+    Entities/player.h \
+    Entities/sprite.h \
     tile.h \
     tilemap.h \
-    userinterface.h \
     view.h
 
 FORMS +=

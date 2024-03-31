@@ -6,7 +6,6 @@
 #include <QGraphicsItem>
 
 #include "button.h"
-#include "keymap.h"
 #include "buttonmenu.h"
 
 struct PopupInteraction

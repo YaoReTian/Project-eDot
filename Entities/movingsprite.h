@@ -2,7 +2,6 @@
 #define MOVINGSPRITE_H
 
 #include "sprite.h"
-#include "global.h"
 
 class MovingSprite : public Sprite
 {

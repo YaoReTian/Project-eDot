@@ -2,7 +2,7 @@
 
 #include <QFont>
 
-#include "global.h"
+#include "../Utils/global.h"
 
 Button::Button(QGraphicsItem* parent) : QObject(), QGraphicsPixmapItem(parent)
 {

@@ -5,8 +5,8 @@
 #include <QSqlError>
 #include <QPixmap>
 
-#include "global.h"
-#include "movingsprite.h"
+#include "Utils/global.h"
+#include "Entities/movingsprite.h"
 
 // Public methods
 Tilemap::Tilemap(Database* db, UserInterface * UI)

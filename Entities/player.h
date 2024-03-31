@@ -3,7 +3,6 @@
 
 #include <QList>
 #include "movingsprite.h"
-#include "keymap.h"
 #include "database.h"
 
 class Player

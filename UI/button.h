@@ -5,7 +5,7 @@
 #include <QGraphicsTextItem>
 #include <QGraphicsScene>
 #include <QPixmap>
-#include "keymap.h"
+#include "../Utils/keymap.h"
 
 class Button : public QObject, public QGraphicsPixmapItem
 {

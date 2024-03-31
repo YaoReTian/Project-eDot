@@ -1,5 +1,5 @@
 #include "tile.h"
-#include "movingsprite.h"
+#include "Entities/movingsprite.h"
 
 #include <QRandomGenerator>
 

@@ -1,6 +1,6 @@
 #include "player.h"
 
-#include "global.h"
+#include "../Utils/global.h"
 
 Player::Player(Database* db)
 {

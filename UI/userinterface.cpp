@@ -1,6 +1,6 @@
 #include "userinterface.h"
 
-#include "global.h"
+#include "../Utils/global.h"
 
 UserInterface::UserInterface(QGraphicsScene * scene)
 {
