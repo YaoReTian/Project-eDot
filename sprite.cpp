@@ -30,7 +30,9 @@ void Sprite::setType(QString type)
 
 void Sprite::createIdentifier()
 {
-    m_identifier = QString("%1%2%3").arg(m_SpriteID).arg(x()).arg(y());
+    m_identifier += QString::number(m_SpriteID);
+    m_identifier += QString::number(x());
+    m_identifier += QString::number(y());
 }
 
 int Sprite::getID()
@@ -146,7 +148,7 @@ void Sprite::update(int deltaTime)
 
 void Sprite::update(int deltaTime, UserInterface* UI, QGraphicsItem* activeCharacter)
 {
-    if (collidesWithItem(activeCharacter))
+    if (collidesWithItem(activeCharacter) && !m_button->isPaused())
     {
         if (UI->popupTriggered(m_identifier))
         {

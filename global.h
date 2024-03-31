@@ -30,6 +30,7 @@ enum Action
     WALK,
     SELECT,
     NEXT_OPTION,
+    PREV_OPTION,
     NONE
 };
 

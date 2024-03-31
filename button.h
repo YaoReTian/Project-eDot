@@ -22,8 +22,11 @@ public:
     void setFocused();
     void removeFocus();
     void setIconText(QString text);
+    void pause();
 
     bool isTriggered();
+    bool isRendered();
+    bool isPaused();
 
 private:
     QGraphicsTextItem* m_textBox;
@@ -32,6 +35,8 @@ private:
     bool m_released;
     bool m_focused;
     bool m_mouseMode;
+    bool m_rendered;
+    bool m_paused;
 
     QPixmap m_defaultPixmap;
     QPixmap m_focusedPixmap;

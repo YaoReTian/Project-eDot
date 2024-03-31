@@ -8,17 +8,21 @@ UserInterface::UserInterface(QGraphicsScene * scene)
     m_popupMenu = new ButtonMenu;
 }
 
-void UserInterface::update(KeyMap * keys, QGraphicsItem * activeCharacter)
+void UserInterface::update(int deltatime, KeyMap * keys, QGraphicsItem * activeCharacter)
 {
     if (m_popupMenu->isRendered())
     {
         m_popupMenu->setPos(activeCharacter->x() + activeCharacter->boundingRect().width() + 5* GLOBAL::Scale,
                             activeCharacter->y());
-        m_popupMenu->update(keys);
+        m_popupMenu->update(deltatime, keys, *m_scene);
         if (m_popupMenu->buttonReleased())
         {
             m_popupMenu->removeFromScene(*m_scene);
-            for ( auto [key, value] : m_popupInteractions.asKeyValueRange())    value->m_rendered = false;
+            for ( auto [key, value] : m_popupInteractions.asKeyValueRange())
+            {
+                value->m_button->pause();
+                value->m_rendered = false;
+            }
         }
     }
 }

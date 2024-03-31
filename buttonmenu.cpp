@@ -8,19 +8,29 @@ ButtonMenu::ButtonMenu()
     m_focusedIndex = 0;
 }
 
-void ButtonMenu::update(KeyMap* keys)
+void ButtonMenu::update(int deltatime, KeyMap* keys, QGraphicsScene &scene)
 {
+    m_elapsedTime += deltatime;
     if (!m_buttons.empty())
     {
-        if (keys->keyHeldStatus(GLOBAL::NEXT_OPTION))
+        if (keys->keyHeldStatus(GLOBAL::NEXT_OPTION) && m_elapsedTime >= 100)
         {
             m_buttons[m_focusedIndex]->removeFocus();
             m_focusedIndex++;
             if (m_focusedIndex == m_buttons.size())  m_focusedIndex = 0;
-            m_buttons[m_focusedIndex]->setFocused();
+            m_elapsedTime = 0;
         }
+        else if (keys->keyHeldStatus(GLOBAL::PREV_OPTION) && m_elapsedTime > 100)
+        {
+            m_buttons[m_focusedIndex]->removeFocus();
+            m_focusedIndex--;
+            if (m_focusedIndex == -1)  m_focusedIndex = m_buttons.size()-1;
+            m_elapsedTime = 0;
+        }
+        m_buttons[m_focusedIndex]->setFocused();
         for (auto b : m_buttons)
         {
+            if (!b->isRendered())   b->render(scene);
             b->update(keys);
         }
     }
@@ -28,6 +38,7 @@ void ButtonMenu::update(KeyMap* keys)
 
 void ButtonMenu::addButton(Button* button)
 {
+    qDebug() << "Button added";
     if (m_vertical)
     {
         button->setPos(m_x, m_rectSize.height() + 2 * GLOBAL::Scale);
@@ -61,8 +72,14 @@ void ButtonMenu::removeButton(int index, QGraphicsScene &scene)
         }
         m_rectSize.setWidth(m_rectSize.width() - (m_buttons[index]->boundingRect().width() + 2*GLOBAL::Scale));
     }
+    m_buttons[index]->removeFocus();
     m_buttons[index]->removeFromScene(scene);
     m_buttons.removeAt(index);
+
+    if (m_focusedIndex == m_buttons.size())
+    {
+        m_focusedIndex = 0;
+    }
 }
 
 void ButtonMenu::removeButton(Button * button, QGraphicsScene &scene)
@@ -98,6 +115,7 @@ void ButtonMenu::removeFromScene(QGraphicsScene &scene)
     {
         for (const auto b : m_buttons)
         {
+            b->removeFocus();
             b->removeFromScene(scene);
         }
     }

@@ -7,7 +7,7 @@ class ButtonMenu
 {
 public:
     ButtonMenu();
-    void update(KeyMap* keys);
+    void update(int deltatime, KeyMap* keys, QGraphicsScene &scene);
     void addButton(Button* button);
     void removeButton(int index, QGraphicsScene &scene);
     void removeButton(Button* button, QGraphicsScene &scene);
@@ -31,6 +31,7 @@ private:
     float m_x;
     float m_y;
     int m_focusedIndex;
+    int m_elapsedTime;
 };
 
 #endif // BUTTONMENU_H

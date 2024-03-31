@@ -21,7 +21,7 @@ class UserInterface
 public:
     UserInterface(QGraphicsScene *scene);
 
-    void update(KeyMap * keys, QGraphicsItem* activeCharacter);
+    void update(int deltatime, KeyMap * keys, QGraphicsItem* activeCharacter);
 
     // Popup interactions
     void addPopupInteraction(QString spriteIdentifier, Button * button, QString interactDialogue);

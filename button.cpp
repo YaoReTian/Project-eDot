@@ -30,6 +30,8 @@ Button::Button(QGraphicsItem* parent) : QObject(), QGraphicsPixmapItem(parent)
     m_focused = false;
     m_mouseMode = true;
     m_released = false;
+    m_rendered = false;
+    m_paused = false;
 }
 
 void Button::update(KeyMap * keys)
@@ -112,6 +114,11 @@ void Button::setFocused()
     m_focused = true;
 }
 
+void Button::pause()
+{
+    m_paused = true;
+}
+
 void Button::removeFocus()
 {
     m_focused = false;
@@ -119,6 +126,7 @@ void Button::removeFocus()
 
 void Button::render(QGraphicsScene &scene)
 {
+    m_rendered = true;
     scene.addItem(this);
     scene.addItem(m_textBox);
     scene.addItem(m_iconText);
@@ -126,6 +134,7 @@ void Button::render(QGraphicsScene &scene)
 
 void Button::removeFromScene(QGraphicsScene &scene)
 {
+    m_rendered = false;
     scene.removeItem(this);
     scene.removeItem(m_textBox);
     scene.removeItem(m_iconText);
@@ -134,4 +143,14 @@ void Button::removeFromScene(QGraphicsScene &scene)
 bool Button::isTriggered()
 {
     return m_released;
+}
+
+bool Button::isRendered()
+{
+    return m_rendered;
+}
+
+bool Button::isPaused()
+{
+    return m_paused;
 }

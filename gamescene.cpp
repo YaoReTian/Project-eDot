@@ -19,7 +19,7 @@ GameScene::GameScene(QObject *parent) :
 
     // Add functionality
     m_keymap->setDefaultBindings();
-    m_tilemap->setMap(2);
+    m_tilemap->setMap(1);
     m_player->activeCharacter()->setPos(0,0);
 
     addItem(m_player->activeCharacter());
@@ -38,7 +38,7 @@ void GameScene::loop()
     m_elapsedTimer.restart();
     m_tilemap->update(m_deltaTime, m_UI, m_player->activeCharacter());
     m_player->update(m_deltaTime, m_keymap);
-    m_UI->update(m_keymap, m_player->activeCharacter());
+    m_UI->update(m_deltaTime, m_keymap, m_player->activeCharacter());
 
     // Reset mouse and key status
     m_keymap->resetStatus();
@@ -48,7 +48,6 @@ void GameScene::loop()
 void GameScene::keyPressEvent(QKeyEvent *event)
 {
     Qt::Key key = static_cast<Qt::Key>(event->key());
-
     if (m_keymap->contains(key))
     {
         GLOBAL::Action action = m_keymap->getAction(key);

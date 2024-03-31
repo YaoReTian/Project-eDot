@@ -165,6 +165,7 @@ QList<MovingSprite*> Database::getMovingSpritesFromMap(int MapID)
                                               transitionQuery.value("StateName").toString());
             }
         }
+        sprites.back()->createIdentifier();
     }
 
     return sprites;
