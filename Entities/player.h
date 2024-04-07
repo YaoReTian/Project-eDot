@@ -11,7 +11,11 @@ public:
     Player(Database* db);
 
     void editParty();
+
+    void removeItem(QGraphicsScene &scene);
     void update(int deltatime, KeyMap* keys);
+    void render(QGraphicsScene &scene);
+
     void setCharacter(int partyIndex, int SpriteID);
     MovingSprite* activeCharacter();
 

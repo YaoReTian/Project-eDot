@@ -124,6 +124,11 @@ void Sprite::addTransition(QString startStateName, GLOBAL::Action action, QStrin
     m_states[startStateName]->transitions[action] = endStateName;
 }
 
+void Sprite::removeItem(QGraphicsScene &scene)
+{
+    scene.removeItem(this);
+}
+
 void Sprite::update(int deltaTime)
 {
     m_elapsed_time += deltaTime;
@@ -145,6 +150,11 @@ void Sprite::update(int deltaTime)
     }
 }
 
+void Sprite::render(QGraphicsScene &scene)
+{
+    scene.addItem(this);
+}
+
 void Sprite::update(int deltaTime, UserInterface* UI, QGraphicsItem* activeCharacter)
 {
     if (collidesWithItem(activeCharacter) && !m_button->isPaused())
@@ -153,15 +163,15 @@ void Sprite::update(int deltaTime, UserInterface* UI, QGraphicsItem* activeChara
         {
             m_interactingWithPlayer = true;
         }
-        if (!UI->popupRendered(m_identifier) && !m_interactingWithPlayer)
+        if (!UI->popupActive(m_identifier) && !m_interactingWithPlayer)
         {
             m_button->reset();
-            UI->renderPopupInteraction(m_identifier);
+            UI->renderPopup(m_identifier);
         }
     }
-    else if (UI->popupRendered(m_identifier))
+    else if (UI->popupActive(m_identifier))
     {
-        UI->removePopupInteractionFromScene(m_identifier);
+        UI->hidePopup(m_identifier);
     }
 
     update(deltaTime);

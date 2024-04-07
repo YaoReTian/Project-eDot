@@ -2,48 +2,57 @@
 
 #include "../Utils/global.h"
 
-UserInterface::UserInterface(QGraphicsScene * scene)
+UserInterface::UserInterface()
 {
-    m_scene = scene;
     m_popupMenu = new ButtonMenu;
+}
+
+void UserInterface::removeItem(QGraphicsScene &scene)
+{
+    if (m_popupMenu->isActive())    m_popupMenu->removeItem(scene);
 }
 
 void UserInterface::update(int deltatime, KeyMap * keys, QGraphicsItem * activeCharacter)
 {
-    if (m_popupMenu->isRendered())
+    if (m_popupMenu->isActive())
     {
         m_popupMenu->setPos(activeCharacter->x() + activeCharacter->boundingRect().width() + 5* GLOBAL::Scale,
                             activeCharacter->y());
-        m_popupMenu->update(deltatime, keys, *m_scene);
+        m_popupMenu->update(deltatime, keys);
         if (m_popupMenu->buttonReleased())
         {
-            m_popupMenu->removeFromScene(*m_scene);
-            for ( auto [key, value] : m_popupInteractions.asKeyValueRange())
+            m_popupMenu->setActive(false);
+            for ( auto [key, value] : m_popups.asKeyValueRange())
             {
                 value->m_button->pause();
-                value->m_rendered = false;
+                value->m_active = false;
             }
         }
     }
 }
 
-void UserInterface::addPopupInteraction(QString spriteIdentifier, Button * button, QString interactDialogue)
+void UserInterface::render(QGraphicsScene &scene)
 {
-    m_popupInteractions[spriteIdentifier] = new PopupInteraction;
-    m_popupInteractions[spriteIdentifier]->m_button = button;
-    m_popupInteractions[spriteIdentifier]->m_button->setIconText("F");
-    m_popupInteractions[spriteIdentifier]->m_interactDialogue = interactDialogue;
+    if (m_popupMenu->isActive())    m_popupMenu->render(scene);
 }
 
-void UserInterface::renderPopupInteraction(QString spriteIdentifier)
+void UserInterface::addPopup(QString spriteIdentifier, Button * button, QString interactDialogue)
 {
-    if (m_popupInteractions.contains(spriteIdentifier))
+    m_popups[spriteIdentifier] = new Popup;
+    m_popups[spriteIdentifier]->m_button = button;
+    m_popups[spriteIdentifier]->m_button->setIconText("F");
+    m_popups[spriteIdentifier]->m_script = interactDialogue;
+}
+
+void UserInterface::renderPopup(QString spriteIdentifier)
+{
+    if (m_popups.contains(spriteIdentifier))
     {
-        m_popupInteractions[spriteIdentifier]->m_rendered = true;
-        m_popupMenu->addButton(m_popupInteractions[spriteIdentifier]->m_button);
-        if (!m_popupMenu->isRendered())
+        m_popups[spriteIdentifier]->m_active = true;
+        m_popupMenu->addButton(m_popups[spriteIdentifier]->m_button);
+        if (!m_popupMenu->isActive())
         {
-            m_popupMenu->render(*m_scene);
+            m_popupMenu->setActive(true);
         }
     }
     else
@@ -52,26 +61,36 @@ void UserInterface::renderPopupInteraction(QString spriteIdentifier)
     }
 }
 
-void UserInterface::removePopupInteractionFromScene(QString spriteIdentifier)
+void UserInterface::hidePopup(QString spriteIdentifier)
 {
-    if (m_popupInteractions.contains(spriteIdentifier) &&
-        m_popupMenu->contains(m_popupInteractions[spriteIdentifier]->m_button))
+    if (m_popups.contains(spriteIdentifier) &&
+        m_popupMenu->contains(m_popups[spriteIdentifier]->m_button))
     {
-        m_popupInteractions[spriteIdentifier]->m_rendered = false;
-        m_popupMenu->removeButton(m_popupInteractions[spriteIdentifier]->m_button, *m_scene);
+        m_popups[spriteIdentifier]->m_active = false;
+        m_popupMenu->removeButton(m_popups[spriteIdentifier]->m_button);
+
         if (m_popupMenu->numberOfButtons() == 0)
         {
-            m_popupMenu->removeFromScene(*m_scene);
+            m_popupMenu->setActive(false);
         }
     }
 }
 
-bool UserInterface::popupRendered(QString spriteIdentifier)
+void UserInterface::removePopup(QString spriteIdentifier)
 {
-    return m_popupInteractions[spriteIdentifier]->m_rendered;
+    if (m_popups.contains(spriteIdentifier))
+    {
+        hidePopup(spriteIdentifier);
+        m_popups.remove(spriteIdentifier);
+    }
+}
+
+bool UserInterface::popupActive(QString spriteIdentifier)
+{
+    return m_popups[spriteIdentifier]->m_active;
 }
 
 bool UserInterface::popupTriggered(QString spriteIdentifier)
 {
-    return m_popupInteractions[spriteIdentifier]->m_button->isTriggered();
+    return m_popups[spriteIdentifier]->m_button->isTriggered();
 }

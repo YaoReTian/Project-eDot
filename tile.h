@@ -19,7 +19,10 @@ public:
     int getID();
     QString getName();
     QString getDescription();
+
+    void removeItem(QGraphicsScene &scene);
     void update();
+    void render(QGraphicsScene &scene);
 
 private:
     void blockSprite(QGraphicsItem* item);

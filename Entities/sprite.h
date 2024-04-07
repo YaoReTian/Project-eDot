@@ -27,8 +27,10 @@ public:
     void createIdentifier();
 
     // Overloaded update functions
+    void removeItem(QGraphicsScene &scene);
     void update(int deltaTime);
     void update(int deltaTime, UserInterface* UI, QGraphicsItem* activeCharacter);
+    void render(QGraphicsScene &scene);
 
     void setAction(GLOBAL::Action action);
 

@@ -11,22 +11,25 @@
 class Tilemap
 {
 public:
-    Tilemap(Database* db, UserInterface* UI);
+    Tilemap(Database* db);
     ~Tilemap();
-    void setMap(int MapID);
+    void setMap(int MapID, UserInterface* UI);
     QString getMapName();
     QString getMapDesc();
     int getMapSizeX();
     int getMapSizeY();
 
+    void removeIem(QGraphicsScene &scene);
     void update(int deltatime, UserInterface* UI, QGraphicsItem* activeCharacter);
+    void render(QGraphicsScene &scene);
+
     void generateTiles(QGraphicsScene &scene);
     void generateSprites(QGraphicsScene &scene);
 
 private:
     // Methods for creating the map
     void setTiles();
-    void setSprites();
+    void setSprites(UserInterface* UI);
 
     // Attributes for creating the map
     Database* m_db;
@@ -42,9 +45,6 @@ private:
     QString m_mapDesc;
     int m_mapSizeX;
     int m_mapSizeY;
-
-    // User interface
-    UserInterface * m_UI;
 };
 
 #endif // MAP_H

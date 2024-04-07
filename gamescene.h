@@ -18,7 +18,6 @@ class GameScene : public QGraphicsScene
 public:
     GameScene(QObject *parent = 0);
     void loop();
-    void testOutput();
     void clear();
 
 private:

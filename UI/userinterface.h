@@ -8,30 +8,33 @@
 #include "button.h"
 #include "buttonmenu.h"
 
-struct PopupInteraction
+struct Popup
 {
     Button* m_button;
-    QString m_interactDialogue;
-    bool m_rendered = false;
+    QString m_script;
+    bool m_active;
 };
 
 class UserInterface
 {
 public:
-    UserInterface(QGraphicsScene *scene);
+    UserInterface();
 
+    void removeItem(QGraphicsScene &scene);
     void update(int deltatime, KeyMap * keys, QGraphicsItem* activeCharacter);
+    void render(QGraphicsScene &scene);
 
     // Popup interactions
-    void addPopupInteraction(QString spriteIdentifier, Button * button, QString interactDialogue);
-    void renderPopupInteraction(QString spriteIdentifier);
-    void removePopupInteractionFromScene(QString spriteIdentifier);
-    bool popupRendered(QString spriteIdnetifier);
+    void addPopup(QString spriteIdentifier, Button * button, QString interactDialogue);
+    void renderPopup(QString spriteIdentifier);
+    void hidePopup(QString spriteIdentifier);
+    void removePopup(QString spriteIdentifier);
+
+    bool popupActive(QString spriteIdnetifier);
     bool popupTriggered(QString spriteIdentifier);
 
 private:
-    QMap<QString, PopupInteraction*> m_popupInteractions;
-    QGraphicsScene * m_scene;
+    QMap<QString, Popup*> m_popups;
     int m_elapsedTime;
     ButtonMenu * m_popupMenu;
 };

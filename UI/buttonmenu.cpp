@@ -8,7 +8,19 @@ ButtonMenu::ButtonMenu()
     m_focusedIndex = 0;
 }
 
-void ButtonMenu::update(int deltatime, KeyMap* keys, QGraphicsScene &scene)
+void ButtonMenu::removeItem(QGraphicsScene &scene)
+{
+    if (!m_buttons.empty())
+    {
+        for (const auto b : m_buttons)
+        {
+            b->removeFocus();
+            b->removeItem(scene);
+        }
+    }
+}
+
+void ButtonMenu::update(int deltatime, KeyMap* keys)
 {
     m_elapsedTime += deltatime;
     if (!m_buttons.empty())
@@ -30,8 +42,18 @@ void ButtonMenu::update(int deltatime, KeyMap* keys, QGraphicsScene &scene)
         m_buttons[m_focusedIndex]->setFocused();
         for (auto b : m_buttons)
         {
-            if (!b->isRendered())   b->render(scene);
             b->update(keys);
+        }
+    }
+}
+
+void ButtonMenu::render(QGraphicsScene &scene)
+{
+    if (!m_buttons.empty())
+    {
+        for (const auto b : m_buttons)
+        {
+            b->render(scene);
         }
     }
 }
@@ -51,7 +73,7 @@ void ButtonMenu::addButton(Button* button)
     m_buttons.append(button);
 }
 
-void ButtonMenu::removeButton(int index, QGraphicsScene &scene)
+void ButtonMenu::removeButton(int index)
 {
     if (m_vertical)
     {
@@ -72,7 +94,6 @@ void ButtonMenu::removeButton(int index, QGraphicsScene &scene)
         m_rectSize.setWidth(m_rectSize.width() - (m_buttons[index]->boundingRect().width() + 2*GLOBAL::Scale));
     }
     m_buttons[index]->removeFocus();
-    m_buttons[index]->removeFromScene(scene);
     m_buttons.removeAt(index);
 
     if (m_focusedIndex == m_buttons.size())
@@ -81,42 +102,15 @@ void ButtonMenu::removeButton(int index, QGraphicsScene &scene)
     }
 }
 
-void ButtonMenu::removeButton(Button * button, QGraphicsScene &scene)
+void ButtonMenu::removeButton(Button * button)
 {
     if (m_buttons.indexOf(button) != -1)
     {
-        removeButton(m_buttons.indexOf(button), scene);
+        removeButton(m_buttons.indexOf(button));
     }
     else
     {
         qDebug() << "Button not found";
-    }
-}
-
-void ButtonMenu::render(QGraphicsScene &scene)
-{
-    if (!m_buttons.empty())
-    {
-        m_rendered = true;
-        m_focusedIndex = 0;
-        m_buttons[m_focusedIndex]->setFocused();
-        for (const auto b : m_buttons)
-        {
-            b->render(scene);
-        }
-    }
-}
-
-void ButtonMenu::removeFromScene(QGraphicsScene &scene)
-{
-    m_rendered = false;
-    if (!m_buttons.empty())
-    {
-        for (const auto b : m_buttons)
-        {
-            b->removeFocus();
-            b->removeFromScene(scene);
-        }
     }
 }
 
@@ -147,6 +141,11 @@ void ButtonMenu::setHorizontal()
     m_vertical = false;
 }
 
+void ButtonMenu::setActive(bool status)
+{
+    m_active = status;
+}
+
 QSize ButtonMenu::rectSize()
 {
     return m_rectSize;
@@ -162,9 +161,9 @@ bool ButtonMenu::buttonReleased()
     return m_buttons[m_focusedIndex]->isTriggered();
 }
 
-bool ButtonMenu::isRendered()
+bool ButtonMenu::isActive()
 {
-    return m_rendered;
+    return m_active;
 }
 
 int ButtonMenu::focusedButtonIndex()

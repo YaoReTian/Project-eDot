@@ -13,6 +13,11 @@ Player::Player(Database* db)
     m_activeCharacterIndex = 0;
 }
 
+void Player::removeItem(QGraphicsScene &scene)
+{
+    activeCharacter()->removeItem(scene);
+}
+
 void Player::update(int deltatime, KeyMap* keys)
 {
     bool actionTaken = false;
@@ -41,6 +46,11 @@ void Player::update(int deltatime, KeyMap* keys)
         activeCharacter()->setAction(deltatime, GLOBAL::NONE);
     }
     activeCharacter()->update(deltatime);
+}
+
+void Player::render(QGraphicsScene &scene)
+{
+    activeCharacter()->render(scene);
 }
 
 void Player::setCharacter(int partyIndex, int SpriteID)

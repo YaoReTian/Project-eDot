@@ -13,11 +13,12 @@ class Button : public QObject, public QGraphicsPixmapItem
 public:
     Button(QGraphicsItem* parent = 0);
 
+    void removeItem(QGraphicsScene &scene);
     void update(KeyMap * keys);
+    void render(QGraphicsScene &scene);
+
     void reset();
     void setText(QString text);
-    void render(QGraphicsScene &scene);
-    void removeFromScene(QGraphicsScene &scene);
     void setPos(qreal x, qreal y);
     void setFocused();
     void removeFocus();
@@ -25,7 +26,7 @@ public:
     void pause();
 
     bool isTriggered();
-    bool isRendered();
+    bool isActive();
     bool isPaused();
 
 private:
@@ -35,7 +36,7 @@ private:
     bool m_released;
     bool m_focused;
     bool m_mouseMode;
-    bool m_rendered;
+    bool m_active;
     bool m_paused;
 
     QPixmap m_defaultPixmap;

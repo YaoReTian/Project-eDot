@@ -12,14 +12,14 @@ GameScene::GameScene(QObject *parent) :
 {
     // Instantiate objects
     m_db = new Database;
-    m_UI = new UserInterface(this);
+    m_UI = new UserInterface();
     m_keymap = new KeyMap;
-    m_tilemap = new Tilemap(m_db, m_UI);
+    m_tilemap = new Tilemap(m_db);
     m_player = new Player(m_db);
 
     // Add functionality
     m_keymap->setDefaultBindings();
-    m_tilemap->setMap(1);
+    m_tilemap->setMap(1, m_UI);
     m_player->activeCharacter()->setPos(0,0);
 
     addItem(m_player->activeCharacter());
@@ -36,13 +36,32 @@ void GameScene::loop()
 {
     m_deltaTime = m_elapsedTimer.elapsed();
     m_elapsedTimer.restart();
+
+    // Reset gamescene
+    clear();
+
+    // Input handled by keymap through press and release events
+
+    // Update
     m_tilemap->update(m_deltaTime, m_UI, m_player->activeCharacter());
     m_player->update(m_deltaTime, m_keymap);
     m_UI->update(m_deltaTime, m_keymap, m_player->activeCharacter());
 
+    // Render
+    m_tilemap->render(*this);
+    m_player->render(*this);
+    m_UI->render(*this);
+
     // Reset mouse and key status
     m_keymap->resetStatus();
 
+}
+
+void GameScene::clear()
+{
+    m_tilemap->removeIem(*this);
+    m_player->removeItem(*this);
+    m_UI->removeItem(*this);
 }
 
 void GameScene::keyPressEvent(QKeyEvent *event)

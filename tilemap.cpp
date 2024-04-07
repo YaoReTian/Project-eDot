@@ -9,10 +9,9 @@
 #include "Entities/movingsprite.h"
 
 // Public methods
-Tilemap::Tilemap(Database* db, UserInterface * UI)
+Tilemap::Tilemap(Database* db)
 {
     m_db = db;
-    m_UI = UI;
 }
 
 Tilemap::~Tilemap()
@@ -20,7 +19,7 @@ Tilemap::~Tilemap()
     qDebug() << "Tilemap destroyed";
 }
 
-void Tilemap::setMap(int MapID)
+void Tilemap::setMap(int MapID, UserInterface* UI)
 {
     QSqlQuery query;
 
@@ -38,7 +37,7 @@ void Tilemap::setMap(int MapID)
     m_mapSizeY = query.value("MapSizeY").toInt();
 
     setTiles();
-    setSprites();
+    setSprites(UI);
 }
 
 QString Tilemap::getMapDesc()
@@ -59,6 +58,22 @@ int Tilemap::getMapSizeX()
 int Tilemap::getMapSizeY()
 {
     return m_mapSizeY;
+}
+
+void Tilemap::removeIem(QGraphicsScene &scene)
+{
+    for (const auto &s : m_sprites)
+    {
+        s->removeItem(scene);
+    }
+    for (const auto &s : m_movingSprites)
+    {
+        s->removeItem(scene);
+    }
+    for (const auto &t : m_tiles)
+    {
+        t->removeItem(scene);
+    }
 }
 
 void Tilemap::update(int deltatime, UserInterface* UI, QGraphicsItem* activeCharacter)
@@ -93,6 +108,22 @@ void Tilemap::update(int deltatime, UserInterface* UI, QGraphicsItem* activeChar
     }
 }
 
+void Tilemap::render(QGraphicsScene &scene)
+{
+    for (const auto &s : m_sprites)
+    {
+        s->render(scene);
+    }
+    for (const auto &s : m_movingSprites)
+    {
+        s->render(scene);
+    }
+    for (const auto &t : m_tiles)
+    {
+        t->render(scene);
+    }
+}
+
 void Tilemap::setTiles()
 {
 
@@ -105,22 +136,22 @@ void Tilemap::setTiles()
     }
 }
 
-void Tilemap::setSprites()
+void Tilemap::setSprites(UserInterface* UI)
 {
     m_sprites = m_db->getWorldSprites(m_mapID);
     m_movingSprites = m_db->getMovingSpritesFromMap(m_mapID);
 
     for (const auto s : m_sprites)
     {
-        m_UI->addPopupInteraction(s->getIdentifier(),
-                                  s->getButton(),
-                                  s->getDialogue());
+        UI->addPopup(s->getIdentifier(),
+                     s->getButton(),
+                     s->getDialogue());
     }
     for (const auto s : m_movingSprites)
     {
-        m_UI->addPopupInteraction(s->getIdentifier(),
-                                  s->getButton(),
-                                  s->getDialogue());
+        UI->addPopup(s->getIdentifier(),
+                     s->getButton(),
+                     s->getDialogue());
     }
 }
 

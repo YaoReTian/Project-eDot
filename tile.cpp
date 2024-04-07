@@ -48,16 +48,26 @@ QString Tile::getDescription()
     return m_TileDescription;
 }
 
+void Tile::removeItem(QGraphicsScene &scene)
+{
+    scene.removeItem(this);
+}
+
 void Tile::update()
 {
     if (m_solid)
     {
         QList<QGraphicsItem*> list = collidingItems();
-        for (auto n : list)
+        for (const auto n : list)
         {
             if (typeid(*n) == typeid(MovingSprite)) blockSprite(n);
         }
     }
+}
+
+void Tile::render(QGraphicsScene &scene)
+{
+    scene.addItem(this);
 }
 
 void Tile::blockSprite(QGraphicsItem* item)

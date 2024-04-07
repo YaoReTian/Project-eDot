@@ -7,19 +7,25 @@ class ButtonMenu
 {
 public:
     ButtonMenu();
-    void update(int deltatime, KeyMap* keys, QGraphicsScene &scene);
-    void addButton(Button* button);
-    void removeButton(int index, QGraphicsScene &scene);
-    void removeButton(Button* button, QGraphicsScene &scene);
+
+    void removeItem(QGraphicsScene &scene);
+    void update(int deltatime, KeyMap* keys);
     void render(QGraphicsScene &scene);
-    void removeFromScene(QGraphicsScene &scene);
+
+    void addButton(Button* button);
+    void removeButton(int index);
+    void removeButton(Button* button);
+
     void setPos(qreal x, qreal y);
     void setVertical();
     void setHorizontal();
+    void setActive(bool status);
+
+    bool isActive();
+
     QSize rectSize();
     int numberOfButtons();
     bool buttonReleased();
-    bool isRendered();
     int focusedButtonIndex();
     bool contains(Button* button);
 
@@ -27,7 +33,7 @@ private:
     QList<Button*> m_buttons;
     QSize m_rectSize;
     bool m_vertical;
-    bool m_rendered;
+    bool m_active;
     float m_x;
     float m_y;
     int m_focusedIndex;
