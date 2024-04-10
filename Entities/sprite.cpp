@@ -9,7 +9,6 @@ Sprite::Sprite(QGraphicsItem * parent) : QObject(), QGraphicsPixmapItem(parent)
     m_type = "Sprite";
     setZValue(GLOBAL::SPRITE_LAYER + y());
     m_interactingWithPlayer = false;
-    m_identifier = NULL;
 }
 
 void Sprite::setID(int ID)
@@ -25,13 +24,6 @@ void Sprite::setName(QString name)
 void Sprite::setType(QString type)
 {
     m_type = type;
-}
-
-void Sprite::createIdentifier()
-{
-    m_identifier += QString::number(m_SpriteID);
-    m_identifier += QString::number(x());
-    m_identifier += QString::number(y());
 }
 
 int Sprite::getID()
@@ -54,14 +46,9 @@ Button* Sprite::getButton()
     return m_button;
 }
 
-QString Sprite::getDialogue()
+QString Sprite::getScript()
 {
-    return m_interactDialogue;
-}
-
-QString Sprite::getIdentifier()
-{
-    return m_identifier;
+    return m_script;
 }
 
 void Sprite::setSpriteSheet(QPixmap spriteSheet)
@@ -74,11 +61,11 @@ void Sprite::setFrameSize(QSize frameSize)
     m_frameSize = frameSize;
 }
 
-void Sprite::setInteraction(QString text, QString dialogue)
+void Sprite::setInteraction(QString text, QString script)
 {
     m_interactable = true;
     m_interactText = (text == "") ? m_name : text;
-    m_interactDialogue = dialogue;
+    m_script = script;
 
     m_button = new Button;
     m_button->setText(m_interactText);
@@ -148,33 +135,18 @@ void Sprite::update(int deltaTime)
     {
         setPixmap(m_states[m_currentStateName]->frames[m_currentFrame]);
     }
+
+    // Check for interactions
+    if (m_interactable && m_button->isActive())
+    {
+        if (m_button->isTriggered())    m_interactingWithPlayer = true;
+        m_button->setActive(false);
+    }
 }
 
 void Sprite::render(QGraphicsScene &scene)
 {
     scene.addItem(this);
-}
-
-void Sprite::update(int deltaTime, UserInterface* UI, QGraphicsItem* activeCharacter)
-{
-    if (collidesWithItem(activeCharacter) && !m_button->isPaused())
-    {
-        if (UI->popupTriggered(m_identifier))
-        {
-            m_interactingWithPlayer = true;
-        }
-        if (!UI->popupActive(m_identifier) && !m_interactingWithPlayer)
-        {
-            m_button->reset();
-            UI->renderPopup(m_identifier);
-        }
-    }
-    else if (UI->popupActive(m_identifier))
-    {
-        UI->hidePopup(m_identifier);
-    }
-
-    update(deltaTime);
 }
 
 void Sprite::setAction(GLOBAL::Action action)
@@ -195,4 +167,9 @@ bool Sprite::isInteractable()
 bool Sprite::isInteractingWithPlayer()
 {
     return m_interactingWithPlayer;
+}
+
+void Sprite::popup()
+{
+    m_button->setActive(true);
 }

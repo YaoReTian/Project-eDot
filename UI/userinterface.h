@@ -12,7 +12,6 @@ struct Popup
 {
     Button* m_button;
     QString m_script;
-    bool m_active;
 };
 
 class UserInterface
@@ -25,16 +24,10 @@ public:
     void render(QGraphicsScene &scene);
 
     // Popup interactions
-    void addPopup(QString spriteIdentifier, Button * button, QString interactDialogue);
-    void renderPopup(QString spriteIdentifier);
-    void hidePopup(QString spriteIdentifier);
-    void removePopup(QString spriteIdentifier);
-
-    bool popupActive(QString spriteIdnetifier);
-    bool popupTriggered(QString spriteIdentifier);
+    void addPopup(Button * button, QString interactDialogue);
 
 private:
-    QMap<QString, Popup*> m_popups;
+    QList<Popup*> m_popups;
     int m_elapsedTime;
     ButtonMenu * m_popupMenu;
 };

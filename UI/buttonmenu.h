@@ -2,6 +2,7 @@
 #define BUTTONMENU_H
 
 #include "button.h"
+#include <QQueue>
 
 class ButtonMenu
 {
@@ -31,6 +32,7 @@ public:
 
 private:
     QList<Button*> m_buttons;
+    QQueue<Button*> m_newButtons;
     QSize m_rectSize;
     bool m_vertical;
     bool m_active;
@@ -38,6 +40,7 @@ private:
     float m_y;
     int m_focusedIndex;
     int m_elapsedTime;
+    int m_numberOfButtons;
 };
 
 #endif // BUTTONMENU_H

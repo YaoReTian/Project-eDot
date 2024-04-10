@@ -114,6 +114,11 @@ void Button::setFocused()
     m_focused = true;
 }
 
+void Button::setActive(bool value)
+{
+    m_active = value;
+}
+
 void Button::pause()
 {
     m_paused = true;
@@ -126,7 +131,6 @@ void Button::removeFocus()
 
 void Button::render(QGraphicsScene &scene)
 {
-    m_active = true;
     scene.addItem(this);
     scene.addItem(m_textBox);
     scene.addItem(m_iconText);
@@ -134,10 +138,23 @@ void Button::render(QGraphicsScene &scene)
 
 void Button::removeItem(QGraphicsScene &scene)
 {
-    m_active = false;
     scene.removeItem(this);
     scene.removeItem(m_textBox);
     scene.removeItem(m_iconText);
+}
+
+void Button::hide()
+{
+    QGraphicsItem::hide();
+    m_textBox->hide();
+    m_iconText->hide();
+}
+
+void Button::show()
+{
+    QGraphicsItem::show();
+    m_textBox->show();
+    m_iconText->show();
 }
 
 bool Button::isTriggered()

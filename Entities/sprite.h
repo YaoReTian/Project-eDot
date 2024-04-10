@@ -5,7 +5,7 @@
 #include <QGraphicsScene>
 
 #include "../Utils/global.h"
-#include "../UI/userinterface.h"
+#include "../UI/button.h"
 
 struct AnimationState
 {
@@ -24,12 +24,9 @@ public:
     void setID(int ID);
     void setName(QString name);
     void setSpriteSheet(QString spriteSheet);
-    void createIdentifier();
 
-    // Overloaded update functions
     void removeItem(QGraphicsScene &scene);
     void update(int deltaTime);
-    void update(int deltaTime, UserInterface* UI, QGraphicsItem* activeCharacter);
     void render(QGraphicsScene &scene);
 
     void setAction(GLOBAL::Action action);
@@ -38,8 +35,7 @@ public:
     QString getName();
     QString getType();
     Button* getButton();
-    QString getDialogue();
-    QString getIdentifier();
+    QString getScript();
 
     // For animations
     void setSpriteSheet(QPixmap spriteSheet);
@@ -51,6 +47,7 @@ public:
     // For interactions with the player
     bool isInteractable();
     bool isInteractingWithPlayer();
+    void popup();
 
 protected:
     void setType(QString type);
@@ -58,12 +55,11 @@ protected:
 private:
     // Sprite data
     int m_SpriteID;
-    QString m_identifier;
     QString m_name;
     QString m_type;
     bool m_interactable;
     QString m_interactText;
-    QString m_interactDialogue;
+    QString m_script;
 
     // For animations
     QSize m_frameSize;

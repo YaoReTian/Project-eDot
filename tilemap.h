@@ -19,8 +19,8 @@ public:
     int getMapSizeX();
     int getMapSizeY();
 
-    void removeIem(QGraphicsScene &scene);
-    void update(int deltatime, UserInterface* UI, QGraphicsItem* activeCharacter);
+    void removeItem(QGraphicsScene &scene);
+    void update(int deltatime);
     void render(QGraphicsScene &scene);
 
     void generateTiles(QGraphicsScene &scene);
@@ -36,7 +36,6 @@ private:
 
     // Attributes of objects on the map
     QList<Sprite*> m_sprites;
-    QList<MovingSprite*> m_movingSprites;
     QList<Tile*> m_tiles;
 
     // Map info

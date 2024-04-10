@@ -3,10 +3,60 @@
     <qresource prefix="/image/sprite">
         <file>res/test_sprite_1.png</file>
         <file>res/test_sprite_2.png</file>
+        <file>res/box-of-robot-heads.png</file>
+        <file>res/button(fac).png</file>
+        <file>res/comp.png</file>
+        <file>res/conveyor-belt-sprite sheet-(fac).png</file>
+        <file>res/conveyor-belt-start-E.png</file>
+        <file>res/conveyor-belt-start-W.png</file>
+        <file>res/door(fac).png</file>
+        <file>res/elevator.png</file>
+        <file>res/radiowaste(fac).png</file>
+        <file>res/robo-head(fac).png</file>
+        <file>res/telp-(horizontal).png</file>
+        <file>res/telp-buton(E).png</file>
+        <file>res/telp-buton(N).png</file>
+        <file>res/telp-buton(S).png</file>
+        <file>res/telp-buton(W).png</file>
+        <file>res/telp-corner-interior(NE).png</file>
     </qresource>
     <qresource prefix="/image/tile">
         <file>res/test_tile_1.png</file>
         <file>res/test_tile_2.png</file>
+        <file>res/1-block-path-(fac)(horizontal).png</file>
+        <file>res/1-block-path-(fac)(vertical).png</file>
+        <file>res/background-black.png</file>
+        <file>res/clean-floor-(fac).png</file>
+        <file>res/corner-path-interior-2block-(fac)(NE).png</file>
+        <file>res/corner-path-interior-2block-(fac)(NW).png</file>
+        <file>res/corner-path-interior-2block-(fac)(SE).png</file>
+        <file>res/corner-path-interior-2block-(fac)(SW).png</file>
+        <file>res/cornerpath-1block-(NE).png</file>
+        <file>res/cornerpath-1block-(NW).png</file>
+        <file>res/cornerpath-1block-(SE).png</file>
+        <file>res/cornerpath-1block-(SW).png</file>
+        <file>res/cornerpath-Exterior-(fac)(NE).png</file>
+        <file>res/cornerpath-Exterior-(fac)(NW).png</file>
+        <file>res/cornerpath-Exterior-(fac)(SE).png</file>
+        <file>res/cornerpath-Exterior-(fac)(SW).png</file>
+        <file>res/path-(E)(fac).png</file>
+        <file>res/path-(N)(fac).png</file>
+        <file>res/path-(S)(fac).png</file>
+        <file>res/path-(W)(fac).png</file>
+        <file>res/tiles-(fac).png</file>
+        <file>res/wall-(fac).png</file>
+        <file>res/wall-corner-Exterior(NE).png</file>
+        <file>res/wall-corner-Exterior(NW).png</file>
+        <file>res/wall-corner-Exterior(SE).png</file>
+        <file>res/wall-corner-Exterior(SW).png</file>
+        <file>res/wall-corner-interior(NE).png</file>
+        <file>res/wall-corner-interior(NW).png</file>
+        <file>res/wall-corner-interior(SE).png</file>
+        <file>res/wall-corner-interior(SW).png</file>
+        <file>res/wall-not-front(fac)(E).png</file>
+        <file>res/wall-not-front(fac)(N).png</file>
+        <file>res/wall-not-front(fac)(S).png</file>
+        <file>res/wall-not-front(fac)(W).png</file>
     </qresource>
     <qresource prefix="/image/UI">
         <file>res/PopupButtonDefault.png</file>

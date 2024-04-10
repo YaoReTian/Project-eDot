@@ -2,7 +2,7 @@
 #define VIEW_H
 
 #include <QGraphicsView>
-#include "gamescene.h"
+#include "worldscene.h"
 
 class View : public QGraphicsView
 {
@@ -11,7 +11,7 @@ public:
     View();
 
 private:
-    GameScene *m_gamescene;
+    WorldScene *m_worldscene;
 };
 
 #endif // VIEW_H

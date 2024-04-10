@@ -13,7 +13,6 @@ SOURCES += \
     UI/buttonmenu.cpp \
     UI/userinterface.cpp \
     database.cpp \
-    gamescene.cpp \
     Utils/keymap.cpp \
     main.cpp \
     Entities/movingsprite.cpp \
@@ -21,14 +20,14 @@ SOURCES += \
     Entities/sprite.cpp \
     tile.cpp \
     tilemap.cpp \
-    view.cpp
+    view.cpp \
+    worldscene.cpp
 
 HEADERS += \
     UI/button.h \
     UI/buttonmenu.h \
     UI/userinterface.h \
     database.h \
-    gamescene.h \
     Utils/global.h \
     Utils/keymap.h \
     Entities/movingsprite.h \
@@ -36,7 +35,8 @@ HEADERS += \
     Entities/sprite.h \
     tile.h \
     tilemap.h \
-    view.h
+    view.h \
+    worldscene.h
 
 FORMS +=
 

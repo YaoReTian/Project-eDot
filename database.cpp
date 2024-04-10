@@ -71,7 +71,7 @@ QList<Sprite*> Database::getWorldSprites(int MapID)
 {
     QSqlQuery query(QString("SELECT Sprite.SpriteID, SpriteName, SpriteType, SpriteSizeX, SpriteSizeY, PathToSpriteSheet, Interactable, InteractText, InteractDialogue, PositionX, PositionY "
                             "FROM SpriteInMap, Sprite "
-                            "WHERE (Sprite.SpriteID = SpriteInMap.SpriteID) AND (MapID = %1)  AND (SpriteType = 'WorldSprite') "
+                            "WHERE (Sprite.SpriteID = SpriteInMap.SpriteID) AND (MapID = %1) "
                             "ORDER BY PositionX ASC, PositionY ASC").arg(MapID));
     QSqlQuery animationQuery;
     QSqlQuery transitionQuery;
@@ -95,8 +95,8 @@ QList<Sprite*> Database::getWorldSprites(int MapID)
                                              query.value("InteractDialogue").toString());
         }
         sprites.back()->setPos(query.value("PositionX").toInt()*GLOBAL::ObjectLength,
-                                 query.value("PositionY").toInt()*GLOBAL::ObjectLength);
-        sprites.back()->setZValue(GLOBAL::SPRITE_LAYER);
+                               query.value("PositionY").toInt()*GLOBAL::ObjectLength + GLOBAL::ObjectLength - query.value("SpriteSizeY").toInt()*GLOBAL::Scale);
+        sprites.back()->setZValue(GLOBAL::SPRITE_LAYER + sprites.back()->y());
 
         animationQuery = getSpriteAnimations(sprites.back()->getID());
         while (animationQuery.next()) {
@@ -113,65 +113,12 @@ QList<Sprite*> Database::getWorldSprites(int MapID)
                                               transitionQuery.value("StateName").toString());
             }
         }
-        sprites.back()->createIdentifier();
     }
 
     return sprites;
 }
 
-QList<MovingSprite*> Database::getMovingSpritesFromMap(int MapID)
-{
-    QSqlQuery query(QString("SELECT Sprite.SpriteID, SpriteName, SpriteType, SpriteSizeX, SpriteSizeY, PathToSpriteSheet, Interactable, InteractText, InteractDialogue, PositionX, PositionY "
-                            "FROM SpriteInMap, Sprite "
-                            "WHERE (Sprite.SpriteID = SpriteInMap.SpriteID) AND (MapID = %1) AND (SpriteType = 'MovingSprite') "
-                            "ORDER BY PositionX ASC, PositionY ASC").arg(MapID));
-    QSqlQuery animationQuery;
-    QSqlQuery transitionQuery;
-    QPixmap image;
-
-    QList<MovingSprite*> sprites;
-    while(query.next())
-    {
-        sprites.append(new MovingSprite);
-        sprites.back()->setID(query.value("Sprite.SpriteID").toInt());
-        sprites.back()->setName(query.value("SpriteName").toString());
-        sprites.back()->setFrameSize(QSize(query.value("SpriteSizeX").toInt(),
-                                           query.value("SpriteSizeY").toInt()));
-
-        image.load(query.value("PathToSpriteSheet").toString());
-        sprites.back()->setSpriteSheet(image);
-
-        if (query.value("Interactable").toBool())
-        {
-            sprites.back()->setInteraction(query.value("InteractText").toString(),
-                                           query.value("InteractDialogue").toString());
-        }
-        sprites.back()->setPos(query.value("PositionX").toInt()*GLOBAL::ObjectLength,
-                               query.value("PositionY").toInt()*GLOBAL::ObjectLength);
-        sprites.back()->setZValue(GLOBAL::SPRITE_LAYER);
-
-        animationQuery = getSpriteAnimations(sprites.back()->getID());
-        while (animationQuery.next()) {
-            sprites.back()->addAnimationState(animationQuery.value("StateName").toString(),
-                                              animationQuery.value("StartFrame").toInt(),
-                                              animationQuery.value("EndFrame").toInt(),
-                                              animationQuery.value("FrameTime").toFloat());
-
-            transitionQuery = getSpriteTransitions(animationQuery.value("AnimationID").toInt());
-            while (transitionQuery.next())
-            {
-                sprites.back()->addTransition(animationQuery.value("StateName").toString(),
-                                              stringToAction(transitionQuery.value("Action").toString()),
-                                              transitionQuery.value("StateName").toString());
-            }
-        }
-        sprites.back()->createIdentifier();
-    }
-
-    return sprites;
-}
-
-MovingSprite* Database::getMovingSprite(int SpriteID)
+Sprite* Database::getSprite(int SpriteID)
 {
     QSqlQuery query(QString("SELECT * FROM Sprite "
                             "WHERE (SpriteID = %1)").arg(SpriteID));

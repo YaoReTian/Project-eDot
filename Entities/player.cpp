@@ -9,7 +9,7 @@ Player::Player(Database* db)
     {
         m_party.append(nullptr);
     }
-    m_party[0] = m_db->getMovingSprite(2);
+    m_party[0] = dynamic_cast<MovingSprite*>(m_db->getSprite(1));
     m_activeCharacterIndex = 0;
 }
 
@@ -46,6 +46,16 @@ void Player::update(int deltatime, KeyMap* keys)
         activeCharacter()->setAction(deltatime, GLOBAL::NONE);
     }
     activeCharacter()->update(deltatime);
+
+    QList<QGraphicsItem*> list = activeCharacter()->collidingItems();
+
+    for (const auto s : list)
+    {
+        if (typeid(*s) == typeid(Sprite))
+        {
+            dynamic_cast<Sprite*>(s)->popup();
+        }
+    }
 }
 
 void Player::render(QGraphicsScene &scene)
@@ -55,7 +65,7 @@ void Player::render(QGraphicsScene &scene)
 
 void Player::setCharacter(int partyIndex, int SpriteID)
 {
-    m_party[partyIndex] = m_db->getMovingSprite(SpriteID);
+    m_party[partyIndex] = dynamic_cast<MovingSprite*>(m_db->getSprite(SpriteID));
 }
 
 MovingSprite* Player::activeCharacter()

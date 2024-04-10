@@ -21,9 +21,12 @@ public:
     void setText(QString text);
     void setPos(qreal x, qreal y);
     void setFocused();
+    void setActive(bool value);
     void removeFocus();
     void setIconText(QString text);
     void pause();
+    void hide();
+    void show();
 
     bool isTriggered();
     bool isActive();

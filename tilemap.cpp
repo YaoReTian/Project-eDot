@@ -60,13 +60,9 @@ int Tilemap::getMapSizeY()
     return m_mapSizeY;
 }
 
-void Tilemap::removeIem(QGraphicsScene &scene)
+void Tilemap::removeItem(QGraphicsScene &scene)
 {
-    for (const auto &s : m_sprites)
-    {
-        s->removeItem(scene);
-    }
-    for (const auto &s : m_movingSprites)
+    for (const auto s : m_sprites)
     {
         s->removeItem(scene);
     }
@@ -76,45 +72,25 @@ void Tilemap::removeIem(QGraphicsScene &scene)
     }
 }
 
-void Tilemap::update(int deltatime, UserInterface* UI, QGraphicsItem* activeCharacter)
+void Tilemap::update(int deltatime)
 {
     for (const auto &s : m_sprites)
     {
         s->setAction(GLOBAL::NONE);
-        if (s->isInteractable())
+        if (typeid(*s) == typeid(MovingSprite))
         {
-            s->update(deltatime, UI, activeCharacter);
+            dynamic_cast<MovingSprite*>(s)->update(deltatime);
         }
         else
         {
             s->update(deltatime);
         }
-    }
-    for (const auto &s : m_movingSprites)
-    {
-        s->setAction(deltatime, GLOBAL::NONE);
-        if (s->isInteractable())
-        {
-            s->update(deltatime, UI, activeCharacter);
-        }
-        else
-        {
-            s->update(deltatime);
-        }
-    }
-    for (const auto &t : m_tiles)
-    {
-        t->update();
     }
 }
 
 void Tilemap::render(QGraphicsScene &scene)
 {
     for (const auto &s : m_sprites)
-    {
-        s->render(scene);
-    }
-    for (const auto &s : m_movingSprites)
     {
         s->render(scene);
     }
@@ -139,19 +115,14 @@ void Tilemap::setTiles()
 void Tilemap::setSprites(UserInterface* UI)
 {
     m_sprites = m_db->getWorldSprites(m_mapID);
-    m_movingSprites = m_db->getMovingSpritesFromMap(m_mapID);
 
     for (const auto s : m_sprites)
     {
-        UI->addPopup(s->getIdentifier(),
-                     s->getButton(),
-                     s->getDialogue());
-    }
-    for (const auto s : m_movingSprites)
-    {
-        UI->addPopup(s->getIdentifier(),
-                     s->getButton(),
-                     s->getDialogue());
+        if (s->isInteractable())
+        {
+            UI->addPopup(s->getButton(),
+                         s->getScript());
+        }
     }
 }
 
@@ -167,21 +138,20 @@ void Tilemap::generateTiles(QGraphicsScene &scene)
             m_tiles[tileIndex]->setZValue(GLOBAL::TILE_LAYER);
             scene.addItem(m_tiles[tileIndex]);
             tileIndex++;
+            if (tileIndex == m_tiles.size()) break;
         }
+        if (tileIndex == m_tiles.size()) break;
     }
 }
 
 void Tilemap::generateSprites(QGraphicsScene &scene)
 {
-    for (const auto &n : m_sprites)
+    for (const auto n : m_sprites)
     {
-        n->update(0);
-
-        scene.addItem(n);
-    }
-    for (const auto &n : m_movingSprites)
-    {
-        n->setDefaultToWalk();
+        if (typeid(*n) == typeid(MovingSprite))
+        {
+            dynamic_cast<MovingSprite*>(n)->setDefaultToWalk();
+        }
         n->update(0);
         scene.addItem(n);
     }

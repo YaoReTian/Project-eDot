@@ -1,4 +1,4 @@
-#include "gamescene.h"
+#include "worldscene.h"
 
 #include <QDebug>
 #include <QString>
@@ -7,7 +7,7 @@
 
 #include "Utils/global.h"
 
-GameScene::GameScene(QObject *parent) :
+WorldScene::WorldScene(QObject *parent) :
     QGraphicsScene(parent)
 {
     // Instantiate objects
@@ -19,35 +19,31 @@ GameScene::GameScene(QObject *parent) :
 
     // Add functionality
     m_keymap->setDefaultBindings();
-    m_tilemap->setMap(1, m_UI);
-    m_player->activeCharacter()->setPos(0,0);
+    m_tilemap->setMap(3, m_UI);
+    m_player->activeCharacter()->setPos(4*GLOBAL::ObjectLength,4*GLOBAL::ObjectLength);
 
     addItem(m_player->activeCharacter());
     m_tilemap->generateTiles(*this);
     m_tilemap->generateSprites(*this);
 
     // Timer to handle game loop
-    connect(&m_timer, &QTimer::timeout, this, &GameScene::loop);
+    connect(&m_timer, &QTimer::timeout, this, &WorldScene::loop);
     m_timer.start(int(1000.0f/GLOBAL::FPS));
     m_elapsedTimer.start();
 }
 
-void GameScene::loop()
+void WorldScene::loop()
 {
     m_deltaTime = m_elapsedTimer.elapsed();
     m_elapsedTimer.restart();
 
-    // Reset gamescene
-    clear();
-
-    // Input handled by keymap through press and release events
-
     // Update
-    m_tilemap->update(m_deltaTime, m_UI, m_player->activeCharacter());
+    m_tilemap->update(m_deltaTime);
     m_player->update(m_deltaTime, m_keymap);
     m_UI->update(m_deltaTime, m_keymap, m_player->activeCharacter());
 
     // Render
+    clear();
     m_tilemap->render(*this);
     m_player->render(*this);
     m_UI->render(*this);
@@ -57,14 +53,14 @@ void GameScene::loop()
 
 }
 
-void GameScene::clear()
+void WorldScene::clear()
 {
-    m_tilemap->removeIem(*this);
+    m_tilemap->removeItem(*this);
     m_player->removeItem(*this);
     m_UI->removeItem(*this);
 }
 
-void GameScene::keyPressEvent(QKeyEvent *event)
+void WorldScene::keyPressEvent(QKeyEvent *event)
 {
     Qt::Key key = static_cast<Qt::Key>(event->key());
     if (m_keymap->contains(key))
@@ -75,7 +71,7 @@ void GameScene::keyPressEvent(QKeyEvent *event)
     QGraphicsScene::keyPressEvent(event);
 }
 
-void GameScene::keyReleaseEvent(QKeyEvent *event)
+void WorldScene::keyReleaseEvent(QKeyEvent *event)
 {
     Qt::Key key = static_cast<Qt::Key>(event->key());
 
@@ -88,13 +84,13 @@ void GameScene::keyReleaseEvent(QKeyEvent *event)
     QGraphicsScene::keyReleaseEvent(event);
 }
 
-void GameScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void WorldScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     m_keymap->mouseHeld();
     QGraphicsScene::mousePressEvent(event);
 }
 
-void GameScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void WorldScene::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     m_keymap->mouseReleased();
     QGraphicsScene::mouseReleaseEvent(event);

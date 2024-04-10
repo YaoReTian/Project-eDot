@@ -12,11 +12,11 @@
 #include "Entities/player.h"
 #include "UI/userinterface.h"
 
-class GameScene : public QGraphicsScene
+class WorldScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    GameScene(QObject *parent = 0);
+    WorldScene(QObject *parent = 0);
     void loop();
     void clear();
 

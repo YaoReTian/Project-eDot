@@ -1,9 +1,9 @@
 #include "view.h"
 
 View::View() :
-    m_gamescene(new GameScene)
+    m_worldscene(new WorldScene)
 {
-    setScene(m_gamescene);
+    setScene(m_worldscene);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 

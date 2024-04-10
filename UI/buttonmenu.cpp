@@ -6,16 +6,33 @@ ButtonMenu::ButtonMenu()
     m_rectSize.setWidth(0);
     m_vertical = true;
     m_focusedIndex = 0;
+    m_active = false;
+    m_numberOfButtons = 0;
 }
 
 void ButtonMenu::removeItem(QGraphicsScene &scene)
 {
     if (!m_buttons.empty())
     {
-        for (const auto b : m_buttons)
+        QList<int> removedButtons;
+        for (int i = 0; i < m_buttons.size(); i++)
         {
-            b->removeFocus();
-            b->removeItem(scene);
+            m_buttons[i]->removeFocus();
+            m_buttons[i]->removeItem(scene);
+            if (!m_buttons[i]->isActive())
+            {
+                removeButton(i);
+                removedButtons.append(i);
+            }
+        }
+        if (!removedButtons.empty())
+        {
+            while (removedButtons.size() != 0)
+            {
+                m_buttons[removedButtons.back()]->setActive(false);
+                m_buttons.removeAt(removedButtons.back());
+                removedButtons.removeLast();
+            }
         }
     }
 }
@@ -49,6 +66,10 @@ void ButtonMenu::update(int deltatime, KeyMap* keys)
 
 void ButtonMenu::render(QGraphicsScene &scene)
 {
+    while (!m_newButtons.empty())
+    {
+        m_buttons.append(m_newButtons.dequeue());
+    }
     if (!m_buttons.empty())
     {
         for (const auto b : m_buttons)
@@ -60,46 +81,47 @@ void ButtonMenu::render(QGraphicsScene &scene)
 
 void ButtonMenu::addButton(Button* button)
 {
+    if (m_buttons.size() == 0)  m_active = true;
     if (m_vertical)
     {
-        button->setPos(m_x, m_rectSize.height() + 2 * GLOBAL::Scale);
         m_rectSize.setHeight(m_rectSize.height() + button->boundingRect().height() + 2*GLOBAL::Scale);
     }
     else
     {
-        button->setPos(m_rectSize.width() + 2 * GLOBAL::Scale, m_y);
         m_rectSize.setWidth(m_rectSize.width() + button->boundingRect().width() + 2*GLOBAL::Scale);
     }
-    m_buttons.append(button);
+    m_newButtons.enqueue(button);
+    m_numberOfButtons++;
 }
 
 void ButtonMenu::removeButton(int index)
 {
     if (m_vertical)
     {
-        for (int i = index; i < m_buttons.size(); i++)
+        for (int i = index; i < m_numberOfButtons; i++)
         {
-            m_buttons[i]->setPos(m_buttons[i]->x(),
-                                 m_buttons[i]->y() - m_buttons[i]->boundingRect().height() - 2*GLOBAL::Scale);
+            m_buttons[i]->setPos(m_x,
+                                 m_y + i*(m_buttons[i]->boundingRect().height() +  2*GLOBAL::Scale));
         }
         m_rectSize.setHeight(m_rectSize.height() - (m_buttons[index]->boundingRect().height() + 2*GLOBAL::Scale));
     }
     else
     {
-        for (int i = index; i < m_buttons.size(); i++)
+        for (int i = index; i < m_numberOfButtons; i++)
         {
-            m_buttons[i]->setPos(m_buttons[i]->x() - m_buttons[i]->boundingRect().width(),
-                                 m_buttons[i]->y());
+            m_buttons[i]->setPos(m_x - i*(m_buttons[i]->boundingRect().width() + 2*GLOBAL::Scale),
+                                 m_y);
         }
         m_rectSize.setWidth(m_rectSize.width() - (m_buttons[index]->boundingRect().width() + 2*GLOBAL::Scale));
     }
     m_buttons[index]->removeFocus();
-    m_buttons.removeAt(index);
 
-    if (m_focusedIndex == m_buttons.size())
+    if (m_focusedIndex == m_numberOfButtons)
     {
         m_focusedIndex = 0;
     }
+    m_numberOfButtons--;
+    if (m_numberOfButtons == 0)  m_active = false;
 }
 
 void ButtonMenu::removeButton(Button * button)
@@ -153,12 +175,19 @@ QSize ButtonMenu::rectSize()
 
 int ButtonMenu::numberOfButtons()
 {
-    return m_buttons.size();
+    return m_numberOfButtons;
 }
 
 bool ButtonMenu::buttonReleased()
 {
-    return m_buttons[m_focusedIndex]->isTriggered();
+    if (!m_buttons.empty())
+    {
+        return m_buttons[m_focusedIndex]->isTriggered();
+    }
+    else
+    {
+        return false;
+    }
 }
 
 bool ButtonMenu::isActive()
