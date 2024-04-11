@@ -74,6 +74,7 @@ void ButtonMenu::render(QGraphicsScene &scene)
     {
         for (const auto b : m_buttons)
         {
+            setPos(m_x, m_y);
             b->render(scene);
         }
     }
@@ -82,6 +83,7 @@ void ButtonMenu::render(QGraphicsScene &scene)
 void ButtonMenu::addButton(Button* button)
 {
     if (m_buttons.size() == 0)  m_active = true;
+    m_numberOfButtons++;
     if (m_vertical)
     {
         m_rectSize.setHeight(m_rectSize.height() + button->boundingRect().height() + 2*GLOBAL::Scale);
@@ -91,7 +93,6 @@ void ButtonMenu::addButton(Button* button)
         m_rectSize.setWidth(m_rectSize.width() + button->boundingRect().width() + 2*GLOBAL::Scale);
     }
     m_newButtons.enqueue(button);
-    m_numberOfButtons++;
 }
 
 void ButtonMenu::removeButton(int index)

@@ -6,7 +6,6 @@ Sprite::Sprite(QGraphicsItem * parent) : QObject(), QGraphicsPixmapItem(parent)
     m_currentStateName = "idle";
     m_currentFrame = 0;
     m_interactable = false;
-    m_type = "Sprite";
     setZValue(GLOBAL::SPRITE_LAYER + y());
     m_interactingWithPlayer = false;
 }

@@ -3,6 +3,7 @@
 #include <QDebug>
 
 #include "Entities/movingsprite.h"
+#include "Entities/combatsprite.h"
 
 Database::Database()
 {
@@ -80,8 +81,22 @@ QList<Sprite*> Database::getWorldSprites(int MapID)
     QList<Sprite*> sprites;
     while(query.next())
     {
-        sprites.append(new Sprite);
+        if (query.value("SpriteType").toString() == "MovingSprite")
+        {
+            sprites.append(new MovingSprite);
+        }
+        else if (query.value("SpriteType").toString() == "CombatSprite")
+        {
+            sprites.append(new CombatSprite);
+            dynamic_cast<CombatSprite*>(sprites.back())->setBaseStat(SPD, 100);
+        }
+        else
+        {
+            sprites.append(new Sprite);
+        }
+
         sprites.back()->setID(query.value("Sprite.SpriteID").toInt());
+        sprites.back()->setType(query.value("SpriteType").toString());
         sprites.back()->setName(query.value("SpriteName").toString());
         sprites.back()->setFrameSize(QSize(query.value("SpriteSizeX").toInt(),
                                              query.value("SpriteSizeY").toInt()));
@@ -126,7 +141,7 @@ Sprite* Database::getSprite(int SpriteID)
     QSqlQuery animationQuery;
     QSqlQuery transitionQuery;
     QPixmap image;
-    MovingSprite* sprite = new MovingSprite;
+    CombatSprite* sprite = new CombatSprite;
 
     query.next();
     sprite->setID(query.value("Sprite.SpriteID").toInt());

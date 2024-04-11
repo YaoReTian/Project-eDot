@@ -5,30 +5,46 @@
 #include <QTimer>
 #include <QElapsedTimer>
 #include <QMouseEvent>
+#include <QPainter>
 
 #include "tilemap.h"
 #include "Utils/keymap.h"
 #include "database.h"
 #include "Entities/player.h"
 #include "UI/userinterface.h"
+#include "turnbased.h"
 
-class WorldScene : public QGraphicsScene
+class GameScene : public QGraphicsScene
 {
     Q_OBJECT
 public:
-    WorldScene(QObject *parent = 0);
+    GameScene(QObject *parent = 0);
     void loop();
-    void clear();
+    void updateCamera();
 
 private:
+    enum GameLayer
+    {
+        WORLD,
+        TURN_BASED,
+        BULLET_HELL,
+        MENU,
+        MAIN_MENU,
+        PAUSE_MENU
+    };
+
     QTimer m_timer;
     Tilemap *m_tilemap;
     KeyMap *m_keymap;
     Database *m_db;
     Player *m_player;
     UserInterface *m_UI;
+    TurnBased* m_turnbased;
     QElapsedTimer m_elapsedTimer;
+    GameLayer m_currentLayer;
     float m_deltaTime = 0.0f;
+    double m_cameraPosX;
+    double m_cameraPosY;
 
 protected:
     // Overridden functions

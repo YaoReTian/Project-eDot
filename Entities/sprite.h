@@ -24,6 +24,7 @@ public:
     void setID(int ID);
     void setName(QString name);
     void setSpriteSheet(QString spriteSheet);
+    void setType(QString type);
 
     void removeItem(QGraphicsScene &scene);
     void update(int deltaTime);
@@ -48,9 +49,6 @@ public:
     bool isInteractable();
     bool isInteractingWithPlayer();
     void popup();
-
-protected:
-    void setType(QString type);
 
 private:
     // Sprite data

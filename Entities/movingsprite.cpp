@@ -7,7 +7,6 @@ MovingSprite::MovingSprite() : Sprite()
     m_defaultSpeed = m_RUN_SPEED;
     m_currentSpeed = m_defaultSpeed;
     m_previousPos = QPointF(0,0);
-    setType("MovingSprite");
 }
 
 void MovingSprite::update(int deltatime)

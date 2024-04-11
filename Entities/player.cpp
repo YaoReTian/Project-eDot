@@ -9,8 +9,11 @@ Player::Player(Database* db)
     {
         m_party.append(nullptr);
     }
-    m_party[0] = dynamic_cast<MovingSprite*>(m_db->getSprite(1));
+    m_party[0] = dynamic_cast<CombatSprite*>(m_db->getSprite(1));
+    m_party[0]->setSide(Friendly);
+    m_party[0]->setBaseStat(SPD, 100);
     m_activeCharacterIndex = 0;
+    m_enteredCombat = true;
 }
 
 void Player::removeItem(QGraphicsScene &scene)
@@ -53,7 +56,8 @@ void Player::update(int deltatime, KeyMap* keys)
     {
         if (typeid(*s) == typeid(Sprite))
         {
-            dynamic_cast<Sprite*>(s)->popup();
+            Sprite* sprite = dynamic_cast<Sprite*>(s);
+            if (sprite->isInteractable())   sprite->popup();
         }
     }
 }
@@ -63,12 +67,29 @@ void Player::render(QGraphicsScene &scene)
     activeCharacter()->render(scene);
 }
 
-void Player::setCharacter(int partyIndex, int SpriteID)
+bool Player::enteredCombat()
 {
-    m_party[partyIndex] = dynamic_cast<MovingSprite*>(m_db->getSprite(SpriteID));
+    return m_enteredCombat;
 }
 
-MovingSprite* Player::activeCharacter()
+void Player::setCharacter(int partyIndex, int SpriteID)
+{
+    m_party[partyIndex] = dynamic_cast<CombatSprite*>(m_db->getSprite(SpriteID));
+}
+
+CombatSprite* Player::activeCharacter()
 {
     return m_party[m_activeCharacterIndex];
+}
+
+QList<CombatSprite*> Player::getParty()
+{
+    QList<CombatSprite*> list;
+
+    for (const auto p : m_party)
+    {
+        if (p != nullptr)   list.append(p);
+    }
+
+    return list;
 }

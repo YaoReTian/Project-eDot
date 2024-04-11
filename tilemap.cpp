@@ -7,16 +7,22 @@
 
 #include "Utils/global.h"
 #include "Entities/movingsprite.h"
+#include "Entities/combatsprite.h"
 
 // Public methods
-Tilemap::Tilemap(Database* db)
+Tilemap::Tilemap()
 {
-    m_db = db;
+    m_enteredCombatIndex = 0;
 }
 
 Tilemap::~Tilemap()
 {
     qDebug() << "Tilemap destroyed";
+}
+
+void Tilemap::setDatabase(Database* db)
+{
+    m_db = db;
 }
 
 void Tilemap::setMap(int MapID, UserInterface* UI)
@@ -60,6 +66,22 @@ int Tilemap::getMapSizeY()
     return m_mapSizeY;
 }
 
+bool Tilemap::enteredCombat()
+{
+    if (m_enteredCombatIndex == -1)
+    {
+        return false;
+    }
+    return true;
+}
+
+QList<CombatSprite*> Tilemap::getCombatSprites()
+{
+    QList<CombatSprite*> s;
+    s.append(dynamic_cast<CombatSprite*>(m_sprites[m_enteredCombatIndex]));
+    return s;
+}
+
 void Tilemap::removeItem(QGraphicsScene &scene)
 {
     for (const auto s : m_sprites)
@@ -74,17 +96,26 @@ void Tilemap::removeItem(QGraphicsScene &scene)
 
 void Tilemap::update(int deltatime)
 {
+    int i = 0;
     for (const auto &s : m_sprites)
     {
-        s->setAction(GLOBAL::NONE);
         if (typeid(*s) == typeid(MovingSprite))
         {
+            dynamic_cast<MovingSprite*>(s)->setAction(deltatime, GLOBAL::MOVE_LEFT);
             dynamic_cast<MovingSprite*>(s)->update(deltatime);
+        }
+        else if (typeid(*s) == typeid(CombatSprite))
+        {
+            if (dynamic_cast<CombatSprite*>(s)->enteredCombat()) m_enteredCombatIndex = i;
+            dynamic_cast<CombatSprite*>(s)->setAction(deltatime, GLOBAL::MOVE_LEFT);
+            dynamic_cast<CombatSprite*>(s)->update(deltatime);
         }
         else
         {
+            s->setAction(GLOBAL::MOVE_LEFT);
             s->update(deltatime);
         }
+        i++;
     }
 }
 

@@ -5,19 +5,22 @@
 
 #include "tile.h"
 #include "database.h"
-#include "Entities/movingsprite.h"
 #include "UI/userinterface.h"
+#include "Entities/combatsprite.h"
 
 class Tilemap
 {
 public:
-    Tilemap(Database* db);
+    Tilemap();
     ~Tilemap();
+    void setDatabase(Database* db);
     void setMap(int MapID, UserInterface* UI);
     QString getMapName();
     QString getMapDesc();
     int getMapSizeX();
     int getMapSizeY();
+    bool enteredCombat();
+    QList<CombatSprite*> getCombatSprites();
 
     void removeItem(QGraphicsScene &scene);
     void update(int deltatime);
@@ -44,6 +47,9 @@ private:
     QString m_mapDesc;
     int m_mapSizeX;
     int m_mapSizeY;
+
+    // Flags
+    int m_enteredCombatIndex;
 };
 
 #endif // MAP_H

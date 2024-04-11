@@ -34,6 +34,29 @@ enum Action
     NONE
 };
 
+enum Element
+{
+    PHYSICAL,
+    QUANTUM,
+    IMAGINARY
+};
+
+/*
+static QString ElementToString(Element element)
+{
+    switch (element)
+    {
+    case (PHYSICAL):
+        return "Physical";
+    case (QUANTUM):
+        return "Quantum";
+    case (IMAGINARY):
+        return "Imaginary";
+    }
+    return "ERROR: NO TYPE FOUND";
+};
+*/
+
 }
 
 #endif // GLOBAL_H

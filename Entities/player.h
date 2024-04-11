@@ -2,7 +2,7 @@
 #define PLAYER_H
 
 #include <QList>
-#include "movingsprite.h"
+#include "combatsprite.h"
 #include "database.h"
 
 class Player
@@ -16,12 +16,16 @@ public:
     void update(int deltatime, KeyMap* keys);
     void render(QGraphicsScene &scene);
 
+    bool enteredCombat();
+
     void setCharacter(int partyIndex, int SpriteID);
-    MovingSprite* activeCharacter();
+    CombatSprite* activeCharacter();
+    QList<CombatSprite*> getParty();
 
 private:
+    bool m_enteredCombat;
     Database *m_db;
-    QList<MovingSprite*> m_party;
+    QList<CombatSprite*> m_party;
     int m_activeCharacterIndex;
 };
 

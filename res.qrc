@@ -63,4 +63,7 @@
         <file>res/PopupButtonClicked.png</file>
         <file>res/PopupButtonFocused.png</file>
     </qresource>
+    <qresource prefix="/image/background">
+        <file>res/battleBackground.png</file>
+    </qresource>
 </RCC>
