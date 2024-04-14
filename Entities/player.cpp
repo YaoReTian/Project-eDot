@@ -1,6 +1,7 @@
 #include "player.h"
 
 #include "../Utils/global.h"
+#include "interactivesprite.h"
 
 Player::Player(Database* db)
 {
@@ -54,10 +55,20 @@ void Player::update(int deltatime, KeyMap* keys)
 
     for (const auto s : list)
     {
-        if (typeid(*s) == typeid(Sprite))
+        if (typeid(*s) == typeid(InteractiveSprite))
         {
-            Sprite* sprite = dynamic_cast<Sprite*>(s);
-            if (sprite->isInteractable())   sprite->popup();
+            InteractiveSprite* sprite = static_cast<InteractiveSprite*>(s);
+            if (sprite->isInteractive())   sprite->popup();
+        }
+        else if (typeid(*s) == typeid(MovingSprite))
+        {
+            MovingSprite* sprite = static_cast<MovingSprite*>(s);
+            if (sprite->isInteractive())   sprite->popup();
+        }
+        else if (typeid(*s) == typeid(CombatSprite))
+        {
+            CombatSprite* sprite = static_cast<CombatSprite*>(s);
+            if (sprite->isInteractive())   sprite->popup();
         }
     }
 }

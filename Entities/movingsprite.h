@@ -1,9 +1,9 @@
 #ifndef MOVINGSPRITE_H
 #define MOVINGSPRITE_H
 
-#include "sprite.h"
+#include "interactivesprite.h"
 
-class MovingSprite : public Sprite
+class MovingSprite : public InteractiveSprite
 {
 public:
     MovingSprite();

@@ -23,7 +23,7 @@ GameScene::GameScene(QObject *parent) :
 
     // Add functionality
     m_tilemap->setDatabase(m_db);
-    m_keymap->setDefaultBindings();
+    m_keymap->setWorldBindings();
     m_tilemap->setMap(1, m_UI);
     m_player->activeCharacter()->setPos(4*GLOBAL::ObjectLength,4*GLOBAL::ObjectLength);
 
@@ -48,6 +48,7 @@ void GameScene::loop()
     case WORLD:
         if (m_player->enteredCombat())
         {
+            m_keymap->setTurnBasedBindings();
             m_turnbased->setBackground(QPixmap(":/image/background/res/battleBackground.png").scaled(sceneRect().width(), sceneRect().height()));
             m_currentLayer = TURN_BASED;
             m_turnbased->setEvent(m_player, m_tilemap->getCombatSprites());
@@ -91,7 +92,7 @@ void GameScene::loop()
         m_UI->render(*this);
         break;
     case TURN_BASED:
-        m_turnbased->update(m_deltaTime);
+        m_turnbased->update(m_deltaTime, m_keymap);
 
         // RENDER
         // Remove all items

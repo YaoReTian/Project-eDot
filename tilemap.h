@@ -38,7 +38,7 @@ private:
     Database* m_db;
 
     // Attributes of objects on the map
-    QList<Sprite*> m_sprites;
+    QList<InteractiveSprite*> m_sprites;
     QList<Tile*> m_tiles;
 
     // Map info

@@ -35,29 +35,18 @@ public:
     int getID();
     QString getName();
     QString getType();
-    Button* getButton();
-    QString getScript();
 
     // For animations
     void setSpriteSheet(QPixmap spriteSheet);
     void setFrameSize(QSize frameSize);
-    void setInteraction(QString text, QString dialogue);
     void addAnimationState(QString stateName, int startFrame, int endFrame, float frameTime);
     void addTransition(QString startStateName, GLOBAL::Action triggerAction, QString endStateName);
-
-    // For interactions with the player
-    bool isInteractable();
-    bool isInteractingWithPlayer();
-    void popup();
 
 private:
     // Sprite data
     int m_SpriteID;
     QString m_name;
     QString m_type;
-    bool m_interactable;
-    QString m_interactText;
-    QString m_script;
 
     // For animations
     QSize m_frameSize;
@@ -66,10 +55,6 @@ private:
     QString m_currentStateName;
     QPixmap m_spriteSheet;
     QMap<QString, AnimationState*> m_states;
-
-    // For interactions
-    Button * m_button;
-    bool m_interactingWithPlayer;
 };
 
 #endif // SPRITE_H

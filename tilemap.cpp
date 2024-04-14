@@ -97,14 +97,14 @@ void Tilemap::removeItem(QGraphicsScene &scene)
 void Tilemap::update(int deltatime)
 {
     int i = 0;
-    for (const auto &s : m_sprites)
+    for (const auto s : m_sprites)
     {
-        if (typeid(*s) == typeid(MovingSprite))
+        if (typeid(s) == typeid(MovingSprite))
         {
             dynamic_cast<MovingSprite*>(s)->setAction(deltatime, GLOBAL::MOVE_LEFT);
             dynamic_cast<MovingSprite*>(s)->update(deltatime);
         }
-        else if (typeid(*s) == typeid(CombatSprite))
+        else if (typeid(s) == typeid(CombatSprite))
         {
             if (dynamic_cast<CombatSprite*>(s)->enteredCombat()) m_enteredCombatIndex = i;
             dynamic_cast<CombatSprite*>(s)->setAction(deltatime, GLOBAL::MOVE_LEFT);
@@ -149,10 +149,9 @@ void Tilemap::setSprites(UserInterface* UI)
 
     for (const auto s : m_sprites)
     {
-        if (s->isInteractable())
+        if (s->isInteractive())
         {
-            UI->addPopup(s->getButton(),
-                         s->getScript());
+            UI->addPopup(s->getButton(), s->getScript());
         }
     }
 }

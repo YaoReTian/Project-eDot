@@ -5,9 +5,7 @@ Sprite::Sprite(QGraphicsItem * parent) : QObject(), QGraphicsPixmapItem(parent)
     m_elapsed_time = 0;
     m_currentStateName = "idle";
     m_currentFrame = 0;
-    m_interactable = false;
     setZValue(GLOBAL::SPRITE_LAYER + y());
-    m_interactingWithPlayer = false;
 }
 
 void Sprite::setID(int ID)
@@ -40,16 +38,6 @@ QString Sprite::getType()
     return m_type;
 }
 
-Button* Sprite::getButton()
-{
-    return m_button;
-}
-
-QString Sprite::getScript()
-{
-    return m_script;
-}
-
 void Sprite::setSpriteSheet(QPixmap spriteSheet)
 {
     m_spriteSheet = spriteSheet;
@@ -58,16 +46,6 @@ void Sprite::setSpriteSheet(QPixmap spriteSheet)
 void Sprite::setFrameSize(QSize frameSize)
 {
     m_frameSize = frameSize;
-}
-
-void Sprite::setInteraction(QString text, QString script)
-{
-    m_interactable = true;
-    m_interactText = (text == "") ? m_name : text;
-    m_script = script;
-
-    m_button = new Button;
-    m_button->setText(m_interactText);
 }
 
 void Sprite::addAnimationState(QString stateName, int startFrame, int endFrame, float frameTime)
@@ -134,13 +112,6 @@ void Sprite::update(int deltaTime)
     {
         setPixmap(m_states[m_currentStateName]->frames[m_currentFrame]);
     }
-
-    // Check for interactions
-    if (m_interactable && m_button->isActive())
-    {
-        if (m_button->isTriggered())    m_interactingWithPlayer = true;
-        m_button->setActive(false);
-    }
 }
 
 void Sprite::render(QGraphicsScene &scene)
@@ -150,25 +121,9 @@ void Sprite::render(QGraphicsScene &scene)
 
 void Sprite::setAction(GLOBAL::Action action)
 {
-    if (m_interactable && m_button->isTriggered()) action = GLOBAL::NONE;
     if (m_states[m_currentStateName]->transitions.contains(action))
     {
         m_currentStateName = m_states[m_currentStateName]->transitions[action];
         m_currentFrame = 0;
     }
-}
-
-bool Sprite::isInteractable()
-{
-    return m_interactable;
-}
-
-bool Sprite::isInteractingWithPlayer()
-{
-    return m_interactingWithPlayer;
-}
-
-void Sprite::popup()
-{
-    m_button->setActive(true);
 }

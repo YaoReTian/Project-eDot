@@ -2,7 +2,7 @@
 
 #include "../tile.h"
 
-MovingSprite::MovingSprite() : Sprite()
+MovingSprite::MovingSprite() : InteractiveSprite()
 {
     m_defaultSpeed = m_RUN_SPEED;
     m_currentSpeed = m_defaultSpeed;

@@ -4,13 +4,88 @@ CombatSprite::CombatSprite() : MovingSprite()
 {
     m_side = Enemy;
     m_enteredCombat = true;
+    m_leftCombat = false;
+    m_inCombat = false;
+    m_healthBar = new ProgressBar;
+    m_energyBar = new ProgressBar;
+
+    m_stats[HP] = 5768;
+    m_currentHP = 4321;
+
+    m_maxEnergy = 100;
+    m_energyCharged = 43;
+
+    m_healthBar->setBackgroundColour(Qt::darkGray);
+    m_healthBar->setOutlineColour(Qt::black);
+    m_healthBar->setProgressColour(Qt::darkGreen);
+    m_healthBar->setProgressLowColour(Qt::red);
+    m_healthBar->setLowPercent(20);
+    m_healthBar->setWidth(4*GLOBAL::Scale);
+    m_healthBar->setLength(GLOBAL::ObjectLength);
+    m_healthBar->setZValue(GLOBAL::RENDER_LAYER);
+
+    m_energyBar->setBackgroundColour(Qt::darkGray);
+    m_energyBar->setOutlineColour(Qt::black);
+    m_energyBar->setWidth(4*GLOBAL::Scale);
+    m_energyBar->setLength(GLOBAL::ObjectLength);
+    m_energyBar->setZValue(GLOBAL::RENDER_LAYER);
+    m_energyBar->setAllignment(Vertical);
+}
+
+
+/*ISSUEs
+ * items removed despite not being on scene
+ */
+void CombatSprite::removeItem(QGraphicsScene &scene)
+{
+    MovingSprite::removeItem(scene);
+    if (m_enteredCombat)
+    {
+        m_inCombat = true;
+        m_enteredCombat = false;
+    }
+    else if (m_inCombat)
+    {
+        m_healthBar->removeItem(scene);
+        m_energyBar->removeItem(scene);
+        if (m_leftCombat)
+        {
+            m_inCombat = false;
+            m_leftCombat = false;
+        }
+    }
 }
 
 void CombatSprite::update(int deltatime)
 {
     m_baseActionValue = 1000/m_baseStats[SPD];
     m_actionValue = m_baseActionValue;
+
+    if (m_inCombat)
+    {
+        m_healthBar->setMaximum(m_stats[HP]);
+        m_healthBar->setValue(m_currentHP);
+        m_energyBar->setMaximum(m_maxEnergy);
+        m_energyBar->setValue(m_energyCharged);
+
+        m_energyBar->setPos(x() - 2*GLOBAL::Scale - m_energyBar->getWidth(), y());
+        m_healthBar->setPos(x() - (GLOBAL::ObjectLength - boundingRect().width())/2,
+                            y() - 2*GLOBAL::Scale - m_healthBar->getWidth());
+        m_energyBar->update(deltatime);
+        m_healthBar->update(deltatime);
+    }
+
     MovingSprite::update(deltatime);
+}
+
+void CombatSprite::render(QGraphicsScene &scene)
+{
+    MovingSprite::render(scene);
+    if (m_inCombat)
+    {
+        m_healthBar->render(scene);
+        m_energyBar->render(scene);
+    }
 }
 
 // SETTERS
@@ -27,6 +102,18 @@ void CombatSprite::setEntityName(QString name)
 void CombatSprite::setElement(GLOBAL::Element element)
 {
     m_element = element;
+    switch (element)
+    {
+    case GLOBAL::PHYSICAL:
+        m_energyBar->setProgressColour(Qt::darkCyan);
+        break;
+    case GLOBAL::QUANTUM:
+        m_energyBar->setProgressColour(Qt::darkMagenta);
+        break;
+    case GLOBAL::IMAGINARY:
+        m_energyBar->setProgressColour(QColor(255,215,00));
+        break;
+    }
 }
 
 void CombatSprite::setBaseStat(Stat stat, int value)

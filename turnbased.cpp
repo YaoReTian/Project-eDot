@@ -1,10 +1,17 @@
 #include "turnbased.h"
 
-#include <algorithm>
-
 TurnBased::TurnBased()
 {
     m_background = new QGraphicsPixmapItem;
+    m_friendlyTurn = false;
+    m_basicButton = new Button;
+    m_skillButton = new Button;
+
+    m_basicButton->setIconText("Q");
+    m_basicButton->setTriggerAction(GLOBAL::BASIC);
+
+    m_skillButton->setIconText("E");
+    m_skillButton->setTriggerAction(GLOBAL::SKILL);
 }
 
 void TurnBased::setBackground(QPixmap backgroundImg)
@@ -31,9 +38,19 @@ void TurnBased::removeItem(QGraphicsScene &scene)
     {
         s->removeItem(scene);
     }
+    if (m_basicButton->isActive())
+    {
+        m_basicButton->removeItem(scene);
+        m_skillButton->removeItem(scene);
+        if (!m_friendlyTurn)
+        {
+            m_basicButton->setActive(false);
+            m_skillButton->setActive(false);
+        }
+    }
 }
 
-void TurnBased::update(int deltatime)
+void TurnBased::update(int deltatime, KeyMap* keys)
 {
 
     // Sort in action value order with lambda function
@@ -60,6 +77,22 @@ void TurnBased::update(int deltatime)
         }
         s->update(deltatime);
     }
+
+    if (m_spriteQueue.head()->side() == Friendly)
+    {
+        m_friendlyTurn = true;
+
+        m_basicButton->setPos(m_background->boundingRect().width() - m_basicButton->boundingRect().width() - 2*GLOBAL::Scale,
+                              m_background->boundingRect().height() - 2*(m_basicButton->boundingRect().height() + 2*GLOBAL::Scale));
+        m_skillButton->setPos(m_background->boundingRect().width() - m_skillButton->boundingRect().width() - 2*GLOBAL::Scale,
+                              m_background->boundingRect().height() - m_skillButton->boundingRect().height() - 2*GLOBAL::Scale);
+
+        m_skillButton->setFocused();
+        m_basicButton->setFocused();
+
+        m_basicButton->update(keys);
+        m_skillButton->update(keys);
+    }
 }
 
 void TurnBased::render(QGraphicsScene &scene)
@@ -68,5 +101,15 @@ void TurnBased::render(QGraphicsScene &scene)
     for (const auto s : m_spriteQueue)
     {
         s->render(scene);
+    }
+    if (m_friendlyTurn)
+    {
+        m_basicButton->render(scene);
+        m_skillButton->render(scene);
+        if (!m_basicButton->isActive())
+        {
+            m_basicButton->setActive(true);
+            m_skillButton->setActive(true);
+        }
     }
 }

@@ -32,6 +32,7 @@ Button::Button(QGraphicsItem* parent) : QObject(), QGraphicsPixmapItem(parent)
     m_released = false;
     m_active = false;
     m_paused = false;
+    m_trigger = GLOBAL::SELECT;
 }
 
 void Button::update(KeyMap * keys)
@@ -45,14 +46,14 @@ void Button::update(KeyMap * keys)
     }
 
     // Check if clicked
-    if ((m_focused && ((m_mouseMode && keys->mouseHeldStatus() && keys->mouseFramesHeld() == 1) ||
-                       (keys->keyHeldStatus(GLOBAL::SELECT)))))
+    if ((m_focused && ((isUnderMouse() && m_mouseMode && keys->mouseHeldStatus() && keys->mouseFramesHeld() == 1) ||
+                       (keys->keyHeldStatus(m_trigger)))))
     {
         m_clicked = true;
     }
     // Check if keys are released
     if (m_clicked && ((m_mouseMode && keys->mouseReleasedStatus() && isUnderMouse()) ||
-                      keys->keyReleasedStatus(GLOBAL::SELECT)))
+                      keys->keyReleasedStatus(m_trigger)))
     {
         m_released = true;
         m_clicked = false;
@@ -98,6 +99,11 @@ void Button::setIconText(QString text)
     m_iconText->setPlainText(text);
 }
 
+void Button::setMousemode(bool value)
+{
+    m_mouseMode = value;
+}
+
 void Button::setPos(qreal x, qreal y)
 {
     QGraphicsPixmapItem::setPos(x, y);
@@ -117,6 +123,11 @@ void Button::setFocused()
 void Button::setActive(bool value)
 {
     m_active = value;
+}
+
+void Button::setTriggerAction(GLOBAL::Action action)
+{
+    m_trigger = action;
 }
 
 void Button::pause()

@@ -68,7 +68,7 @@ QList<Tile*> Database::getMapTiles(int MapID)
     return tiles;
 }
 
-QList<Sprite*> Database::getWorldSprites(int MapID)
+QList<InteractiveSprite*> Database::getWorldSprites(int MapID)
 {
     QSqlQuery query(QString("SELECT Sprite.SpriteID, SpriteName, SpriteType, SpriteSizeX, SpriteSizeY, PathToSpriteSheet, Interactable, InteractText, InteractDialogue, PositionX, PositionY "
                             "FROM SpriteInMap, Sprite "
@@ -78,7 +78,9 @@ QList<Sprite*> Database::getWorldSprites(int MapID)
     QSqlQuery transitionQuery;
     QPixmap image;
 
-    QList<Sprite*> sprites;
+    // PLAN: REMOVE INTERACTIVE SPRITES AND REPLACE WITH NORMAL SPRITES SCREW CARDS
+
+    QList<InteractiveSprite*> sprites;
     while(query.next())
     {
         if (query.value("SpriteType").toString() == "MovingSprite")
@@ -92,7 +94,7 @@ QList<Sprite*> Database::getWorldSprites(int MapID)
         }
         else
         {
-            sprites.append(new Sprite);
+            sprites.append(new InteractiveSprite);
         }
 
         sprites.back()->setID(query.value("Sprite.SpriteID").toInt());

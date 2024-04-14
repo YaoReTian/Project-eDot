@@ -22,8 +22,10 @@ public:
     void setPos(qreal x, qreal y);
     void setFocused();
     void setActive(bool value);
+    void setTriggerAction(GLOBAL::Action);
     void removeFocus();
     void setIconText(QString text);
+    void setMousemode(bool value);
     void pause();
     void hide();
     void show();
@@ -41,6 +43,7 @@ private:
     bool m_mouseMode;
     bool m_active;
     bool m_paused;
+    GLOBAL::Action m_trigger;
 
     QPixmap m_defaultPixmap;
     QPixmap m_focusedPixmap;

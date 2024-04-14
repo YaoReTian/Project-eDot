@@ -2,6 +2,7 @@
 #define COMBATSPRITE_H
 
 #include "movingsprite.h"
+#include "../UI/progressbar.h"
 
 struct Move
 {
@@ -52,7 +53,9 @@ public:
     CombatSprite();
 
     // Game loop functions
+    void removeItem(QGraphicsScene &scene);
     void update(int deltatime);
+    void render(QGraphicsScene &scene);
 
     // Setters
     void setEntityID(int EntityID);
@@ -117,6 +120,11 @@ private:
     int m_baseActionValue;
     Side m_side;
     bool m_enteredCombat;
+    bool m_leftCombat;
+    bool m_inCombat;
+
+    ProgressBar* m_healthBar;
+    ProgressBar* m_energyBar;
 };
 
 #endif // COMBATSPRITE_H
