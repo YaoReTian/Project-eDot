@@ -5,7 +5,7 @@
 #include <QGraphicsScene>
 
 #include "../Utils/global.h"
-#include "../UI/button.h"
+#include "../gameobject.h"
 
 struct AnimationState
 {
@@ -15,20 +15,21 @@ struct AnimationState
     QMap<GLOBAL::Action, QString> transitions;
 };
 
-class Sprite : public QObject, public QGraphicsPixmapItem
+class Sprite : public QObject, public QGraphicsPixmapItem, public GameObject
 {
     Q_OBJECT
 public:
     Sprite(QGraphicsItem * parent =0);
+    ~Sprite();
 
     void setID(int ID);
     void setName(QString name);
     void setSpriteSheet(QString spriteSheet);
     void setType(QString type);
 
-    void removeItem(QGraphicsScene &scene);
-    void update(int deltaTime);
-    void render(QGraphicsScene &scene);
+    virtual void removeItem(QGraphicsScene &scene) override;
+    virtual void update(int deltaTime) override;
+    virtual void render(QGraphicsScene &scene) override;
 
     void setAction(GLOBAL::Action action);
 

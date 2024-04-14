@@ -3,16 +3,14 @@
 #include <QDebug>
 #include <QString>
 #include <QGraphicsPixmapItem>
+#include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
 
 #include "Utils/global.h"
 
 GameScene::GameScene(QObject *parent) :
-    QGraphicsScene(parent)
+    QGraphicsScene(parent), m_currentLayer(WORLD), m_deltaTime(0.0f), m_cameraPosX(0), m_cameraPosY(0)
 {
-    // Set initial game layer
-    m_currentLayer = WORLD;
-
     // Instantiate objects
     m_db = new Database;
     m_UI = new UserInterface();
@@ -24,7 +22,7 @@ GameScene::GameScene(QObject *parent) :
     // Add functionality
     m_tilemap->setDatabase(m_db);
     m_keymap->setWorldBindings();
-    m_tilemap->setMap(1, m_UI);
+    m_tilemap->setMap(3, m_UI);
     m_player->activeCharacter()->setPos(4*GLOBAL::ObjectLength,4*GLOBAL::ObjectLength);
 
     addItem(m_player->activeCharacter());
@@ -35,6 +33,16 @@ GameScene::GameScene(QObject *parent) :
     connect(&m_timer, &QTimer::timeout, this, &GameScene::loop);
     m_timer.start(int(1000.0f/GLOBAL::FPS));
     m_elapsedTimer.start();
+}
+
+GameScene::~GameScene()
+{
+    delete m_tilemap;
+    delete m_keymap;
+    delete m_db;
+    delete m_player;
+    delete m_UI;
+    delete m_turnbased;
 }
 
 void GameScene::loop()
@@ -74,11 +82,15 @@ void GameScene::loop()
     switch (m_currentLayer)
     {
     case WORLD:
+        // INPUT
+        m_player->input(m_keymap);
+        m_UI->input(m_keymap, m_player->activeCharacter());
+
         // UPDATE
         updateCamera();
         m_tilemap->update(m_deltaTime);
-        m_player->update(m_deltaTime, m_keymap);
-        m_UI->update(m_deltaTime, m_keymap, m_player->activeCharacter());
+        m_player->update(m_deltaTime);
+        m_UI->update(m_deltaTime);
 
         // RENDER
         // Remove all items
@@ -92,7 +104,11 @@ void GameScene::loop()
         m_UI->render(*this);
         break;
     case TURN_BASED:
-        m_turnbased->update(m_deltaTime, m_keymap);
+        // INPUT
+        m_turnbased->input(m_keymap);
+
+        // UPDATE
+        m_turnbased->update(m_deltaTime);
 
         // RENDER
         // Remove all items
@@ -137,13 +153,15 @@ void GameScene::keyPressEvent(QKeyEvent *event)
 
 void GameScene::keyReleaseEvent(QKeyEvent *event)
 {
-    Qt::Key key = static_cast<Qt::Key>(event->key());
-
-    if (m_keymap->contains(key))
+    if (!event->isAutoRepeat())
     {
-        GLOBAL::Action action = m_keymap->getAction(key);
-        m_keymap->keyHeld(action);
-        m_keymap->keyReleased(action);
+        Qt::Key key = static_cast<Qt::Key>(event->key());
+
+        if (m_keymap->contains(key))
+        {
+            GLOBAL::Action action = m_keymap->getAction(key);
+            m_keymap->keyReleased(action);
+        }
     }
     QGraphicsScene::keyReleaseEvent(event);
 }

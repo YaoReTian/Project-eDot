@@ -1,13 +1,40 @@
 #include "buttonmenu.h"
 
 ButtonMenu::ButtonMenu()
+    : m_rectSize(0,0), m_vertical(true), m_active(false), m_x(0), m_y(0),
+    m_focusedIndex(0), m_elapsedTime(0), m_numberOfButtons(0)
 {
-    m_rectSize.setHeight(0);
-    m_rectSize.setWidth(0);
-    m_vertical = true;
-    m_focusedIndex = 0;
-    m_active = false;
-    m_numberOfButtons = 0;
+}
+
+ButtonMenu::~ButtonMenu()
+{
+    qDeleteAll(m_buttons);
+    m_buttons.clear();
+    qDeleteAll(m_newButtons);
+    m_newButtons.clear();
+}
+
+void ButtonMenu::input(KeyMap* keys)
+{
+    if (!m_buttons.empty())
+    {
+        if (keys->keyHeldStatus(GLOBAL::NEXT_OPTION) && m_elapsedTime >= 100)
+        {
+            m_buttons[m_focusedIndex]->removeFocus();
+            m_focusedIndex++;
+            if (m_focusedIndex == m_buttons.size())  m_focusedIndex = 0;
+            m_elapsedTime = 0;
+        }
+        else if (keys->keyHeldStatus(GLOBAL::PREV_OPTION) && m_elapsedTime > 100)
+        {
+            m_buttons[m_focusedIndex]->removeFocus();
+            m_focusedIndex--;
+            if (m_focusedIndex == -1)  m_focusedIndex = m_buttons.size()-1;
+            m_elapsedTime = 0;
+        }
+        m_buttons[m_focusedIndex]->setFocused();
+        m_buttons[m_focusedIndex]->input(keys);
+    }
 }
 
 void ButtonMenu::removeItem(QGraphicsScene &scene)
@@ -27,7 +54,7 @@ void ButtonMenu::removeItem(QGraphicsScene &scene)
         }
         if (!removedButtons.empty())
         {
-            while (removedButtons.size() != 0)
+            while (!removedButtons.empty())
             {
                 m_buttons[removedButtons.back()]->setActive(false);
                 m_buttons.removeAt(removedButtons.back());
@@ -37,29 +64,14 @@ void ButtonMenu::removeItem(QGraphicsScene &scene)
     }
 }
 
-void ButtonMenu::update(int deltatime, KeyMap* keys)
+void ButtonMenu::update(int deltatime)
 {
     m_elapsedTime += deltatime;
     if (!m_buttons.empty())
     {
-        if (keys->keyHeldStatus(GLOBAL::NEXT_OPTION) && m_elapsedTime >= 100)
-        {
-            m_buttons[m_focusedIndex]->removeFocus();
-            m_focusedIndex++;
-            if (m_focusedIndex == m_buttons.size())  m_focusedIndex = 0;
-            m_elapsedTime = 0;
-        }
-        else if (keys->keyHeldStatus(GLOBAL::PREV_OPTION) && m_elapsedTime > 100)
-        {
-            m_buttons[m_focusedIndex]->removeFocus();
-            m_focusedIndex--;
-            if (m_focusedIndex == -1)  m_focusedIndex = m_buttons.size()-1;
-            m_elapsedTime = 0;
-        }
-        m_buttons[m_focusedIndex]->setFocused();
         for (auto b : m_buttons)
         {
-            b->update(keys);
+            b->update(deltatime);
         }
     }
 }

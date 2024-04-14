@@ -9,15 +9,18 @@
 #include "Entities/movingsprite.h"
 #include "Entities/combatsprite.h"
 
-// Public methods
 Tilemap::Tilemap()
+    : m_mapID(0), m_mapName("Unset"), m_mapDesc("Unset"),
+    m_mapSizeX(0), m_mapSizeY(0), m_enteredCombatIndex(0)
 {
-    m_enteredCombatIndex = 0;
 }
 
 Tilemap::~Tilemap()
 {
-    qDebug() << "Tilemap destroyed";
+    qDeleteAll(m_tiles);
+    m_tiles.clear();
+    qDeleteAll(m_sprites);
+    m_sprites.clear();
 }
 
 void Tilemap::setDatabase(Database* db)
@@ -101,13 +104,13 @@ void Tilemap::update(int deltatime)
     {
         if (typeid(s) == typeid(MovingSprite))
         {
-            dynamic_cast<MovingSprite*>(s)->setAction(deltatime, GLOBAL::MOVE_LEFT);
+            dynamic_cast<MovingSprite*>(s)->setAction(GLOBAL::MOVE_LEFT);
             dynamic_cast<MovingSprite*>(s)->update(deltatime);
         }
         else if (typeid(s) == typeid(CombatSprite))
         {
             if (dynamic_cast<CombatSprite*>(s)->enteredCombat()) m_enteredCombatIndex = i;
-            dynamic_cast<CombatSprite*>(s)->setAction(deltatime, GLOBAL::MOVE_LEFT);
+            dynamic_cast<CombatSprite*>(s)->setAction(GLOBAL::MOVE_LEFT);
             dynamic_cast<CombatSprite*>(s)->update(deltatime);
         }
         else

@@ -11,6 +11,13 @@ KeyMap::KeyMap()
     m_mouseStatus = new MouseStatus;
 }
 
+KeyMap::~KeyMap()
+{
+    qDeleteAll(m_keyStatus);
+    m_keyStatus.clear();
+    delete m_mouseStatus;
+}
+
 void KeyMap::setWorldBindings()
 {
     m_keys.clear();

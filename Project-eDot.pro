@@ -42,6 +42,7 @@ HEADERS += \
     Entities/movingsprite.h \
     Entities/player.h \
     Entities/sprite.h \
+    gameobject.h \
     gamescene.h \
     tile.h \
     tilemap.h \

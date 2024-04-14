@@ -3,18 +3,21 @@
 
 #include <QList>
 #include "combatsprite.h"
-#include "database.h"
+#include "../database.h"
+#include "../gameobject.h"
 
-class Player
+class Player : public GameObject
 {
 public:
     Player(Database* db);
+    ~Player();
 
     void editParty();
 
-    void removeItem(QGraphicsScene &scene);
-    void update(int deltatime, KeyMap* keys);
-    void render(QGraphicsScene &scene);
+    void input(KeyMap* keys);
+    virtual void removeItem(QGraphicsScene &scene) override;
+    virtual void update(int deltatime) override;
+    virtual void render(QGraphicsScene &scene) override;
 
     bool enteredCombat();
 

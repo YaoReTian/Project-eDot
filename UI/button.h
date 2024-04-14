@@ -6,16 +6,20 @@
 #include <QGraphicsScene>
 #include <QPixmap>
 #include "../Utils/keymap.h"
+#include "../gameobject.h"
 
-class Button : public QObject, public QGraphicsPixmapItem
+class Button : public QObject, public QGraphicsPixmapItem, public GameObject
 {
     Q_OBJECT
 public:
     Button(QGraphicsItem* parent = 0);
+    ~Button();
 
-    void removeItem(QGraphicsScene &scene);
-    void update(KeyMap * keys);
-    void render(QGraphicsScene &scene);
+    void input(KeyMap* keys);
+
+    virtual void removeItem(QGraphicsScene &scene) override;
+    virtual void update(int deltatime) override;
+    virtual void render(QGraphicsScene &scene) override;
 
     void reset();
     void setText(QString text);
@@ -35,6 +39,8 @@ public:
     bool isPaused();
 
 private:
+    int m_elapsedTime;
+
     QGraphicsTextItem* m_textBox;
     QGraphicsTextItem* m_iconText;
     bool m_clicked;
@@ -48,10 +54,6 @@ private:
     QPixmap m_defaultPixmap;
     QPixmap m_focusedPixmap;
     QPixmap m_clickedPixmap;
-
-    //Icon only appears when focused
-    QPixmap m_iconDefault;
-    QPixmap m_iconClicked;
 };
 
 #endif // BUTTON_H

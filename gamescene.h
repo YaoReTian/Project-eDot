@@ -19,6 +19,7 @@ class GameScene : public QGraphicsScene
     Q_OBJECT
 public:
     GameScene(QObject *parent = 0);
+    ~GameScene();
     void loop();
     void updateCamera();
 
@@ -42,7 +43,7 @@ private:
     TurnBased* m_turnbased;
     QElapsedTimer m_elapsedTimer;
     GameLayer m_currentLayer;
-    float m_deltaTime = 0.0f;
+    float m_deltaTime;
     double m_cameraPosX;
     double m_cameraPosY;
 

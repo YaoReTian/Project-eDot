@@ -5,6 +5,7 @@
 #include <QGraphicsRectItem>
 #include <QBrush>
 #include <QPen>
+#include "../gameobject.h"
 
 enum Allignment
 {
@@ -18,14 +19,15 @@ enum Direction
     TopToBottom
 };
 
-class ProgressBar
+class ProgressBar : public GameObject
 {
 public:
     ProgressBar();
+    ~ProgressBar();
 
-    void removeItem(QGraphicsScene &scene);
-    void update(int deltatime);
-    void render(QGraphicsScene &scene);
+    virtual void removeItem(QGraphicsScene &scene) override;
+    virtual void update(int deltatime) override;
+    virtual void render(QGraphicsScene &scene) override;
 
     void setMaximum(qreal maximum);
     void setValue(qreal value);

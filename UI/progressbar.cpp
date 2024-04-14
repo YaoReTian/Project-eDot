@@ -5,28 +5,24 @@
 #include "../Utils/global.h"
 
 ProgressBar::ProgressBar()
+    : m_elapsedTime(0), m_maximum(100), m_currentVal(0), m_changeInVal(0), m_newVal(0), m_lowPercent(20),
+    m_x(0), m_y(0), m_zValue(0), m_width(0), m_length(0), m_progressLowColour(Qt::green), m_progressColour(Qt::green),
+    m_allignment(Horizontal), m_direction(BottomToTop), m_progressChangeRate(1000.0f)
 {
-    m_maximum = 100;
-    m_currentVal = 0;
-    m_lowPercent = 0;
-    m_x = 0;
-    m_y = 0;
-    m_zValue = 0;
-    m_progressLowColour = nullptr;
-    m_progressChangeRate = 1000.0f;
-    m_newVal = 0;
-    m_elapsedTime = 0;
-
     m_progressLine = new QGraphicsRectItem;
     m_backgroundLine = new QGraphicsRectItem;
     m_outline = new QGraphicsRectItem;
 
-    m_allignment = Horizontal;
-    m_direction = BottomToTop;
-
     m_progressLine->setPen(Qt::NoPen);
     m_backgroundLine->setPen(Qt::NoPen);
     m_outline->setPen(QPen(Qt::white, 0.3f));
+}
+
+ProgressBar::~ProgressBar()
+{
+    delete m_progressLine;
+    delete m_backgroundLine;
+    delete m_outline;
 }
 
 void ProgressBar::removeItem(QGraphicsScene &scene)
@@ -36,7 +32,6 @@ void ProgressBar::removeItem(QGraphicsScene &scene)
     scene.removeItem(m_outline);
 }
 
-// Write this after the rest of the functions
 void ProgressBar::update(int deltatime)
 {
     if (m_newVal != m_currentVal)
@@ -141,6 +136,10 @@ void ProgressBar::setValue(qreal value)
 
 void ProgressBar::setProgressColour(QColor colour)
 {
+    if (m_progressColour == m_progressLowColour)
+    {
+        m_progressLowColour = colour;
+    }
     m_progressColour = colour;
 }
 

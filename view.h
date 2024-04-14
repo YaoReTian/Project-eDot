@@ -9,6 +9,7 @@ class View : public QGraphicsView
     Q_OBJECT
 public:
     View();
+    ~View();
 
 private:
     GameScene *m_gamescene;

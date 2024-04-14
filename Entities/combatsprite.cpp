@@ -1,19 +1,26 @@
 #include "combatsprite.h"
 
-CombatSprite::CombatSprite() : MovingSprite()
+CombatSprite::CombatSprite()
+    : MovingSprite(), m_EntityID(-1), m_level(1), m_entityName("Unset"),
+    m_scaleStat(ATK), m_currentHP(100), m_maxEnergy(100), m_energyCharged(10), m_side(Enemy),
+    m_enteredCombat(false), m_leftCombat(false), m_inCombat(false)
 {
-    m_side = Enemy;
-    m_enteredCombat = true;
-    m_leftCombat = false;
-    m_inCombat = false;
+
+    for (int stat = HP; stat < Null; stat++)
+    {
+        Stat s = static_cast<Stat>(stat);
+        m_baseStats[s] = 100;
+        m_stats[s] = m_baseStats[s];
+        m_statScalers[s] = new StatScaler;
+    }
+
+    m_moveset[Basic] = new Move;
+    m_moveset[Skill] = new Move;
+    m_moveset[Overdrive] = new Move;
+
+    // Progress bars
     m_healthBar = new ProgressBar;
     m_energyBar = new ProgressBar;
-
-    m_stats[HP] = 5768;
-    m_currentHP = 4321;
-
-    m_maxEnergy = 100;
-    m_energyCharged = 43;
 
     m_healthBar->setBackgroundColour(Qt::darkGray);
     m_healthBar->setOutlineColour(Qt::black);
@@ -32,10 +39,18 @@ CombatSprite::CombatSprite() : MovingSprite()
     m_energyBar->setAllignment(Vertical);
 }
 
+CombatSprite::~CombatSprite()
+{
+    qDeleteAll(m_statChanges);
+    m_statChanges.clear();
+    qDeleteAll(m_statScalers);
+    m_statScalers.clear();
+    qDeleteAll(m_moveset);
+    m_moveset.clear();
+    delete m_healthBar;
+    delete m_energyBar;
+}
 
-/*ISSUEs
- * items removed despite not being on scene
- */
 void CombatSprite::removeItem(QGraphicsScene &scene)
 {
     MovingSprite::removeItem(scene);

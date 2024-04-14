@@ -9,6 +9,11 @@ View::View() :
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
 
+View::~View()
+{
+    delete m_gamescene;
+}
+
 void View::resizeEvent(QResizeEvent* event)
 {
     m_gamescene->setSceneRect(m_gamescene->sceneRect().x(),m_gamescene->sceneRect().y(),

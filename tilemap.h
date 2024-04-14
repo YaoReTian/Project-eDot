@@ -7,8 +7,9 @@
 #include "database.h"
 #include "UI/userinterface.h"
 #include "Entities/combatsprite.h"
+#include "gameobject.h"
 
-class Tilemap
+class Tilemap : public GameObject
 {
 public:
     Tilemap();
@@ -22,9 +23,9 @@ public:
     bool enteredCombat();
     QList<CombatSprite*> getCombatSprites();
 
-    void removeItem(QGraphicsScene &scene);
-    void update(int deltatime);
-    void render(QGraphicsScene &scene);
+    virtual void removeItem(QGraphicsScene &scene) override;
+    virtual void update(int deltatime) override;
+    virtual void render(QGraphicsScene &scene) override;
 
     void generateTiles(QGraphicsScene &scene);
     void generateSprites(QGraphicsScene &scene);

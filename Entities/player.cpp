@@ -3,9 +3,8 @@
 #include "../Utils/global.h"
 #include "interactivesprite.h"
 
-Player::Player(Database* db)
+Player::Player(Database* db) : m_enteredCombat(false), m_db(db), m_activeCharacterIndex(0)
 {
-    m_db = db;
     for (int n = 0; n < 4; n++)
     {
         m_party.append(nullptr);
@@ -13,8 +12,43 @@ Player::Player(Database* db)
     m_party[0] = dynamic_cast<CombatSprite*>(m_db->getSprite(1));
     m_party[0]->setSide(Friendly);
     m_party[0]->setBaseStat(SPD, 100);
-    m_activeCharacterIndex = 0;
-    m_enteredCombat = true;
+    m_party[0]->setElement(GLOBAL::QUANTUM);
+    m_party[0]->setEntityName("Player");
+}
+
+Player::~Player()
+{
+    qDeleteAll(m_party);
+    m_party.clear();
+}
+
+void Player::input(KeyMap* keys)
+{
+    bool actionTaken = false;
+    if (keys->keyHeldStatus(GLOBAL::MOVE_LEFT))
+    {
+        actionTaken = true;
+        activeCharacter()->setAction(GLOBAL::MOVE_LEFT);
+    }
+    if (keys->keyHeldStatus(GLOBAL::MOVE_RIGHT))
+    {
+        actionTaken = true;
+        activeCharacter()->setAction(GLOBAL::MOVE_RIGHT);
+    }
+    if (keys->keyHeldStatus(GLOBAL::MOVE_UP))
+    {
+        actionTaken = true;
+        activeCharacter()->setAction(GLOBAL::MOVE_UP);
+    }
+    if (keys->keyHeldStatus(GLOBAL::MOVE_DOWN))
+    {
+        actionTaken = true;
+        activeCharacter()->setAction(GLOBAL::MOVE_DOWN);
+    }
+    if (!actionTaken)
+    {
+        activeCharacter()->setAction(GLOBAL::NONE);
+    }
 }
 
 void Player::removeItem(QGraphicsScene &scene)
@@ -22,33 +56,8 @@ void Player::removeItem(QGraphicsScene &scene)
     activeCharacter()->removeItem(scene);
 }
 
-void Player::update(int deltatime, KeyMap* keys)
+void Player::update(int deltatime)
 {
-    bool actionTaken = false;
-    if (keys->keyHeldStatus(GLOBAL::MOVE_LEFT))
-    {
-        actionTaken = true;
-        activeCharacter()->setAction(deltatime, GLOBAL::MOVE_LEFT);
-    }
-    if (keys->keyHeldStatus(GLOBAL::MOVE_RIGHT))
-    {
-        actionTaken = true;
-        activeCharacter()->setAction(deltatime, GLOBAL::MOVE_RIGHT);
-    }
-    if (keys->keyHeldStatus(GLOBAL::MOVE_UP))
-    {
-        actionTaken = true;
-        activeCharacter()->setAction(deltatime, GLOBAL::MOVE_UP);
-    }
-    if (keys->keyHeldStatus(GLOBAL::MOVE_DOWN))
-    {
-        actionTaken = true;
-        activeCharacter()->setAction(deltatime, GLOBAL::MOVE_DOWN);
-    }
-    if (!actionTaken)
-    {
-        activeCharacter()->setAction(deltatime, GLOBAL::NONE);
-    }
     activeCharacter()->update(deltatime);
 
     QList<QGraphicsItem*> list = activeCharacter()->collidingItems();

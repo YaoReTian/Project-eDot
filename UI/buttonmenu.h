@@ -4,14 +4,19 @@
 #include "button.h"
 #include <QQueue>
 
-class ButtonMenu
+#include "../gameobject.h"
+
+class ButtonMenu : public GameObject
 {
 public:
     ButtonMenu();
+    ~ButtonMenu();
 
-    void removeItem(QGraphicsScene &scene);
-    void update(int deltatime, KeyMap* keys);
-    void render(QGraphicsScene &scene);
+    void input(KeyMap* keys);
+
+    virtual void removeItem(QGraphicsScene &scene) override;
+    virtual void update(int deltatime) override;
+    virtual void render(QGraphicsScene &scene) override;
 
     void addButton(Button* button);
     void removeButton(int index);

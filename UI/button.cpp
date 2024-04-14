@@ -3,8 +3,12 @@
 #include <QFont>
 
 #include "../Utils/global.h"
-
-Button::Button(QGraphicsItem* parent) : QObject(), QGraphicsPixmapItem(parent)
+Button::Button(QGraphicsItem* parent)
+    : QObject(), QGraphicsPixmapItem(parent), m_elapsedTime(0), m_clicked(false), m_released(false),
+    m_focused(false), m_mouseMode(true), m_active(false), m_paused(false), m_trigger(GLOBAL::SELECT),
+    m_defaultPixmap(":/image/UI/res/PopupButtonDefault.png"),
+    m_focusedPixmap(":/image/UI/res/PopupButtonFocused.png"),
+    m_clickedPixmap(":/image/UI/res/PopupButtonClicked.png")
 {
     m_textBox = new QGraphicsTextItem;
     m_iconText = new QGraphicsTextItem;
@@ -16,28 +20,27 @@ Button::Button(QGraphicsItem* parent) : QObject(), QGraphicsPixmapItem(parent)
     font.setPointSize(8 * GLOBAL::Scale);
     m_iconText->setFont(font);
 
-    m_defaultPixmap.load(":/image/UI/res/PopupButtonDefault.png");
-    m_clickedPixmap.load(":/image/UI/res/PopupButtonClicked.png");
-    m_focusedPixmap.load(":/image/UI/res/PopupButtonFocused.png");
-    m_iconDefault.load(":/image/UI/res/PopupIconDefault.png");
-    m_iconClicked.load(":/image/UI/res/PopupIconClicked.png");
-
     setPixmap(m_defaultPixmap.scaled(m_defaultPixmap.width() * GLOBAL::Scale,
                                      m_defaultPixmap.height() * GLOBAL::Scale));
     m_textBox->setTextWidth(boundingRect().width()/2);
-
-    m_clicked = false;
-    m_focused = false;
-    m_mouseMode = true;
-    m_released = false;
-    m_active = false;
-    m_paused = false;
-    m_trigger = GLOBAL::SELECT;
 }
 
-void Button::update(KeyMap * keys)
+Button::~Button()
 {
-    m_released = false;
+    delete m_textBox;
+    delete m_iconText;
+}
+
+void Button::input(KeyMap* keys)
+{
+    if (m_clicked && m_mouseMode && keys->mouseHeldStatus())
+    {
+        m_released = false;
+    }
+    else
+    {
+        reset();
+    }
 
     // Check if focused
     if (m_mouseMode && isUnderMouse())
@@ -51,6 +54,7 @@ void Button::update(KeyMap * keys)
     {
         m_clicked = true;
     }
+
     // Check if keys are released
     if (m_clicked && ((m_mouseMode && keys->mouseReleasedStatus() && isUnderMouse()) ||
                       keys->keyReleasedStatus(m_trigger)))
@@ -61,6 +65,23 @@ void Button::update(KeyMap * keys)
     else if (m_clicked && (m_mouseMode && keys->mouseReleasedStatus() && !isUnderMouse()))
     {
         m_clicked = false;
+    }
+}
+
+void Button::update(int deltatime)
+{
+    if (m_released && m_elapsedTime < 100)
+    {
+        m_released = false;
+    }
+
+    if (m_clicked)
+    {
+        m_elapsedTime += deltatime;
+    }
+    else
+    {
+        m_elapsedTime = 0;
     }
 
     // Render according to status

@@ -1,15 +1,19 @@
 #include "interactivesprite.h"
 
-InteractiveSprite::InteractiveSprite() : Sprite()
+InteractiveSprite::InteractiveSprite()
+    : Sprite(), m_interactive(false), m_button(nullptr), m_interactingWithPlayer(false)
 {
-    m_interactable = false;
-    m_interactingWithPlayer = false;
+}
+
+InteractiveSprite::~InteractiveSprite()
+{
+    delete m_button;
 }
 
 void InteractiveSprite::update(int deltatime)
 {
     Sprite::update(deltatime);
-    if (m_interactable && m_button->isActive())
+    if (m_interactive && m_button->isActive())
     {
         if (m_button->isTriggered())    m_interactingWithPlayer = true;
         m_button->setActive(false);
@@ -18,13 +22,13 @@ void InteractiveSprite::update(int deltatime)
 
 void InteractiveSprite::setAction(GLOBAL::Action action)
 {
-    if (m_interactable && m_button->isTriggered()) action = GLOBAL::NONE;
+    if (m_interactive && m_button->isTriggered()) action = GLOBAL::NONE;
     Sprite::setAction(action);
 }
 
 void InteractiveSprite::setInteraction(QString text, QString script)
 {
-    m_interactable = true;
+    m_interactive = true;
     m_interactText = (text == "") ? getName() : text;
     m_script = script;
 
@@ -39,7 +43,7 @@ QString InteractiveSprite::getScript()
 
 bool InteractiveSprite::isInteractive()
 {
-    return m_interactable;
+    return m_interactive;
 }
 
 bool InteractiveSprite::isInteractingWithPlayer()

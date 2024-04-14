@@ -2,9 +2,14 @@
 
 #include "../Utils/global.h"
 
-UserInterface::UserInterface()
+UserInterface::UserInterface() : m_popupPosX(0), m_popupPosY(0), m_elapsedTime(0)
 {
     m_popupMenu = new ButtonMenu;
+}
+
+UserInterface::~UserInterface()
+{
+    delete m_popupMenu;
 }
 
 void UserInterface::removeItem(QGraphicsScene &scene)
@@ -12,7 +17,14 @@ void UserInterface::removeItem(QGraphicsScene &scene)
     m_popupMenu->removeItem(scene);
 }
 
-void UserInterface::update(int deltatime, KeyMap * keys, QGraphicsItem * activeCharacter)
+void UserInterface::input(KeyMap* keys, QGraphicsItem* activeCharacter)
+{
+    m_popupMenu->input(keys);
+    m_popupPosX = activeCharacter->x() + activeCharacter->boundingRect().width() + 5* GLOBAL::Scale;
+    m_popupPosY = activeCharacter->y();
+}
+
+void UserInterface::update(int deltatime)
 {
     for (const auto p : m_popups)
     {
@@ -23,9 +35,8 @@ void UserInterface::update(int deltatime, KeyMap * keys, QGraphicsItem * activeC
     }
     if (m_popupMenu->isActive())
     {
-        m_popupMenu->setPos(activeCharacter->x() + activeCharacter->boundingRect().width() + 5* GLOBAL::Scale,
-                            activeCharacter->y());
-        m_popupMenu->update(deltatime, keys);
+        m_popupMenu->setPos(m_popupPosX, m_popupPosY);
+        m_popupMenu->update(deltatime);
         if (m_popupMenu->buttonReleased())
         {
             m_popupMenu->setActive(false);

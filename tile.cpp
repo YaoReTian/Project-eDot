@@ -2,14 +2,31 @@
 
 #include <QRandomGenerator>
 
-Tile::Tile(QGraphicsItem *parent) : QObject(), QGraphicsPixmapItem(parent)
+Tile::Tile(QGraphicsItem *parent)
+    : QObject(), QGraphicsPixmapItem(parent), m_TileID(-1), m_TileName("Unset"),
+    m_TileDescription("Unset"), m_solid(false)
 {
-
 }
 
 Tile::~Tile()
 {
-    qDebug() << "Item destroyed";
+
+}
+
+void Tile::removeItem(QGraphicsScene &scene)
+{
+    scene.removeItem(this);
+}
+
+void Tile::update(int deltatime)
+{
+
+}
+
+
+void Tile::render(QGraphicsScene &scene)
+{
+    scene.addItem(this);
 }
 
 void Tile::setID(int TileID)
@@ -50,14 +67,4 @@ QString Tile::getName()
 QString Tile::getDescription()
 {
     return m_TileDescription;
-}
-
-void Tile::removeItem(QGraphicsScene &scene)
-{
-    scene.removeItem(this);
-}
-
-void Tile::render(QGraphicsScene &scene)
-{
-    scene.addItem(this);
 }

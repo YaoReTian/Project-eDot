@@ -17,7 +17,8 @@ enum Stat
     DEF,
     SPD,
     CritDMG,
-    CritRate
+    CritRate,
+    Null
 };
 
 enum MoveType
@@ -51,11 +52,12 @@ class CombatSprite : public MovingSprite
 {
 public:
     CombatSprite();
+    ~CombatSprite();
 
     // Game loop functions
-    void removeItem(QGraphicsScene &scene);
-    void update(int deltatime);
-    void render(QGraphicsScene &scene);
+    virtual void removeItem(QGraphicsScene &scene) override;
+    virtual void update(int deltatime) override;
+    virtual void render(QGraphicsScene &scene) override;
 
     // Setters
     void setEntityID(int EntityID);

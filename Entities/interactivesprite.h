@@ -3,13 +3,16 @@
 
 #include "sprite.h"
 
+#include "../UI/button.h"
+
 class InteractiveSprite : public Sprite
 {
 public:
     InteractiveSprite();
+    ~InteractiveSprite();
 
     // Overridden functions
-    void update(int deltatime);
+    virtual void update(int deltatime) override;
     void setAction(GLOBAL::Action action);
 
     // For interactions with the player
@@ -21,7 +24,7 @@ public:
     void popup();
 
 private:
-    bool m_interactable;
+    bool m_interactive;
     QString m_interactText;
     QString m_script;
 

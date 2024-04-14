@@ -1,11 +1,16 @@
 #include "sprite.h"
 
-Sprite::Sprite(QGraphicsItem * parent) : QObject(), QGraphicsPixmapItem(parent)
+Sprite::Sprite(QGraphicsItem * parent)
+    : QObject(), QGraphicsPixmapItem(parent), m_SpriteID(-1), m_name("Unset"), m_type("Unset"),
+    m_frameSize(), m_elapsed_time(0), m_currentFrame(0), m_currentStateName("idle")
 {
-    m_elapsed_time = 0;
-    m_currentStateName = "idle";
-    m_currentFrame = 0;
     setZValue(GLOBAL::SPRITE_LAYER + y());
+}
+
+Sprite::~Sprite()
+{
+    qDeleteAll(m_states);
+    m_states.clear();
 }
 
 void Sprite::setID(int ID)

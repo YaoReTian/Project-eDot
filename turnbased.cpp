@@ -1,9 +1,8 @@
 #include "turnbased.h"
 
-TurnBased::TurnBased()
+TurnBased::TurnBased() : m_friendlyTurn(false)
 {
     m_background = new QGraphicsPixmapItem;
-    m_friendlyTurn = false;
     m_basicButton = new Button;
     m_skillButton = new Button;
 
@@ -12,6 +11,12 @@ TurnBased::TurnBased()
 
     m_skillButton->setIconText("E");
     m_skillButton->setTriggerAction(GLOBAL::SKILL);
+}
+
+TurnBased::~TurnBased()
+{
+    m_spriteQueue.clear();
+    delete m_background;
 }
 
 void TurnBased::setBackground(QPixmap backgroundImg)
@@ -23,11 +28,20 @@ void TurnBased::setEvent(Player* player, QList<CombatSprite*> m_enemies)
 {
     for (const auto s : player->getParty())
     {
-        m_spriteQueue.append(s);
+        m_spriteQueue.enqueue(s);
     }
     for (const auto s : m_enemies)
     {
-        m_spriteQueue.append(s);
+        m_spriteQueue.enqueue(s);
+    }
+}
+
+void TurnBased::input(KeyMap* keys)
+{
+    if (m_spriteQueue.head()->side() == Friendly)
+    {
+        m_basicButton->input(keys);
+        m_skillButton->input(keys);
     }
 }
 
@@ -50,7 +64,7 @@ void TurnBased::removeItem(QGraphicsScene &scene)
     }
 }
 
-void TurnBased::update(int deltatime, KeyMap* keys)
+void TurnBased::update(int deltatime)
 {
 
     // Sort in action value order with lambda function
@@ -90,8 +104,12 @@ void TurnBased::update(int deltatime, KeyMap* keys)
         m_skillButton->setFocused();
         m_basicButton->setFocused();
 
-        m_basicButton->update(keys);
-        m_skillButton->update(keys);
+        m_basicButton->update(deltatime);
+        m_skillButton->update(deltatime);
+    }
+    else
+    {
+        m_friendlyTurn = false;
     }
 }
 
