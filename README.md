@@ -3,7 +3,7 @@
 RPG, turn-based and bullet hell game made for Computer Science A-level NEA  
 
 ## Dependencies
-- Qt6 <
+- Qt5 <
 - QMake 3 <
 - Linux: gcc 11.2 <
 - Windows: MSVC 2019 < or MinGW 11.2 <
