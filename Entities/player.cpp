@@ -3,7 +3,8 @@
 #include "../Utils/global.h"
 #include "interactivesprite.h"
 
-Player::Player(Database* db) : m_enteredCombat(false), m_db(db), m_activeCharacterIndex(0)
+Player::Player(Database* db)
+    : m_enteredCombat(false), m_db(db), m_activeCharacterIndex(0)
 {
     for (int n = 0; n < 4; n++)
     {

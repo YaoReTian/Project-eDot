@@ -5,8 +5,17 @@
 #include "Entities/movingsprite.h"
 #include "Entities/combatsprite.h"
 
+#include <QFile>
+
 Database::Database()
 {
+    if (!QFile::exists("GameDatabase.db"))
+    {
+        if (!QFile::copy(":/database/GameDatabase.db", "GameDatabase.db"))
+        {
+            qDebug() << "ERROR: unable to generate initial database";
+        }
+    }
     m_db = QSqlDatabase::addDatabase("QSQLITE");
     m_db.setDatabaseName("GameDatabase.db");
 

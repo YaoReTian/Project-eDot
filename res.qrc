@@ -66,4 +66,7 @@
     <qresource prefix="/image/background">
         <file>res/battleBackground.png</file>
     </qresource>
+    <qresource prefix="/database">
+        <file>GameDatabase.db</file>
+    </qresource>
 </RCC>

@@ -83,13 +83,11 @@ bool MovingSprite::collidedWithWall()
 
     for (const auto s : list)
     {
-        if (typeid(*s) == typeid(Tile))
+        if (typeid(*s) == typeid(Tile) &&
+            dynamic_cast<Tile*>(s)->isSolid() &&
+            s->y() + s->boundingRect().height() + 3*GLOBAL::Scale >= y()+boundingRect().height())
         {
-            if (dynamic_cast<Tile*>(s)->isSolid() &&
-                s->y() + s->boundingRect().height() + 3*GLOBAL::Scale >= y()+boundingRect().height())
-            {
-                return true;
-            }
+            return true;
         }
     }
     return false;

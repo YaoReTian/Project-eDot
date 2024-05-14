@@ -106,6 +106,15 @@ void TurnBased::update(int deltatime)
 
         m_basicButton->update(deltatime);
         m_skillButton->update(deltatime);
+
+        if (m_basicButton->isTriggered())
+        {
+            qDebug() << "Button triggered";
+        }
+        else if (m_skillButton->isTriggered())
+        {
+
+        }
     }
     else
     {

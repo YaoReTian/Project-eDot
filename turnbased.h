@@ -11,6 +11,13 @@
 #include "Utils/keymap.h"
 #include "gameobject.h"
 
+struct TurnBasedAction
+{
+    MoveType m_moveType;
+    QList<CombatSprite*> m_targets;
+
+};
+
 class TurnBased : public GameObject
 {
 public:

@@ -33,14 +33,7 @@ Button::~Button()
 
 void Button::input(KeyMap* keys)
 {
-    if (m_clicked && m_mouseMode && keys->mouseHeldStatus())
-    {
-        m_released = false;
-    }
-    else
-    {
-        reset();
-    }
+    m_released = false;
 
     // Check if focused
     if (m_mouseMode && isUnderMouse())
@@ -70,7 +63,7 @@ void Button::input(KeyMap* keys)
 
 void Button::update(int deltatime)
 {
-    if (m_released && m_elapsedTime < 100)
+    if (m_released && m_elapsedTime < 40)
     {
         m_released = false;
     }
