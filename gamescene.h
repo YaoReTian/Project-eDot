@@ -6,6 +6,7 @@
 #include <QElapsedTimer>
 #include <QMouseEvent>
 #include <QPainter>
+#include <QImage>
 
 #include "tilemap.h"
 #include "Utils/keymap.h"
@@ -46,6 +47,10 @@ private:
     float m_deltaTime;
     double m_cameraPosX;
     double m_cameraPosY;
+
+    QGraphicsPixmapItem m_bufferItem;
+    QPainter* m_bufferPainter;
+    QPixmap* m_buffer[2];
 
 protected:
     // Overridden functions

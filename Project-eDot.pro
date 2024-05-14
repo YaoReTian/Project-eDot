@@ -16,6 +16,7 @@ SOURCES += \
     UI/buttonmenu.cpp \
     UI/progressbar.cpp \
     UI/userinterface.cpp \
+    Utils/doublebuffer.cpp \
     database.cpp \
     Utils/keymap.cpp \
     gamescene.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
     UI/buttonmenu.h \
     UI/progressbar.h \
     UI/userinterface.h \
+    Utils/doublebuffer.h \
     database.h \
     Utils/global.h \
     Utils/keymap.h \

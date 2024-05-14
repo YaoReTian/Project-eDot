@@ -5,6 +5,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
+#include <QImage>
 
 #include "Utils/global.h"
 
@@ -18,17 +19,20 @@ GameScene::GameScene(QObject *parent) :
     m_tilemap = new Tilemap();
     m_player = new Player(m_db);
     m_turnbased = new TurnBased();
+    m_buffer[0] = new QPixmap();
+    m_buffer[1] = new QPixmap();
+    m_bufferPainter = new QPainter();
 
     // Add functionality
     m_tilemap->setDatabase(m_db);
     m_keymap->setWorldBindings();
     m_tilemap->setMap(3, m_UI);
     m_player->activeCharacter()->setPos(4*GLOBAL::ObjectLength,4*GLOBAL::ObjectLength);
-
     addItem(m_player->activeCharacter());
     m_tilemap->generateTiles(*this);
     m_tilemap->generateSprites(*this);
 
+    qDebug() << sceneRect().toAlignedRect().size();
     // Timer to handle game loop
     connect(&m_timer, &QTimer::timeout, this, &GameScene::loop);
     m_timer.start(int(1000.0f/GLOBAL::FPS));
@@ -64,6 +68,7 @@ void GameScene::loop()
             m_player->removeItem(*this);
             m_UI->removeItem(*this);
             m_turnbased->render(*this);
+            //m_bufferImage = QImage(sceneRect().toAlignedRect().size(), QImage::Format_ARGB32);
         }
         break;
     case TURN_BASED:
@@ -125,6 +130,18 @@ void GameScene::loop()
     case PAUSE_MENU:
         break;
     }
+
+    /*
+    //qDebug() << sceneRect().toAlignedRect().size();
+    //qDebug() << m_player->activeCharacter()->pos();
+    removeItem(&m_buffer);
+    m_bufferPainter.begin(&m_bufferImage);
+    render(&m_bufferPainter);
+    m_bufferPainter.end();
+    m_buffer.setZValue(sceneRect().height()+GLOBAL::RENDER_LAYER+10);
+    m_buffer.setPixmap(QPixmap::fromImage(m_bufferImage));
+    addItem(&m_buffer);
+*/
 
     // Reset mouse and key status
     m_keymap->resetStatus();
