@@ -37,7 +37,7 @@ void ButtonMenu::input(KeyMap* keys)
     }
 }
 
-void ButtonMenu::removeItem(QGraphicsScene &scene)
+void ButtonMenu::clear(QGraphicsScene &scene)
 {
     if (!m_buttons.empty())
     {
@@ -45,7 +45,7 @@ void ButtonMenu::removeItem(QGraphicsScene &scene)
         for (int i = 0; i < m_buttons.size(); i++)
         {
             m_buttons[i]->removeFocus();
-            m_buttons[i]->removeItem(scene);
+            m_buttons[i]->clear(scene);
             if (!m_buttons[i]->isActive())
             {
                 removeButton(i);

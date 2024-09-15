@@ -4,8 +4,9 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 
-#include "tile.h"
-#include "Entities/interactivesprite.h"
+//#include "tile.h"
+//#include "Entities/interactivesprite.h"
+#include "Entities/sprite.h"
 #include "Utils/global.h"
 
 class Database
@@ -16,14 +17,11 @@ public:
 
     bool isOpen() const;
 
-    QString getTestTilePath();
-
     QSqlQuery getMapInfo(int MapID);
-    QList<Tile*> getMapTiles(int MapID);
-    QList<InteractiveSprite*> getWorldSprites(int MapID);
     Sprite* getSprite(int SpriteID);
+    Sprite* getSprite(QString path, QGraphicsItem* parent = 0);
     QSqlQuery getSpriteAnimations(int SpriteID);
-    QSqlQuery getSpriteTransitions(int AnimationID);
+    QSqlQuery getSpriteTransitions(int SpriteID, QString startStateName);
     GLOBAL::Action stringToAction(QString string);
 
 private:

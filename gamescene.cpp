@@ -14,29 +14,24 @@ GameScene::GameScene(QObject *parent) :
 {
     // Instantiate objects
     m_db = new Database;
-    m_UI = new UserInterface();
+    m_UI = new UserInterface;
     m_keymap = new KeyMap;
-    m_tilemap = new Tilemap();
+    m_tilemap = new Tilemap;
     m_player = new Player(m_db);
-    m_turnbased = new TurnBased();
-    m_buffer[0] = new QPixmap();
-    m_buffer[1] = new QPixmap();
-    m_bufferPainter = new QPainter();
 
-    // Add functionality
     m_tilemap->setDatabase(m_db);
-    m_keymap->setWorldBindings();
     m_tilemap->setMap(3, m_UI);
-    m_player->activeCharacter()->setPos(4*GLOBAL::ObjectLength,4*GLOBAL::ObjectLength);
-    addItem(m_player->activeCharacter());
-    m_tilemap->generateTiles(*this);
-    m_tilemap->generateSprites(*this);
+    addItem(m_tilemap);
 
-    qDebug() << sceneRect().toAlignedRect().size();
-    // Timer to handle game loop
+    m_player->getSprite()->setParentItem(m_tilemap);
+    m_player->setZValue(m_tilemap->getPlayerZ());
+    m_keymap->setWorldBindings();
+    m_player->setPos(4*GLOBAL::ObjectLength,4*GLOBAL::ObjectLength);
+
     connect(&m_timer, &QTimer::timeout, this, &GameScene::loop);
     m_timer.start(int(1000.0f/GLOBAL::FPS));
     m_elapsedTimer.start();
+
 }
 
 GameScene::~GameScene()
@@ -46,7 +41,7 @@ GameScene::~GameScene()
     delete m_db;
     delete m_player;
     delete m_UI;
-    delete m_turnbased;
+    clear();
 }
 
 void GameScene::loop()
@@ -54,6 +49,14 @@ void GameScene::loop()
     m_deltaTime = m_elapsedTimer.elapsed();
     m_elapsedTimer.restart();
 
+    m_player->input(m_keymap);
+    m_player->update(m_deltaTime);
+    updateCamera();
+    m_tilemap->setPos(-m_cameraPosX, -m_cameraPosY);
+    setBackgroundBrush(QBrush(m_tilemap->bgColour()));
+    //setSceneRect(m_cameraPosX, m_cameraPosY, sceneRect().width(), sceneRect().height());
+    //m_tilemap->update(m_deltaTime);
+    /*
     // Input and update GameLayer according to flags
     switch (m_currentLayer)
     {
@@ -64,11 +67,13 @@ void GameScene::loop()
             m_turnbased->setBackground(QPixmap(":/image/background/res/battleBackground.png").scaled(sceneRect().width(), sceneRect().height()));
             m_currentLayer = TURN_BASED;
             m_turnbased->setEvent(m_player, m_tilemap->getCombatSprites());
+
             m_tilemap->removeItem(*this);
             m_player->removeItem(*this);
             m_UI->removeItem(*this);
             m_turnbased->render(*this);
             //m_bufferImage = QImage(sceneRect().toAlignedRect().size(), QImage::Format_ARGB32);
+
         }
         break;
     case TURN_BASED:
@@ -98,6 +103,8 @@ void GameScene::loop()
         m_UI->update(m_deltaTime);
 
         // RENDER
+        m_tilemap->render(*m_buffer);
+
         // Remove all items
         m_tilemap->removeItem(*this);
         m_player->removeItem(*this);
@@ -116,10 +123,12 @@ void GameScene::loop()
         m_turnbased->update(m_deltaTime);
 
         // RENDER
+        /*
         // Remove all items
         m_turnbased->removeItem(*this);
         // Render all
         m_turnbased->render(*this);
+
         break;
     case BULLET_HELL:
         break;
@@ -131,29 +140,22 @@ void GameScene::loop()
         break;
     }
 
-    /*
-    //qDebug() << sceneRect().toAlignedRect().size();
-    //qDebug() << m_player->activeCharacter()->pos();
-    removeItem(&m_buffer);
-    m_bufferPainter.begin(&m_bufferImage);
-    render(&m_bufferPainter);
-    m_bufferPainter.end();
-    m_buffer.setZValue(sceneRect().height()+GLOBAL::RENDER_LAYER+10);
-    m_buffer.setPixmap(QPixmap::fromImage(m_bufferImage));
-    addItem(&m_buffer);
-*/
-
+    // Change buffer
+    m_buffer->setPos(-m_cameraPosX, -m_cameraPosY);
+    m_buffer->swap();
+    */
     // Reset mouse and key status
+
     m_keymap->resetStatus();
 }
 
 void GameScene::updateCamera()
 {
-    m_cameraPosX = m_player->activeCharacter()->x() +
-                   m_player->activeCharacter()->boundingRect().width()/2 -
+    m_cameraPosX = m_player->getSprite()->x() +
+                   m_player->getSprite()->boundingRect().width()/2 -
                    sceneRect().width()/2;
-    m_cameraPosY = m_player->activeCharacter()->y() +
-                   m_player->activeCharacter()->boundingRect().height()/2 -
+    m_cameraPosY = m_player->getSprite()->y() +
+                   m_player->getSprite()->boundingRect().height()/2 -
                    sceneRect().height()/2;
 }
 

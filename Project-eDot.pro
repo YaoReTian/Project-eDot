@@ -9,49 +9,45 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    Entities/card.cpp \
-    Entities/combatsprite.cpp \
     Entities/interactivesprite.cpp \
     UI/button.cpp \
     UI/buttonmenu.cpp \
     UI/progressbar.cpp \
     UI/userinterface.cpp \
-    Utils/doublebuffer.cpp \
+    Utils/jsonparser.cpp \
+    chunk.cpp \
     database.cpp \
     Utils/keymap.cpp \
     gamescene.cpp \
     main.cpp \
-    Entities/movingsprite.cpp \
     Entities/player.cpp \
     Entities/sprite.cpp \
-    tile.cpp \
+    tilelayer.cpp \
     tilemap.cpp \
-    turnbased.cpp \
+    tileset.cpp \
     view.cpp
 
 HEADERS += \
-    Entities/card.h \
-    Entities/combatsprite.h \
     Entities/interactivesprite.h \
     UI/button.h \
     UI/buttonmenu.h \
     UI/progressbar.h \
     UI/userinterface.h \
-    Utils/doublebuffer.h \
+    Utils/jsonparser.h \
+    chunk.h \
     database.h \
     Utils/global.h \
     Utils/keymap.h \
-    Entities/movingsprite.h \
     Entities/player.h \
     Entities/sprite.h \
     gameobject.h \
     gamescene.h \
-    tile.h \
+    tilelayer.h \
     tilemap.h \
-    turnbased.h \
+    tileset.h \
     view.h
 
-FORMS +=
+FORMS += \
 
 TRANSLATIONS += \
     Project-eDot_en_GB.ts

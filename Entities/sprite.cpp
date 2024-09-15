@@ -1,11 +1,14 @@
 #include "sprite.h"
 
+#include "../tileset.h"
+
 Sprite::Sprite(QGraphicsItem * parent)
-    : QObject(), QGraphicsPixmapItem(parent), m_SpriteID(-1), m_name("Unset"), m_type("Unset"),
-    m_frameSize(), m_elapsed_time(0), m_currentFrame(0), m_currentStateName("idle")
-{
-    setZValue(GLOBAL::SPRITE_LAYER + y());
-}
+    : QObject(), QGraphicsPixmapItem(parent), m_SpriteID(-1), m_name("Unset"),
+    m_type("Unset"), m_frameSize(), m_elapsed_time(0), m_currentFrame(0),
+    m_currentStateName("idle"), m_WALK_SPEED(1.5f/1000.0f), m_RUN_SPEED(3.0f/1000.0f),
+    m_SPRINT_SPEED(4.5f/1000.0f), m_defaultSpeed(m_RUN_SPEED),
+    m_currentSpeed(m_defaultSpeed), m_velocityX(0), m_velocityY(0)
+{}
 
 Sprite::~Sprite()
 {
@@ -26,6 +29,17 @@ void Sprite::setName(QString name)
 void Sprite::setType(QString type)
 {
     m_type = type;
+}
+
+void Sprite::setZValue(float zValue)
+{
+    m_baseZ = zValue;
+    QGraphicsPixmapItem::setZValue(zValue + y() + boundingRect().height());
+}
+
+void Sprite::setTransform(QTransform transform)
+{
+    m_transform = transform;
 }
 
 int Sprite::getID()
@@ -51,6 +65,21 @@ void Sprite::setSpriteSheet(QPixmap spriteSheet)
 void Sprite::setFrameSize(QSize frameSize)
 {
     m_frameSize = frameSize;
+}
+
+void Sprite::setHitbox(HitboxInfo* hitbox)
+{
+    m_hitboxes.append(new Hitbox(this));
+    m_hitboxes.back()->setPen(QPen(Qt::yellow));
+    m_hitboxes.back()->setRect(-hitbox->m_width*GLOBAL::Scale/2,
+                             -hitbox->m_height*GLOBAL::Scale/2,
+                             hitbox->m_width * GLOBAL::Scale,
+                             hitbox->m_height * GLOBAL::Scale);
+    m_hitboxes.back()->m_solid = hitbox->m_solid;
+    m_hitboxes.back()->m_interactable = hitbox->m_interactable;
+    m_hitboxes.back()->setTransform(m_transform);
+    m_hitboxes.back()->setPos((hitbox->m_x+hitbox->m_width/2)*GLOBAL::Scale,
+                              (hitbox->m_y+hitbox->m_height/2)*GLOBAL::Scale);
 }
 
 void Sprite::addAnimationState(QString stateName, int startFrame, int endFrame, float frameTime)
@@ -93,7 +122,7 @@ void Sprite::addTransition(QString startStateName, GLOBAL::Action action, QStrin
     m_states[startStateName]->transitions[action] = endStateName;
 }
 
-void Sprite::removeItem(QGraphicsScene &scene)
+void Sprite::clear(QGraphicsScene &scene)
 {
     scene.removeItem(this);
 }
@@ -111,12 +140,32 @@ void Sprite::update(int deltaTime)
         {
             m_currentFrame = 0;
         }
-        setPixmap(m_states[m_currentStateName]->frames[m_currentFrame]);
+        setPixmap(m_states[m_currentStateName]->frames[m_currentFrame].transformed(m_transform));
     }
     else if (m_states[m_currentStateName]->frameTime == -1)
     {
-        setPixmap(m_states[m_currentStateName]->frames[m_currentFrame]);
+        setPixmap(m_states[m_currentStateName]->frames[m_currentFrame].transformed(m_transform));
     }
+
+    // Check wall collisions
+    QPointF prevPos;
+
+    for (int i = 0; i < 10; i++)
+    {
+        prevPos = pos();
+        setX(x()+(m_velocityX * deltaTime)/10);
+        if (collidedWithWall()) setPos(prevPos);
+    }
+    for (int i = 0; i < 10; i++)
+    {
+        prevPos = pos();
+        setY(y()+(m_velocityY * deltaTime)/10);
+        if (collidedWithWall()) setPos(prevPos);
+    }
+    QGraphicsPixmapItem::setZValue(m_baseZ + y() + boundingRect().height());
+
+    m_velocityX = 0;
+    m_velocityY = 0;
 }
 
 void Sprite::render(QGraphicsScene &scene)
@@ -126,9 +175,69 @@ void Sprite::render(QGraphicsScene &scene)
 
 void Sprite::setAction(GLOBAL::Action action)
 {
+    // Animations
     if (m_states[m_currentStateName]->transitions.contains(action))
     {
         m_currentStateName = m_states[m_currentStateName]->transitions[action];
         m_currentFrame = 0;
     }
+
+    // Movement
+    if (action == GLOBAL::MOVE_LEFT)
+    {
+        m_velocityX = -m_currentSpeed * GLOBAL::ObjectLength;
+    }
+    else if (action == GLOBAL::MOVE_RIGHT)
+    {
+        m_velocityX = m_currentSpeed * GLOBAL::ObjectLength;
+    }
+    else if (action == GLOBAL::MOVE_UP)
+    {
+        m_velocityY = -m_currentSpeed * GLOBAL::ObjectLength;
+    }
+    else if (action == GLOBAL::MOVE_DOWN)
+    {
+        m_velocityY = m_currentSpeed * GLOBAL::ObjectLength;
+    }
+    else if (action == GLOBAL::SPRINT)
+    {
+        m_currentSpeed = (m_currentSpeed == m_SPRINT_SPEED) ? m_defaultSpeed : m_SPRINT_SPEED;
+    }
+    else if (action == GLOBAL::WALK)
+    {
+        m_currentSpeed = (m_currentSpeed == m_WALK_SPEED) ? m_defaultSpeed : m_SPRINT_SPEED;
+    }
+}
+
+void Sprite::setDefaultToWalk()
+{
+    m_defaultSpeed = m_WALK_SPEED;
+    m_currentSpeed = m_defaultSpeed;
+}
+
+void Sprite::setDefaultToRun()
+{
+    m_defaultSpeed = m_RUN_SPEED;
+    m_currentSpeed = m_defaultSpeed;
+}
+
+bool Sprite::collidedWithWall()
+{
+    for (const auto h : std::as_const(m_hitboxes))
+    {
+        if (h->m_solid)
+        {
+            QList<QGraphicsItem*> list = h->collidingItems();
+
+            for (const auto s : std::as_const(list))
+            {
+                if (typeid(*s) == typeid(Hitbox) &&
+                    dynamic_cast<Hitbox*>(s)->m_solid)
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 }

@@ -13,7 +13,6 @@
 #include "database.h"
 #include "Entities/player.h"
 #include "UI/userinterface.h"
-#include "turnbased.h"
 
 class GameScene : public QGraphicsScene
 {
@@ -25,6 +24,7 @@ public:
     void updateCamera();
 
 private:
+
     enum GameLayer
     {
         WORLD,
@@ -41,16 +41,11 @@ private:
     Database *m_db;
     Player *m_player;
     UserInterface *m_UI;
-    TurnBased* m_turnbased;
     QElapsedTimer m_elapsedTimer;
     GameLayer m_currentLayer;
     float m_deltaTime;
     double m_cameraPosX;
     double m_cameraPosY;
-
-    QGraphicsPixmapItem m_bufferItem;
-    QPainter* m_bufferPainter;
-    QPixmap* m_buffer[2];
 
 protected:
     // Overridden functions

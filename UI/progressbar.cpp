@@ -25,7 +25,7 @@ ProgressBar::~ProgressBar()
     delete m_outline;
 }
 
-void ProgressBar::removeItem(QGraphicsScene &scene)
+void ProgressBar::clear(QGraphicsScene &scene)
 {
     scene.removeItem(m_progressLine);
     scene.removeItem(m_backgroundLine);

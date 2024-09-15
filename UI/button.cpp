@@ -161,7 +161,7 @@ void Button::render(QGraphicsScene &scene)
     scene.addItem(m_iconText);
 }
 
-void Button::removeItem(QGraphicsScene &scene)
+void Button::clear(QGraphicsScene &scene)
 {
     scene.removeItem(this);
     scene.removeItem(m_textBox);

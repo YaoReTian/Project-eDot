@@ -2,17 +2,19 @@
 #define MAP_H
 
 #include <QGraphicsScene>
+#include <QGraphicsRectItem>
 
-#include "tile.h"
 #include "database.h"
 #include "UI/userinterface.h"
-#include "Entities/combatsprite.h"
 #include "gameobject.h"
 
-class Tilemap : public GameObject
+#include "tilelayer.h"
+#include "tileset.h"
+
+class Tilemap : public GameObject, public QGraphicsRectItem
 {
 public:
-    Tilemap();
+    Tilemap(QGraphicsItem* parent = 0);
     ~Tilemap();
     void setDatabase(Database* db);
     void setMap(int MapID, UserInterface* UI);
@@ -20,10 +22,10 @@ public:
     QString getMapDesc();
     int getMapSizeX();
     int getMapSizeY();
-    bool enteredCombat();
-    QList<CombatSprite*> getCombatSprites();
+    qreal getPlayerZ();
+    QRgb bgColour();
 
-    virtual void removeItem(QGraphicsScene &scene) override;
+    virtual void clear(QGraphicsScene &scene) override;
     virtual void update(int deltatime) override;
     virtual void render(QGraphicsScene &scene) override;
 
@@ -32,15 +34,16 @@ public:
 
 private:
     // Methods for creating the map
-    void setTiles();
+    void createTileLayer(QJsonObject chunks, int zValue);
+    void createSpriteLayer(QJsonObject objectGroup, int zValue);
     void setSprites(UserInterface* UI);
 
     // Attributes for creating the map
     Database* m_db;
 
     // Attributes of objects on the map
-    QList<InteractiveSprite*> m_sprites;
-    QList<Tile*> m_tiles;
+    QList<Sprite*> m_sprites;
+    //Tile* m_tiles[100][100];
 
     // Map info
     int m_mapID;
@@ -48,9 +51,16 @@ private:
     QString m_mapDesc;
     int m_mapSizeX;
     int m_mapSizeY;
+    qreal m_playerZ;
 
     // Flags
     int m_enteredCombatIndex;
+
+    // TESTING
+    QRgb m_backgroundColour;
+    bool m_infinite;
+    QList<TileLayer*> m_layers;
+    QList<TileSet*> m_tilesets;
 };
 
 #endif // MAP_H

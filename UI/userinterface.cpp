@@ -12,9 +12,9 @@ UserInterface::~UserInterface()
     delete m_popupMenu;
 }
 
-void UserInterface::removeItem(QGraphicsScene &scene)
+void UserInterface::clear(QGraphicsScene &scene)
 {
-    m_popupMenu->removeItem(scene);
+    m_popupMenu->clear(scene);
 }
 
 void UserInterface::input(KeyMap* keys, QGraphicsItem* activeCharacter)

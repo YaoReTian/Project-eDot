@@ -23,7 +23,7 @@ public:
 
     void input(KeyMap* keys, QGraphicsItem* activeCharacter);
 
-    virtual void removeItem(QGraphicsScene &scene) override;
+    virtual void clear(QGraphicsScene &scene) override;
     virtual void update(int deltatime) override;
     virtual void render(QGraphicsScene &scene) override;
 

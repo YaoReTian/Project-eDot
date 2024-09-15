@@ -2,6 +2,7 @@
 #define VIEW_H
 
 #include <QGraphicsView>
+
 #include "gamescene.h"
 
 class View : public QGraphicsView

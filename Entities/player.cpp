@@ -1,26 +1,23 @@
 #include "player.h"
 
 #include "../Utils/global.h"
-#include "interactivesprite.h"
+#include "sprite.h"
 
 Player::Player(Database* db)
-    : m_enteredCombat(false), m_db(db), m_activeCharacterIndex(0)
+    : m_enteredCombat(false), m_db(db)
 {
-    for (int n = 0; n < 4; n++)
+    m_tileset = new TileSet(":/tileset/res/General.tsj",1);
+    TileInfo* sprite = m_tileset->getInfo(1);
+    m_sprite = m_db->getSprite(sprite->m_path);
+    for (const auto h : std::as_const(sprite->m_hitboxes))
     {
-        m_party.append(nullptr);
+        m_sprite->setHitbox(h);
     }
-    m_party[0] = dynamic_cast<CombatSprite*>(m_db->getSprite(1));
-    m_party[0]->setSide(Friendly);
-    m_party[0]->setBaseStat(SPD, 100);
-    m_party[0]->setElement(GLOBAL::QUANTUM);
-    m_party[0]->setEntityName("Player");
 }
 
 Player::~Player()
 {
-    qDeleteAll(m_party);
-    m_party.clear();
+    delete m_sprite;
 }
 
 void Player::input(KeyMap* keys)
@@ -29,63 +26,42 @@ void Player::input(KeyMap* keys)
     if (keys->keyHeldStatus(GLOBAL::MOVE_LEFT))
     {
         actionTaken = true;
-        activeCharacter()->setAction(GLOBAL::MOVE_LEFT);
+        m_sprite->setAction(GLOBAL::MOVE_LEFT);
     }
     if (keys->keyHeldStatus(GLOBAL::MOVE_RIGHT))
     {
         actionTaken = true;
-        activeCharacter()->setAction(GLOBAL::MOVE_RIGHT);
+        m_sprite->setAction(GLOBAL::MOVE_RIGHT);
     }
     if (keys->keyHeldStatus(GLOBAL::MOVE_UP))
     {
         actionTaken = true;
-        activeCharacter()->setAction(GLOBAL::MOVE_UP);
+        m_sprite->setAction(GLOBAL::MOVE_UP);
     }
     if (keys->keyHeldStatus(GLOBAL::MOVE_DOWN))
     {
         actionTaken = true;
-        activeCharacter()->setAction(GLOBAL::MOVE_DOWN);
+        m_sprite->setAction(GLOBAL::MOVE_DOWN);
     }
     if (!actionTaken)
     {
-        activeCharacter()->setAction(GLOBAL::NONE);
+        m_sprite->setAction(GLOBAL::NONE);
     }
 }
 
-void Player::removeItem(QGraphicsScene &scene)
+void Player::clear(QGraphicsScene &scene)
 {
-    activeCharacter()->removeItem(scene);
+    m_sprite->clear(scene);
 }
 
 void Player::update(int deltatime)
 {
-    activeCharacter()->update(deltatime);
-
-    QList<QGraphicsItem*> list = activeCharacter()->collidingItems();
-
-    for (const auto s : list)
-    {
-        if (typeid(*s) == typeid(InteractiveSprite))
-        {
-            InteractiveSprite* sprite = static_cast<InteractiveSprite*>(s);
-            if (sprite->isInteractive())   sprite->popup();
-        }
-        else if (typeid(*s) == typeid(MovingSprite))
-        {
-            MovingSprite* sprite = static_cast<MovingSprite*>(s);
-            if (sprite->isInteractive())   sprite->popup();
-        }
-        else if (typeid(*s) == typeid(CombatSprite))
-        {
-            CombatSprite* sprite = static_cast<CombatSprite*>(s);
-            if (sprite->isInteractive())   sprite->popup();
-        }
-    }
+    m_sprite->update(deltatime);
 }
 
 void Player::render(QGraphicsScene &scene)
 {
-    activeCharacter()->render(scene);
+    m_sprite->render(scene);
 }
 
 bool Player::enteredCombat()
@@ -93,24 +69,22 @@ bool Player::enteredCombat()
     return m_enteredCombat;
 }
 
-void Player::setCharacter(int partyIndex, int SpriteID)
+void Player::setPos(int x, int y)
 {
-    m_party[partyIndex] = dynamic_cast<CombatSprite*>(m_db->getSprite(SpriteID));
+    m_sprite->setPos(x, y);
 }
 
-CombatSprite* Player::activeCharacter()
+void Player::setZValue(float zValue)
 {
-    return m_party[m_activeCharacterIndex];
+    m_sprite->setZValue(zValue);
 }
 
-QList<CombatSprite*> Player::getParty()
+void Player::setSprite(Sprite* sprite)
 {
-    QList<CombatSprite*> list;
+    m_sprite = sprite;
+}
 
-    for (const auto p : m_party)
-    {
-        if (p != nullptr)   list.append(p);
-    }
-
-    return list;
+Sprite* Player::getSprite()
+{
+    return m_sprite;
 }
