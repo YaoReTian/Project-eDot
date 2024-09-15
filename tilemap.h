@@ -10,6 +10,7 @@
 
 #include "tilelayer.h"
 #include "tileset.h"
+#include "Utils/keymap.h"
 
 class Tilemap : public GameObject, public QGraphicsRectItem
 {
@@ -25,6 +26,7 @@ public:
     qreal getPlayerZ();
     QRgb bgColour();
 
+    void input(KeyMap* keys);
     virtual void clear(QGraphicsScene &scene) override;
     virtual void update(int deltatime) override;
     virtual void render(QGraphicsScene &scene) override;
@@ -61,6 +63,7 @@ private:
     bool m_infinite;
     QList<TileLayer*> m_layers;
     QList<TileSet*> m_tilesets;
+    bool m_hitboxesVisible;
 };
 
 #endif // MAP_H

@@ -31,6 +31,7 @@ private:
     Sprite* m_sprite;
     TileSet* m_tileset;
     qreal m_zValue;
+    bool m_hitboxVisible;
 };
 
 #endif // PLAYER_H

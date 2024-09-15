@@ -15,7 +15,7 @@
 
 Tilemap::Tilemap(QGraphicsItem* parent)
     : QGraphicsRectItem(parent), m_mapID(0), m_mapName("Unset"), m_mapDesc("Unset"),
-    m_mapSizeX(0), m_mapSizeY(0), m_enteredCombatIndex(0)
+    m_mapSizeX(0), m_mapSizeY(0), m_enteredCombatIndex(0), m_hitboxesVisible(false)
 {
     setPen(QPen(Qt::transparent));
 }
@@ -147,6 +147,34 @@ qreal Tilemap::getPlayerZ()
 QRgb Tilemap::bgColour()
 {
     return m_backgroundColour;
+}
+
+void Tilemap::input(KeyMap* keys)
+{
+    if (keys->keyHeldStatus(GLOBAL::SHOW_HITBOX))
+    {
+        m_hitboxesVisible = true;
+        for (const auto &l : std::as_const(m_layers))
+        {
+            l->showHitboxes();
+        }
+        for (const auto &s: std::as_const(m_sprites))
+        {
+            s->showHitbox();
+        }
+    }
+    else if (m_hitboxesVisible)
+    {
+        m_hitboxesVisible = false;
+        for (const auto &l : std::as_const(m_layers))
+        {
+            l->hideHitboxes();
+        }
+        for (const auto &s : std::as_const(m_sprites))
+        {
+            s->hideHitbox();
+        }
+    }
 }
 
 void Tilemap::clear(QGraphicsScene &scene)

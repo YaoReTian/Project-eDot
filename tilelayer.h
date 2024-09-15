@@ -23,6 +23,8 @@ public:
     void setName(QString name);
     void setBgColour(QColor colour);
     void setChunks(QJsonArray jsonChunks, QList<TileSet*> tilesets);
+    void showHitboxes();
+    void hideHitboxes();
 
     int numberOfChunks();
     Chunk* getChunk(int index);

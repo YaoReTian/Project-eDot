@@ -4,7 +4,7 @@
 #include "sprite.h"
 
 Player::Player(Database* db)
-    : m_enteredCombat(false), m_db(db)
+    : m_enteredCombat(false), m_db(db), m_hitboxVisible(false)
 {
     m_tileset = new TileSet(":/tileset/res/General.tsj",1);
     TileInfo* sprite = m_tileset->getInfo(1);
@@ -42,6 +42,16 @@ void Player::input(KeyMap* keys)
     {
         actionTaken = true;
         m_sprite->setAction(GLOBAL::MOVE_DOWN);
+    }
+    if (keys->keyHeldStatus(GLOBAL::SHOW_HITBOX))
+    {
+        m_hitboxVisible = true;
+        m_sprite->showHitbox();
+    }
+    else if (m_hitboxVisible)
+    {
+        m_hitboxVisible = false;
+        m_sprite->hideHitbox();
     }
     if (!actionTaken)
     {

@@ -42,6 +42,22 @@ void Sprite::setTransform(QTransform transform)
     m_transform = transform;
 }
 
+void Sprite::showHitbox()
+{
+    for (const auto h : std::as_const(m_hitboxes))
+    {
+        h->setPen(QPen(Qt::yellow));
+    }
+}
+
+void Sprite::hideHitbox()
+{
+    for (const auto h : std::as_const(m_hitboxes))
+    {
+        h->setPen(QPen(Qt::transparent));
+    }
+}
+
 int Sprite::getID()
 {
     return m_SpriteID;
@@ -70,7 +86,7 @@ void Sprite::setFrameSize(QSize frameSize)
 void Sprite::setHitbox(HitboxInfo* hitbox)
 {
     m_hitboxes.append(new Hitbox(this));
-    m_hitboxes.back()->setPen(QPen(Qt::yellow));
+    m_hitboxes.back()->setPen(QPen(Qt::transparent));
     m_hitboxes.back()->setRect(-hitbox->m_width*GLOBAL::Scale/2,
                              -hitbox->m_height*GLOBAL::Scale/2,
                              hitbox->m_width * GLOBAL::Scale,

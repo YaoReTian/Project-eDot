@@ -66,6 +66,22 @@ void TileLayer::setName(QString name)
     m_name = name;
 }
 
+void TileLayer::showHitboxes()
+{
+    for (const auto c : std::as_const(m_chunks))
+    {
+        c->showHitboxes();
+    }
+}
+
+void TileLayer::hideHitboxes()
+{
+    for (const auto c : std::as_const(m_chunks))
+    {
+        c->hideHitboxes();
+    }
+}
+
 int TileLayer::numberOfChunks()
 {
     return m_chunks.size();

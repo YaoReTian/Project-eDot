@@ -21,6 +21,8 @@ public:
     virtual void update(int deltatime) override;
     virtual void render(QGraphicsScene &scene) override;
 
+    void showHitboxes();
+    void hideHitboxes();
     // Setters
     void setBgColour(QColor colour);
     void setData(QJsonArray data, QList<TileSet*> tilesets);

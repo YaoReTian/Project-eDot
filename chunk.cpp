@@ -106,3 +106,19 @@ void Chunk::setData(QJsonArray data, QList<TileSet*> tilesets)
     p.end();
     setPixmap(pixmap);
 }
+
+void Chunk::showHitboxes()
+{
+    for (const auto h : std::as_const(m_hitbox))
+    {
+        h->setPen(QPen(Qt::yellow));
+    }
+}
+
+void Chunk::hideHitboxes()
+{
+    for (const auto h : std::as_const(m_hitbox))
+    {
+        h->setPen(QPen(Qt::transparent));
+    }
+}

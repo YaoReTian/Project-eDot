@@ -53,6 +53,7 @@ void GameScene::loop()
     m_player->update(m_deltaTime);
     updateCamera();
     m_tilemap->setPos(-m_cameraPosX, -m_cameraPosY);
+    m_tilemap->input(m_keymap);
     setBackgroundBrush(QBrush(m_tilemap->bgColour()));
     //setSceneRect(m_cameraPosX, m_cameraPosY, sceneRect().width(), sceneRect().height());
     //m_tilemap->update(m_deltaTime);
