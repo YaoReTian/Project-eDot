@@ -12,11 +12,6 @@ UserInterface::~UserInterface()
     delete m_popupMenu;
 }
 
-void UserInterface::clear(QGraphicsScene &scene)
-{
-    m_popupMenu->clear(scene);
-}
-
 void UserInterface::input(KeyMap* keys, QGraphicsItem* activeCharacter)
 {
     m_popupMenu->input(keys);
@@ -46,11 +41,6 @@ void UserInterface::update(int deltatime)
             }
         }
     }
-}
-
-void UserInterface::render(QGraphicsScene &scene)
-{
-    m_popupMenu->render(scene);
 }
 
 void UserInterface::addPopup(Button * button, QString script)

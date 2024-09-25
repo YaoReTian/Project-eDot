@@ -138,11 +138,6 @@ void Sprite::addTransition(QString startStateName, GLOBAL::Action action, QStrin
     m_states[startStateName]->transitions[action] = endStateName;
 }
 
-void Sprite::clear(QGraphicsScene &scene)
-{
-    scene.removeItem(this);
-}
-
 void Sprite::update(int deltaTime)
 {
     m_elapsed_time += deltaTime;
@@ -182,11 +177,6 @@ void Sprite::update(int deltaTime)
 
     m_velocityX = 0;
     m_velocityY = 0;
-}
-
-void Sprite::render(QGraphicsScene &scene)
-{
-    scene.addItem(this);
 }
 
 void Sprite::setAction(GLOBAL::Action action)

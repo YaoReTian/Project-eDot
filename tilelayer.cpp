@@ -12,25 +12,9 @@ TileLayer::~TileLayer()
     qDeleteAll(m_chunks);
 }
 
-void TileLayer::clear(QGraphicsScene &scene)
-{
-    for (const auto &chunk : std::as_const(m_chunks))
-    {
-        chunk->clear(scene);
-    }
-}
-
 void TileLayer::update(int deltatime)
 {
 
-}
-
-void TileLayer::render(QGraphicsScene &scene)
-{
-    for (const auto &chunk : std::as_const(m_chunks))
-    {
-        chunk->render(scene);
-    }
 }
 
 void TileLayer::setBgColour(QColor colour)

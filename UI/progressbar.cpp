@@ -25,13 +25,6 @@ ProgressBar::~ProgressBar()
     delete m_outline;
 }
 
-void ProgressBar::clear(QGraphicsScene &scene)
-{
-    scene.removeItem(m_progressLine);
-    scene.removeItem(m_backgroundLine);
-    scene.removeItem(m_outline);
-}
-
 void ProgressBar::update(int deltatime)
 {
     if (m_newVal != m_currentVal)
@@ -103,13 +96,6 @@ void ProgressBar::update(int deltatime)
     {
         m_progressLine->setBrush(m_progressColour);
     }
-}
-
-void ProgressBar::render(QGraphicsScene &scene)
-{
-    scene.addItem(m_progressLine);
-    scene.addItem(m_backgroundLine);
-    scene.addItem(m_outline);
 }
 
 void ProgressBar::setMaximum(qreal maximum)

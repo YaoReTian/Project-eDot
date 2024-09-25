@@ -14,6 +14,16 @@ View::~View()
     delete m_gamescene;
 }
 
+void View::input(KeyMap* keys)
+{
+    m_gamescene->input(keys);
+}
+
+void View::update(int deltatime)
+{
+    m_gamescene->update(deltatime);
+}
+
 void View::resizeEvent(QResizeEvent* event)
 {
 

@@ -37,33 +37,6 @@ void ButtonMenu::input(KeyMap* keys)
     }
 }
 
-void ButtonMenu::clear(QGraphicsScene &scene)
-{
-    if (!m_buttons.empty())
-    {
-        QList<int> removedButtons;
-        for (int i = 0; i < m_buttons.size(); i++)
-        {
-            m_buttons[i]->removeFocus();
-            m_buttons[i]->clear(scene);
-            if (!m_buttons[i]->isActive())
-            {
-                removeButton(i);
-                removedButtons.append(i);
-            }
-        }
-        if (!removedButtons.empty())
-        {
-            while (!removedButtons.empty())
-            {
-                m_buttons[removedButtons.back()]->setActive(false);
-                m_buttons.removeAt(removedButtons.back());
-                removedButtons.removeLast();
-            }
-        }
-    }
-}
-
 void ButtonMenu::update(int deltatime)
 {
     m_elapsedTime += deltatime;
@@ -72,22 +45,6 @@ void ButtonMenu::update(int deltatime)
         for (auto b : m_buttons)
         {
             b->update(deltatime);
-        }
-    }
-}
-
-void ButtonMenu::render(QGraphicsScene &scene)
-{
-    while (!m_newButtons.empty())
-    {
-        m_buttons.append(m_newButtons.dequeue());
-    }
-    if (!m_buttons.empty())
-    {
-        for (const auto b : m_buttons)
-        {
-            setPos(m_x, m_y);
-            b->render(scene);
         }
     }
 }

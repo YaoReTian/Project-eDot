@@ -2,35 +2,18 @@
 #define PLAYER_H
 
 #include <QList>
-#include "../database.h"
-#include "../gameobject.h"
+#include "sprite.h"
 #include "../Utils/keymap.h"
-#include "tileset.h"
 
-class Player : public GameObject
+class Player : public Sprite
 {
 public:
-    Player(Database* db);
+    Player(QGraphicsItem * parent = 0);
     ~Player();
 
     void input(KeyMap* keys);
-    virtual void clear(QGraphicsScene &scene) override;
-    virtual void update(int deltatime) override;
-    virtual void render(QGraphicsScene &scene) override;
-
-    bool enteredCombat();
-    void setPos(int x, int y);
-    void setZValue(float z);
-    void setSprite(Sprite* sprite);
-
-    Sprite* getSprite();
 
 private:
-    bool m_enteredCombat;
-    Database *m_db;
-    Sprite* m_sprite;
-    TileSet* m_tileset;
-    qreal m_zValue;
     bool m_hitboxVisible;
 };
 

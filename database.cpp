@@ -121,6 +121,41 @@ Sprite* Database::getSprite(QString path, QGraphicsItem* parent)
     return sprite;
 }
 
+void Database::setSpriteData(QString path, Sprite* source)
+{
+    QSqlQuery query(QString("SELECT * FROM Sprite "
+                            "WHERE (PathToSpriteSheet = '%1')").arg(path));
+
+    QSqlQuery animationQuery;
+    QSqlQuery transitionQuery;
+    QPixmap image;
+
+    query.next();
+    source->setID(query.value("Sprite.SpriteID").toInt());
+    source->setName(query.value("SpriteName").toString());
+    source->setFrameSize(QSize(query.value("SpriteSizeX").toInt(),
+                               query.value("SpriteSizeY").toInt()));
+    image = QPixmap(query.value("PathToSpriteSheet").toString());
+    source->setSpriteSheet(image);
+
+    animationQuery = getSpriteAnimations(source->getID());
+    while (animationQuery.next()) {
+        source->addAnimationState(animationQuery.value("StateName").toString(),
+                                  animationQuery.value("StartFrame").toInt(),
+                                  animationQuery.value("EndFrame").toInt(),
+                                  animationQuery.value("FrameTime").toFloat());
+
+        transitionQuery = getSpriteTransitions(source->getID(),
+                                               animationQuery.value("StateName").toString());
+        while (transitionQuery.next())
+        {
+            source->addTransition(animationQuery.value("StateName").toString(),
+                                  stringToAction(transitionQuery.value("Action").toString()),
+                                  transitionQuery.value("EndStateName").toString());
+        }
+    }
+}
+
 QSqlQuery Database::getSpriteAnimations(int SpriteID)
 {
     QSqlQuery query(QString("SELECT StateName, StartFrame, EndFrame, FrameTime "

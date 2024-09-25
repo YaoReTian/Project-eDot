@@ -9,7 +9,6 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    Entities/interactivesprite.cpp \
     UI/button.cpp \
     UI/buttonmenu.cpp \
     UI/progressbar.cpp \
@@ -22,13 +21,13 @@ SOURCES += \
     main.cpp \
     Entities/player.cpp \
     Entities/sprite.cpp \
+    mainwindow.cpp \
     tilelayer.cpp \
     tilemap.cpp \
     tileset.cpp \
     view.cpp
 
 HEADERS += \
-    Entities/interactivesprite.h \
     UI/button.h \
     UI/buttonmenu.h \
     UI/progressbar.h \
@@ -42,12 +41,14 @@ HEADERS += \
     Entities/sprite.h \
     gameobject.h \
     gamescene.h \
+    mainwindow.h \
     tilelayer.h \
     tilemap.h \
     tileset.h \
     view.h
 
 FORMS += \
+    mainwindow.ui
 
 TRANSLATIONS += \
     Project-eDot_en_GB.ts

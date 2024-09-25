@@ -34,9 +34,7 @@ public:
     void showHitbox();
     void hideHitbox();
 
-    virtual void clear(QGraphicsScene &scene) override;
     virtual void update(int deltaTime) override;
-    virtual void render(QGraphicsScene &scene) override;
 
     void setAction(GLOBAL::Action action = GLOBAL::NONE);
 
@@ -79,9 +77,6 @@ private:
     float m_currentSpeed;
     float m_velocityX, m_velocityY;
     float m_baseZ;
-
-    // Others
-    bool m_hitboxVisible;
 };
 
 #endif // SPRITE_H

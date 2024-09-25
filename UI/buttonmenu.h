@@ -14,9 +14,7 @@ public:
 
     void input(KeyMap* keys);
 
-    virtual void clear(QGraphicsScene &scene) override;
     virtual void update(int deltatime) override;
-    virtual void render(QGraphicsScene &scene) override;
 
     void addButton(Button* button);
     void removeButton(int index);

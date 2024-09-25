@@ -2,7 +2,7 @@
 #include <QLocale>
 #include <QTranslator>
 
-#include "view.h"
+#include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    View v;
-    v.show();
+    MainWindow m;
+    m.show();
     return a.exec();
 }

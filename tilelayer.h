@@ -14,9 +14,7 @@ public:
     TileLayer(QGraphicsItem * parent = 0);
     ~TileLayer();
 
-    virtual void clear(QGraphicsScene &scene) override;
     virtual void update(int deltatime) override;
-    virtual void render(QGraphicsScene &scene) override;
 
     void setID(int id);
     void setOpacity(float opacity);

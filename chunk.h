@@ -17,12 +17,12 @@ public:
     ~Chunk();
 
     // Game loop functions
-    virtual void clear(QGraphicsScene &scene) override;
     virtual void update(int deltatime) override;
-    virtual void render(QGraphicsScene &scene) override;
 
+    // Hitboxes
     void showHitboxes();
     void hideHitboxes();
+
     // Setters
     void setBgColour(QColor colour);
     void setData(QJsonArray data, QList<TileSet*> tilesets);

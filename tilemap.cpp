@@ -7,15 +7,13 @@
 #include <QGraphicsItemGroup>
 
 #include "Utils/global.h"
-#include "Entities/sprite.h"
-
-// Testing includes
 #include "Utils/jsonparser.h"
 #include "tilelayer.h"
+#include "Entities/sprite.h"
 
 Tilemap::Tilemap(QGraphicsItem* parent)
     : QGraphicsRectItem(parent), m_mapID(0), m_mapName("Unset"), m_mapDesc("Unset"),
-    m_mapSizeX(0), m_mapSizeY(0), m_enteredCombatIndex(0), m_hitboxesVisible(false)
+    m_mapSizeX(0), m_mapSizeY(0), m_hitboxesVisible(false)
 {
     setPen(QPen(Qt::transparent));
 }
@@ -31,7 +29,7 @@ void Tilemap::setDatabase(Database* db)
     m_db = db;
 }
 
-void Tilemap::setMap(int MapID, UserInterface* UI)
+void Tilemap::setMap(int MapID)
 {
 
     QSqlQuery query;
@@ -177,100 +175,11 @@ void Tilemap::input(KeyMap* keys)
     }
 }
 
-void Tilemap::clear(QGraphicsScene &scene)
-{
-    for (const auto s : m_sprites)
-    {
-        s->clear(scene);
-    }
-}
-
 void Tilemap::update(int deltatime)
 {
-    for (const auto s : m_sprites)
+    for (const auto s : std::as_const(m_sprites))
     {
         s->setAction(GLOBAL::NONE);
         s->update(deltatime);
-    }
-}
-
-void Tilemap::render(QGraphicsScene &scene)
-{
-    for (const auto &l : std::as_const(m_layers))
-    {
-        l->render(scene);
-    }
-    for (const auto &s : std::as_const(m_sprites))
-    {
-        s->render(scene);
-    }
-}
-
-void Tilemap::setSprites(UserInterface* UI)
-{
-    /*
-    m_sprites = m_db->getWorldSprites(m_mapID);
-
-    for (const auto s : m_sprites)
-    {
-        if (s->isInteractive())
-        {
-            UI->addPopup(s->getButton(), s->getScript());
-        }
-    }*/
-}
-
-void Tilemap::generateTiles(QGraphicsScene &scene)
-{
-    /*
-    int size;
-    int numTiles;
-    int GID;
-    int tilesetIndex;
-    int chunkH;
-    int chunkW;
-
-    size = m_layers[0]->numberOfChunks();
-    for (int n = 0; n < size; n++)
-    {
-        chunkH = m_layers[0]->getChunk(n)->size().height();
-        chunkW = m_layers[0]->getChunk(n)->size().width();
-        QPoint pos = m_layers[0]->getChunk(n)->pos();
-        numTiles = chunkH * chunkW;
-
-        for (int v = 0; v < numTiles; v++)
-        {
-            GID = m_layers[0]->getChunk(n)->tileData(v)->m_GID;
-            QTransform transform = *m_layers[0]->getChunk(n)->tileData(v)->m_transform;
-            tilesetIndex = getTilesetIndex(GID);
-            QGraphicsPixmapItem* item = new QGraphicsPixmapItem(
-                QPixmap(m_tilesets[tilesetIndex]->getPixmapPathFromGID(GID)).transformed(transform));
-            item->setPos(pos.x()+v%chunkW, pos.y()+v/chunkW);
-            scene.addItem(item);
-        }
-    }
-    int tileIndex = 0;
-
-    for (int y = 0; y < GLOBAL::ObjectLength*m_mapSizeY; y += GLOBAL::ObjectLength)
-    {
-        for (int x = 0; x < GLOBAL::ObjectLength*m_mapSizeX; x += GLOBAL::ObjectLength)
-        {
-            m_tiles[tileIndex]->setPos(x,y);
-            m_tiles[tileIndex]->setZValue(GLOBAL::TILE_LAYER);
-            scene.addItem(m_tiles[tileIndex]);
-            tileIndex++;
-            if (tileIndex == m_tiles.size()) break;
-        }
-        if (tileIndex == m_tiles.size()) break;
-    }*/
-}
-
-void Tilemap::generateSprites(QGraphicsScene &scene)
-{
-    for (const auto n : m_sprites)
-    {
-        n->setDefaultToWalk();
-        n->update(0);
-        scene.addItem(n);
     }
 }

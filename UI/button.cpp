@@ -154,20 +154,6 @@ void Button::removeFocus()
     m_focused = false;
 }
 
-void Button::render(QGraphicsScene &scene)
-{
-    scene.addItem(this);
-    scene.addItem(m_textBox);
-    scene.addItem(m_iconText);
-}
-
-void Button::clear(QGraphicsScene &scene)
-{
-    scene.removeItem(this);
-    scene.removeItem(m_textBox);
-    scene.removeItem(m_iconText);
-}
-
 void Button::hide()
 {
     QGraphicsItem::hide();

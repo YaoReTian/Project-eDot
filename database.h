@@ -4,8 +4,6 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 
-//#include "tile.h"
-//#include "Entities/interactivesprite.h"
 #include "Entities/sprite.h"
 #include "Utils/global.h"
 
@@ -20,6 +18,7 @@ public:
     QSqlQuery getMapInfo(int MapID);
     Sprite* getSprite(int SpriteID);
     Sprite* getSprite(QString path, QGraphicsItem* parent = 0);
+    void setSpriteData(QString path, Sprite* source);
     QSqlQuery getSpriteAnimations(int SpriteID);
     QSqlQuery getSpriteTransitions(int SpriteID, QString startStateName);
     GLOBAL::Action stringToAction(QString string);

@@ -6,9 +6,7 @@
 class GameObject
 {
 public:
-    virtual void clear(QGraphicsScene &scene) = 0;
     virtual void update(int deltatime) = 0;
-    virtual void render(QGraphicsScene &scene) = 0;
 
     virtual ~GameObject() {};
 };

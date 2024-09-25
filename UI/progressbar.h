@@ -25,9 +25,7 @@ public:
     ProgressBar();
     ~ProgressBar();
 
-    virtual void clear(QGraphicsScene &scene) override;
     virtual void update(int deltatime) override;
-    virtual void render(QGraphicsScene &scene) override;
 
     void setMaximum(qreal maximum);
     void setValue(qreal value);

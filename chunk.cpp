@@ -14,19 +14,9 @@ Chunk::~Chunk()
     m_hitbox.clear();
 }
 
-void Chunk::clear(QGraphicsScene &scene)
-{
-    scene.removeItem(this);
-}
-
 void Chunk::update(int deltatime)
 {
 
-}
-
-void Chunk::render(QGraphicsScene &scene)
-{
-    scene.addItem(this);
 }
 
 void Chunk::setBgColour(QColor colour)
