@@ -70,6 +70,7 @@ private:
     QTransform m_transform;
 
     // Movement
+    qreal m_dir[2];
     const float m_WALK_SPEED;
     const float m_RUN_SPEED;
     const float m_SPRINT_SPEED;

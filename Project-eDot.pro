@@ -14,6 +14,7 @@ SOURCES += \
     UI/progressbar.cpp \
     UI/userinterface.cpp \
     Utils/jsonparser.cpp \
+    Utils/vectorfield.cpp \
     chunk.cpp \
     database.cpp \
     Utils/keymap.cpp \
@@ -33,6 +34,7 @@ HEADERS += \
     UI/progressbar.h \
     UI/userinterface.h \
     Utils/jsonparser.h \
+    Utils/vectorfield.h \
     chunk.h \
     database.h \
     Utils/global.h \

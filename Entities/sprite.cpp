@@ -164,19 +164,20 @@ void Sprite::update(int deltaTime)
     for (int i = 0; i < 10; i++)
     {
         prevPos = pos();
-        setX(x()+(m_velocityX * deltaTime)/10);
+        setX(x()+(m_dir[0] * m_currentSpeed * GLOBAL::ObjectLength * deltaTime)/10);
         if (collidedWithWall()) setPos(prevPos);
     }
     for (int i = 0; i < 10; i++)
-    {
+    { // TEST IF VECTSOR WORKS
         prevPos = pos();
-        setY(y()+(m_velocityY * deltaTime)/10);
+        setY(y()+(m_dir[1] * m_currentSpeed * GLOBAL::ObjectLength * deltaTime)/10);
         if (collidedWithWall()) setPos(prevPos);
     }
     QGraphicsPixmapItem::setZValue(m_baseZ + y() + boundingRect().height());
+    qDebug() <<m_dir[0];
 
-    m_velocityX = 0;
-    m_velocityY = 0;
+    m_dir[0] = 0;
+    m_dir[1] = 0;
 }
 
 void Sprite::setAction(GLOBAL::Action action)
@@ -191,19 +192,19 @@ void Sprite::setAction(GLOBAL::Action action)
     // Movement
     if (action == GLOBAL::MOVE_LEFT)
     {
-        m_velocityX = -m_currentSpeed * GLOBAL::ObjectLength;
+        m_dir[0] = -1;
     }
     else if (action == GLOBAL::MOVE_RIGHT)
     {
-        m_velocityX = m_currentSpeed * GLOBAL::ObjectLength;
+        m_dir[0] = 1;
     }
     else if (action == GLOBAL::MOVE_UP)
     {
-        m_velocityY = -m_currentSpeed * GLOBAL::ObjectLength;
+        m_dir[1] = -1;
     }
     else if (action == GLOBAL::MOVE_DOWN)
     {
-        m_velocityY = m_currentSpeed * GLOBAL::ObjectLength;
+        m_dir[1] = 1;
     }
     else if (action == GLOBAL::SPRINT)
     {
@@ -213,6 +214,11 @@ void Sprite::setAction(GLOBAL::Action action)
     {
         m_currentSpeed = (m_currentSpeed == m_WALK_SPEED) ? m_defaultSpeed : m_SPRINT_SPEED;
     }
+
+    qreal mag;
+    mag = sqrt(pow(m_dir[0],2) + pow(m_dir[1],2));
+    m_dir[0] = m_dir[0]/mag;
+    m_dir[1] = m_dir[1]/mag;
 }
 
 void Sprite::setDefaultToWalk()
