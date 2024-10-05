@@ -1,6 +1,6 @@
 # Project-eDot
 
-RPG, turn-based and bullet hell game made for Computer Science A-level NEA  
+RPG bullet hell game made for Computer Science A-level NEA  
 
 ## Dependencies
 - Qt4 <

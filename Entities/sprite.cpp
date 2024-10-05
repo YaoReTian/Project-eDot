@@ -174,7 +174,6 @@ void Sprite::update(int deltaTime)
         if (collidedWithWall()) setPos(prevPos);
     }
     QGraphicsPixmapItem::setZValue(m_baseZ + y() + boundingRect().height());
-    qDebug() <<m_dir[0];
 
     m_dir[0] = 0;
     m_dir[1] = 0;
