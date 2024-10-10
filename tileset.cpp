@@ -13,45 +13,114 @@ TileSet::TileSet(QString tileSetFilepath, int firstGID)
 
 void TileSet::setData(QString tileSetFilepath)
 {
-    bool interactable;
-    bool solid;
-    int i;
-
-    QJsonArray tiles = JsonParser::parse(tileSetFilepath).value("tiles").toArray();
-    for (const auto &t : std::as_const(tiles))
+    qDeleteAll(m_tiles);
+    m_tiles.clear();
+    QJsonObject tileset = JsonParser::parse(tileSetFilepath);
+    if (tileset.value("image").isUndefined())
     {
-        interactable = false;
-        solid = false;
+        parseOnImageCollection(tileset.value("tiles").toArray());
+    }
+    else
+    {
+        parseOnTileSetImage(tileset);
+    }
+}
 
+void TileSet::parseOnImageCollection(QJsonArray tileArray)
+{
+    int i;
+    for (const auto &t : std::as_const(tileArray))
+    {
         QJsonObject val = t.toObject();
         i = val.value("id").toInt();
         m_tiles[i] = new TileInfo;
         m_tiles[i]->m_height = val.value("imageheight").toInt();
         m_tiles[i]->m_width = val.value("imagewidth").toInt();
         m_tiles[i]->m_path = JsonParser::parsePath(val.value("image").toString());
+        m_tiles[i]->m_pixmap = QPixmap(m_tiles[i]->m_path);
+
+        if (!val.value("type").isUndefined())
+        {
+            QString type = val.value("type").toString();
+            if (type == "Wall")
+            {
+                m_tiles[i]->m_type = Wall;
+            }
+        }
 
         if (!val.value("properties").isUndefined())
         {
-            QJsonArray properties = val.value("properties").toArray();
-            interactable = properties[0].toObject().value("value").toBool();
-            solid = properties[1].toObject().value("value").toBool();
+            checkProperties(m_tiles[i], val);
         }
 
         if (!val.value("objectgroup").isUndefined())
         {
-            QJsonArray objects = val.value("objectgroup").toObject().value("objects").toArray();
-            for (const auto &o : std::as_const(objects))
+            setHitboxes(m_tiles[i], val);
+        }
+    }
+}
+
+void TileSet::parseOnTileSetImage(QJsonObject object)
+{
+    QPixmap pix(JsonParser::parsePath(object.value("image").toString()));
+    int tileH = object.value("tileheight").toInt();
+    int tileW = object.value("tilewidth").toInt();
+    int tilesX = object.value("imagewidth").toInt() / tileW;
+    int tilesY = object.value("imageheight").toInt() / tileH;
+    int i = 0;
+    for (int y = 0; y < tilesY; y++)
+    {
+        for (int x = 0; x < tilesX; x++)
+        {
+            m_tiles[i] = new TileInfo;
+            m_tiles[i]->m_height = tileH;
+            m_tiles[i]->m_width = tileW;
+            m_tiles[i]->m_path = "";
+            m_tiles[i]->m_pixmap = pix.copy(x*tileW, y*tileH, tileW, tileH);
+            i++;
+        }
+    }
+    if (!object.value("tiles").isUndefined())
+    {
+        QJsonArray data = object.value("tiles").toArray();
+        for (const auto t : data)
+        {
+            QJsonObject tile = t.toObject();
+            int id = tile.value("id").toInt();
+            if (!tile.value("properties").isUndefined())
             {
-                QJsonObject obj = o.toObject();
-                m_tiles[i]->m_hitboxes.append(new HitboxInfo);
-                m_tiles[i]->m_hitboxes.back()->m_x= obj.value("x").toDouble();
-                m_tiles[i]->m_hitboxes.back()->m_y = obj.value("y").toDouble();
-                m_tiles[i]->m_hitboxes.back()->m_width = obj.value("width").toDouble();
-                m_tiles[i]->m_hitboxes.back()->m_height = obj.value("height").toDouble();
-                m_tiles[i]->m_hitboxes.back()->m_interactable = interactable;
-                m_tiles[i]->m_hitboxes.back()->m_solid = solid;
+                checkProperties(m_tiles[id], tile);
+            }
+
+            if (!tile.value("objectgroup").isUndefined())
+            {
+                setHitboxes(m_tiles[id], tile);
             }
         }
+    }
+}
+
+void TileSet::checkProperties(TileInfo* tile, QJsonObject val)
+{
+    QJsonArray properties = val.value("properties").toArray();
+    tile->m_interactable = properties[0].toObject().value("value").toBool();
+    tile->m_solid = properties[1].toObject().value("value").toBool();
+}
+
+void TileSet::setHitboxes(TileInfo *tile, QJsonObject val)
+{
+    QJsonArray objects = val.value("objectgroup").toObject().value("objects").toArray();
+    for (const auto &o : std::as_const(objects))
+    {
+        QJsonObject obj = o.toObject();
+        tile->m_hitboxes.append(new HitboxInfo);
+        tile->m_hitboxes.back()->m_x= obj.value("x").toDouble();
+        tile->m_hitboxes.back()->m_y = obj.value("y").toDouble();
+        tile->m_hitboxes.back()->m_width = obj.value("width").toDouble();
+        tile->m_hitboxes.back()->m_height = obj.value("height").toDouble();
+        tile->m_hitboxes.back()->m_interactable = tile->m_interactable;
+        tile->m_hitboxes.back()->m_solid = tile->m_solid;
+        tile->m_hitboxes.back()->m_type = tile->m_type;
     }
 }
 

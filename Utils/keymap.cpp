@@ -30,16 +30,7 @@ void KeyMap::setWorldBindings()
     m_keys[Qt::Key_Down]    = GLOBAL::NEXT_OPTION;
     m_keys[Qt::Key_Up]      = GLOBAL::PREV_OPTION;
     m_keys[Qt::Key_R]       = GLOBAL::SHOW_HITBOX;
-}
-
-void KeyMap::setTurnBasedBindings()
-{
-    m_keys.clear();
-    m_keys[Qt::Key_1]       = GLOBAL::OVERDRIVE_1;
-    m_keys[Qt::Key_2]       = GLOBAL::OVERDRIVE_2;
-    m_keys[Qt::Key_3]       = GLOBAL::OVERDRIVE_3;
-    m_keys[Qt::Key_4]       = GLOBAL::OVERDRIVE_4;
-    m_keys[Qt::Key_F]       = GLOBAL::SELECT;
+    m_keys[Qt::Key_Space]   = GLOBAL::SHOOT;
 }
 
 void KeyMap::setBinding(Qt::Key key, GLOBAL::Action action)

@@ -6,14 +6,10 @@
 #include <QStack>
 #include <QList>
 #include <QMap>
+#include <QPointF>
 
-struct Vector
-{
-    qreal m_i;
-    qreal m_j;
-
-    Vector(qreal i=0, qreal j=0) : m_i(i), m_j(j) {}
-};
+#include "vector.h"
+#include <QDebug>
 
 struct Node
 {
@@ -22,6 +18,12 @@ struct Node
     Node* m_right = nullptr;
 
     Node(QString data = "") : m_data(data) {}
+    ~Node()
+    {
+        qDebug() << "Test";
+        delete m_left;
+        delete m_right;
+    }
 };
 
 class VectorField
@@ -29,11 +31,15 @@ class VectorField
 public:
     VectorField();
     VectorField(QString f_i, QString f_j);
+    ~VectorField();
 
     void setField(QString f_i, QString f_j);
-    Vector* getVector(qreal a_x = 0, qreal a_y = 0, qreal p_x = 0, qreal p_y = 0);
+    void setOrigin(qreal x, qreal y);
+    void setOrigin(QPointF point);
+    Vector getVector(qreal a_x = 0, qreal a_y = 0, qreal p_x = 0, qreal p_y = 0);
 
 private:
+    void clearNodes(Node* &parent);
     const QList<QString> functions = {"sin", "cos", "tan", "ln", "log10",
                                       "acos", "asin", "atan", "sqrt"};
     const QMap<QString, int> operations = {
@@ -48,6 +54,7 @@ private:
     void findVectorValue(Node* parent);
     Node* m_parentF[2];
     QString m_fieldEq[2];
+    QPointF m_origin;
 
     // temporary calculation storage
     QStack<qreal> m_RPNstack;

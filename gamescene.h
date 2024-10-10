@@ -23,6 +23,7 @@ private:
     Tilemap *m_tilemap;
     Database *m_db;
     Player *m_player;
+    BulletManager *m_bulletManager;
     double m_cameraPosX;
     double m_cameraPosY;
 };

@@ -9,11 +9,10 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    UI/button.cpp \
-    UI/buttonmenu.cpp \
-    UI/progressbar.cpp \
-    UI/userinterface.cpp \
+    Entities/bullet.cpp \
+    Entities/bulletmanager.cpp \
     Utils/jsonparser.cpp \
+    Utils/vector.cpp \
     Utils/vectorfield.cpp \
     chunk.cpp \
     database.cpp \
@@ -29,11 +28,10 @@ SOURCES += \
     view.cpp
 
 HEADERS += \
-    UI/button.h \
-    UI/buttonmenu.h \
-    UI/progressbar.h \
-    UI/userinterface.h \
+    Entities/bullet.h \
+    Entities/bulletmanager.h \
     Utils/jsonparser.h \
+    Utils/vector.h \
     Utils/vectorfield.h \
     chunk.h \
     database.h \

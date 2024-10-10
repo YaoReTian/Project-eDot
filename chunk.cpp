@@ -33,6 +33,7 @@ void Chunk::setObjects(TileInfo* tile, QTransform transform, int x, int y)
             m_hitbox.append(new Hitbox(this));
             m_hitbox.back()->setPen(QPen(Qt::transparent));
             m_hitbox.back()->m_solid = o->m_solid;
+            m_hitbox.back()->m_type = o->m_type;
             m_hitbox.back()->m_interactable = o->m_interactable;
             m_hitbox.back()->setRect(o->m_x * GLOBAL::Scale - GLOBAL::ObjectLength/2,
                                      o->m_y * GLOBAL::Scale - GLOBAL::ObjectLength/2,
@@ -70,7 +71,7 @@ void Chunk::setData(QJsonArray data, QList<TileSet*> tilesets)
             ts = TileSet::findTilesetIndex(GID, tilesets);
             TileInfo* tile = tilesets[ts]->getInfo(GID);
             p.drawPixmap(x*GLOBAL::ObjectLength,y*GLOBAL::ObjectLength,
-                         QPixmap(tile->m_path).scaled(GLOBAL::ObjectSize).transformed(transform));
+                         tile->m_pixmap.scaled(GLOBAL::ObjectSize).transformed(transform));
             setObjects(tile, transform, x, y);
         }
 

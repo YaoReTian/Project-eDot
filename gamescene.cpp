@@ -6,12 +6,14 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
 #include <QImage>
+#include "Entities/bullet.h"
 
 #include "Utils/global.h"
 
 GameScene::GameScene(QObject *parent) :
     QGraphicsScene(parent), m_tilemap(new Tilemap), m_db(new Database),
-    m_player(new Player(m_tilemap)), m_cameraPosX(0), m_cameraPosY(0)
+    m_player(new Player(m_tilemap)), m_bulletManager(new BulletManager),
+    m_cameraPosX(0), m_cameraPosY(0)
 {
     m_tilemap->setDatabase(m_db);
     m_tilemap->setMap(3);
@@ -27,6 +29,7 @@ GameScene::GameScene(QObject *parent) :
     }
     m_player->setZValue(m_tilemap->getPlayerZ());
     m_player->setPos(4*GLOBAL::ObjectLength,4*GLOBAL::ObjectLength);
+    m_player->setBulletManager(m_bulletManager);
 }
 
 GameScene::~GameScene()
@@ -44,6 +47,7 @@ void GameScene::input(KeyMap* keys)
 void GameScene::update(int deltatime)
 {
     m_player->update(deltatime);
+    m_bulletManager->update(deltatime);
     updateCamera();
     m_tilemap->setPos(-m_cameraPosX, -m_cameraPosY);
 }

@@ -4,15 +4,24 @@
 #include <QtMath>
 
 VectorField::VectorField()
-    : m_parentF({nullptr, nullptr}), m_fieldEq({"",""})
+    : m_origin(0,0)
 {
-
+    m_parentF[0] = nullptr;
+    m_parentF[1] = nullptr;
+    m_fieldEq[0] = "";
+    m_fieldEq[1] = "";
 }
 
 VectorField::VectorField(QString f_i, QString f_j)
 {
     VectorField();
     setField(f_i, f_j);
+}
+
+VectorField::~VectorField()
+{
+    delete m_parentF[0];
+    delete m_parentF[1];
 }
 
 void VectorField::setField(QString f_i, QString f_j)
@@ -23,17 +32,28 @@ void VectorField::setField(QString f_i, QString f_j)
     m_parentF[1] = toRPNtree(f_j);
 }
 
-Vector* VectorField::getVector(qreal a_x, qreal a_y, qreal p_x, qreal p_y)
+void VectorField::setOrigin(QPointF point)
 {
-    Vector* v = new Vector;
-    m_var["x"] = a_x;
-    m_var["y"] = a_y;
-    m_var["px"] = p_x;
-    m_var["py"] = p_y;
+    m_origin = point;
+}
+
+void VectorField::setOrigin(qreal x, qreal y)
+{
+    m_origin.setX(x);
+    m_origin.setY(y);
+}
+
+Vector VectorField::getVector(qreal a_x, qreal a_y, qreal p_x, qreal p_y)
+{
+    Vector v;
+    m_var["x"] = a_x - m_origin.x();
+    m_var["y"] = a_y - m_origin.y();
+    m_var["px"] = p_x - m_origin.x();
+    m_var["py"] = p_y - m_origin.y();
     findVectorValue(m_parentF[0]);
-    v->m_i = m_RPNstack.pop();
+    v.setI(m_RPNstack.pop());
     findVectorValue(m_parentF[1]);
-    v->m_j = m_RPNstack.pop();
+    v.setJ(m_RPNstack.pop());
     return v;
 }
 
@@ -48,7 +68,7 @@ Node* VectorField::toRPNtree(QString str)
     str = "(" + str + ")";
 
     // Parse into queue form
-    for (const QChar c : str)
+    for (const QChar c : std::as_const(str))
     {
         if (c.isLetter())
         {
@@ -66,12 +86,12 @@ Node* VectorField::toRPNtree(QString str)
             }
             tempStr.append(c);
         }
-        else if (operations.keys().indexOf(c) != -1 || c == '(' || c==')')
+        else if (operations.contains(c) || c == '(' || c==')')
         {
             if (tempStr.size() > 0)
             {
                 if (!(functions.contains(tempStr) ||
-                      m_var.keys().contains(tempStr) ||
+                      m_var.contains(tempStr) ||
                       tempStr.back().isDigit() ))
                 {
                     qDebug() << tempStr;
@@ -98,7 +118,7 @@ Node* VectorField::toRPNtree(QString str)
         {
             symStack.push(parsed.head());
         }
-        else if (parsed.head().back().isDigit() || m_var.keys().contains(parsed.head()))
+        else if (parsed.head().back().isDigit() || m_var.contains(parsed.head()))
         {
             nodeStack.push(new Node(parsed.head()));
         }
@@ -107,7 +127,7 @@ Node* VectorField::toRPNtree(QString str)
             nodeStack.push(new Node("0"));
             symStack.push(parsed.head());
         }
-        else if (operations.keys().indexOf(parsed.head()) != -1)
+        else if (operations.contains(parsed.head()))
         {
             while (!symStack.empty() && symStack.top() != "(" &&
                    ((parsed.head() != "^" && operations[symStack.top()] >= operations[parsed.head()]) ||
@@ -131,7 +151,7 @@ Node* VectorField::toRPNtree(QString str)
             }
             if (symStack.empty())   throw std::invalid_argument("Invalid brackets");
             symStack.pop();
-            if (!symStack.empty() && functions.indexOf(symStack.top()) != -1)
+            if (!symStack.empty() && functions.contains(symStack.top()))
             {
                 tempNode = new Node(symStack.pop());
                 tempNode->m_right = nodeStack.pop();
@@ -150,7 +170,7 @@ void VectorField::findVectorValue(Node *parent)
     findVectorValue(parent->m_left);
     findVectorValue(parent->m_right);
 
-    if (operations.keys().indexOf(parent->m_data) != -1)
+    if (operations.contains(parent->m_data))
     {
         qreal tempVal = 0;
         if (parent->m_data == "+")
@@ -225,4 +245,14 @@ void VectorField::findVectorValue(Node *parent)
     {
         m_RPNstack.push(m_var[parent->m_data]);
     }
+}
+
+void VectorField::clearNodes(Node* &parent)
+{
+    if (parent == nullptr)  return;
+    clearNodes(parent->m_left);
+    clearNodes(parent->m_right);
+
+    delete parent;
+    parent = nullptr;
 }

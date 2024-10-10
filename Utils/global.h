@@ -13,13 +13,6 @@ const float Scale           = 2;
 const int ObjectLength      = Scale * TileLength;
 const QSize ObjectSize      = QSize(ObjectLength,ObjectLength);
 
-const int BACKGROUND_LAYER  = 0;
-const int TILE_LAYER        = 10;
-const int SPRITE_LAYER      = 15;
-const int PARTICLE_LAYER    = 40;
-const int UI_LAYER          = 50;
-const int RENDER_LAYER      = 60;
-
 enum Action
 {
     MOVE_LEFT,
@@ -36,6 +29,7 @@ enum Action
     OVERDRIVE_3,
     OVERDRIVE_4,
     SHOW_HITBOX,
+    SHOOT,
     NONE
 };
 

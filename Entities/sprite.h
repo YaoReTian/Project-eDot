@@ -7,6 +7,7 @@
 #include "../Utils/global.h"
 #include "../gameobject.h"
 #include "../tileset.h"
+#include "../Utils/vector.h"
 
 struct AnimationState
 {
@@ -41,6 +42,7 @@ public:
     int getID();
     QString getName();
     QString getType();
+    Vector* prevActiveVector();
 
     // For animations
     void setSpriteSheet(QPixmap spriteSheet);
@@ -52,6 +54,8 @@ public:
     void setDefaultToWalk();
     void setDefaultToRun();
     bool collidedWithWall();
+
+    Vector* vector();
 
 private:
     // Sprite data
@@ -70,13 +74,13 @@ private:
     QTransform m_transform;
 
     // Movement
-    qreal m_dir[2];
+    Vector m_vector;
+    Vector m_prevActiveVector;
     const float m_WALK_SPEED;
     const float m_RUN_SPEED;
     const float m_SPRINT_SPEED;
     float m_defaultSpeed;
     float m_currentSpeed;
-    float m_velocityX, m_velocityY;
     float m_baseZ;
 };
 

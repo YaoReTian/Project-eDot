@@ -24,7 +24,6 @@ public:
     KeyMap();
     ~KeyMap();
     void setWorldBindings();
-    void setTurnBasedBindings();
     void setBinding(Qt::Key key, GLOBAL::Action action);
     GLOBAL::Action getAction(Qt::Key);
     bool contains(Qt::Key key);

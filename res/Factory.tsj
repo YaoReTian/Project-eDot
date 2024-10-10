@@ -14,7 +14,7 @@
  "tiles":[
         {
          "id":0,
-         "image":"..\/Tiled\/Project-eDot\/Tiles\/Factory\/wall-(fac).png",
+         "image":"..\/..\/Tiled\/Tiles\/Factory\/wall-(fac).png",
          "imageheight":32,
          "imagewidth":32,
          "objectgroup":
@@ -50,11 +50,12 @@
                  "name":"Solid",
                  "type":"bool",
                  "value":true
-                }]
+                }],
+         "type":"Wall"
         }, 
         {
          "id":1,
-         "image":"..\/Tiled\/Project-eDot\/Tiles\/Factory\/tiles-(fac).png",
+         "image":"..\/..\/Tiled\/Tiles\/Factory\/tiles-(fac).png",
          "imageheight":32,
          "imagewidth":32,
          "properties":[
@@ -71,7 +72,7 @@
         }, 
         {
          "id":2,
-         "image":"..\/Tiled\/Project-eDot\/Tiles\/Factory\/strange-orange-light(fac).png",
+         "image":"..\/..\/Tiled\/Tiles\/Factory\/strange-orange-light(fac).png",
          "imageheight":32,
          "imagewidth":32,
          "objectgroup":
@@ -112,7 +113,7 @@
         }, 
         {
          "id":3,
-         "image":"..\/Tiled\/Project-eDot\/Tiles\/Factory\/Side path.png",
+         "image":"..\/..\/Tiled\/Tiles\/Factory\/Side path.png",
          "imageheight":32,
          "imagewidth":32,
          "properties":[
@@ -129,7 +130,7 @@
         }, 
         {
          "id":4,
-         "image":"..\/Tiled\/Project-eDot\/Tiles\/Factory\/Interior wall corner.png",
+         "image":"..\/..\/Tiled\/Tiles\/Factory\/Interior wall corner.png",
          "imageheight":32,
          "imagewidth":32,
          "objectgroup":
@@ -165,11 +166,12 @@
                  "name":"Solid",
                  "type":"bool",
                  "value":true
-                }]
+                }],
+         "type":"Wall"
         }, 
         {
          "id":5,
-         "image":"..\/Tiled\/Project-eDot\/Tiles\/Factory\/Exterior wall.png",
+         "image":"..\/..\/Tiled\/Tiles\/Factory\/Exterior wall.png",
          "imageheight":32,
          "imagewidth":32,
          "objectgroup":
@@ -185,7 +187,7 @@
                      "rotation":0,
                      "type":"",
                      "visible":true,
-                     "width":15,
+                     "width":14,
                      "x":17,
                      "y":0
                     }],
@@ -205,11 +207,12 @@
                  "name":"Solid",
                  "type":"bool",
                  "value":true
-                }]
+                }],
+         "type":"Wall"
         }, 
         {
          "id":6,
-         "image":"..\/Tiled\/Project-eDot\/Tiles\/Factory\/Exterior wall corner.png",
+         "image":"..\/..\/Tiled\/Tiles\/Factory\/Exterior wall corner.png",
          "imageheight":32,
          "imagewidth":32,
          "objectgroup":
@@ -219,26 +222,26 @@
              "name":"",
              "objects":[
                     {
-                     "height":15,
+                     "height":14,
                      "id":1,
                      "name":"",
                      "rotation":0,
                      "type":"",
                      "visible":true,
-                     "width":32,
+                     "width":31,
                      "x":0,
-                     "y":0
+                     "y":1
                     }, 
                     {
-                     "height":32,
+                     "height":31,
                      "id":2,
                      "name":"",
                      "rotation":0,
                      "type":"",
                      "visible":true,
-                     "width":15,
+                     "width":14,
                      "x":17,
-                     "y":0
+                     "y":1
                     }],
              "opacity":1,
              "type":"objectgroup",
@@ -256,11 +259,12 @@
                  "name":"Solid",
                  "type":"bool",
                  "value":true
-                }]
+                }],
+         "type":"Wall"
         }, 
         {
          "id":7,
-         "image":"..\/Tiled\/Project-eDot\/Tiles\/Factory\/Corner path interior.png",
+         "image":"..\/..\/Tiled\/Tiles\/Factory\/Corner path interior.png",
          "imageheight":32,
          "imagewidth":32,
          "properties":[
@@ -277,7 +281,7 @@
         }, 
         {
          "id":8,
-         "image":"..\/Tiled\/Project-eDot\/Tiles\/Factory\/Corner path exterior.png",
+         "image":"..\/..\/Tiled\/Tiles\/Factory\/Corner path exterior.png",
          "imageheight":32,
          "imagewidth":32,
          "properties":[
@@ -294,7 +298,7 @@
         }, 
         {
          "id":9,
-         "image":"..\/Tiled\/Project-eDot\/Tiles\/Factory\/clean-floor-(fac).png",
+         "image":"..\/..\/Tiled\/Tiles\/Factory\/clean-floor-(fac).png",
          "imageheight":32,
          "imagewidth":32,
          "properties":[
@@ -311,7 +315,7 @@
         }, 
         {
          "id":10,
-         "image":"..\/Tiled\/Project-eDot\/Tiles\/Factory\/background-black.png",
+         "image":"..\/..\/Tiled\/Tiles\/Factory\/background-black.png",
          "imageheight":32,
          "imagewidth":32,
          "properties":[
@@ -328,7 +332,7 @@
         }, 
         {
          "id":11,
-         "image":"..\/Tiled\/Project-eDot\/Tiles\/Factory\/1-block-path-(fac)(vertical).png",
+         "image":"..\/..\/Tiled\/Tiles\/Factory\/1-block-path-(fac)(vertical).png",
          "imageheight":32,
          "imagewidth":32,
          "properties":[
@@ -345,7 +349,7 @@
         }, 
         {
          "id":13,
-         "image":"..\/Tiled\/Project-eDot\/Tiles\/Factory\/1 block corner path.png",
+         "image":"..\/..\/Tiled\/Tiles\/Factory\/1 block corner path.png",
          "imageheight":32,
          "imagewidth":32,
          "properties":[
@@ -362,7 +366,7 @@
         }, 
         {
          "id":14,
-         "image":"..\/Tiled\/Project-eDot\/Sprites\/Factory\/telp-corner-interior(NE).png",
+         "image":"..\/..\/Tiled\/Sprites\/Factory\/telp-corner-interior(NE).png",
          "imageheight":32,
          "imagewidth":32,
          "properties":[
@@ -379,7 +383,7 @@
         }, 
         {
          "id":15,
-         "image":"..\/Tiled\/Project-eDot\/Sprites\/Factory\/telp-buton(E).png",
+         "image":"..\/..\/Tiled\/Sprites\/Factory\/telp-buton(E).png",
          "imageheight":5,
          "imagewidth":34,
          "objectgroup":
@@ -419,7 +423,7 @@
         }, 
         {
          "id":16,
-         "image":"..\/Tiled\/Project-eDot\/Sprites\/Factory\/telp-(horizontal).png",
+         "image":"..\/..\/Tiled\/Sprites\/Factory\/telp-(horizontal).png",
          "imageheight":3,
          "imagewidth":32,
          "properties":[
@@ -436,7 +440,7 @@
         }, 
         {
          "id":17,
-         "image":"..\/Tiled\/Project-eDot\/Sprites\/Factory\/robo-head(fac).png",
+         "image":"..\/..\/Tiled\/Sprites\/Factory\/robo-head(fac).png",
          "imageheight":9,
          "imagewidth":7,
          "objectgroup":
@@ -476,7 +480,7 @@
         }, 
         {
          "id":18,
-         "image":"..\/Tiled\/Project-eDot\/Sprites\/Factory\/radiowaste(fac).png",
+         "image":"..\/..\/Tiled\/Sprites\/Factory\/radiowaste(fac).png",
          "imageheight":64,
          "imagewidth":32,
          "objectgroup":
@@ -516,7 +520,7 @@
         }, 
         {
          "id":19,
-         "image":"..\/Tiled\/Project-eDot\/Sprites\/Factory\/elevator.png",
+         "image":"..\/..\/Tiled\/Sprites\/Factory\/elevator.png",
          "imageheight":64,
          "imagewidth":64,
          "objectgroup":
@@ -556,7 +560,7 @@
         }, 
         {
          "id":20,
-         "image":"..\/Tiled\/Project-eDot\/Sprites\/Factory\/door(fac).png",
+         "image":"..\/..\/Tiled\/Sprites\/Factory\/door(fac).png",
          "imageheight":64,
          "imagewidth":64,
          "objectgroup":
@@ -596,7 +600,7 @@
         }, 
         {
          "id":21,
-         "image":"..\/Tiled\/Project-eDot\/Sprites\/Factory\/conveyor-belt-start-E.png",
+         "image":"..\/..\/Tiled\/Sprites\/Factory\/conveyor-belt-start-E.png",
          "imageheight":32,
          "imagewidth":32,
          "objectgroup":
@@ -636,7 +640,7 @@
         }, 
         {
          "id":22,
-         "image":"..\/Tiled\/Project-eDot\/Sprites\/Factory\/conveyor-belt-sprite sheet-(fac).png",
+         "image":"..\/..\/Tiled\/Sprites\/Factory\/conveyor-belt-sprite sheet-(fac).png",
          "imageheight":33,
          "imagewidth":96,
          "properties":[
@@ -653,7 +657,7 @@
         }, 
         {
          "id":23,
-         "image":"..\/Tiled\/Project-eDot\/Sprites\/Factory\/comp.png",
+         "image":"..\/..\/Tiled\/Sprites\/Factory\/comp.png",
          "imageheight":48,
          "imagewidth":32,
          "objectgroup":
@@ -693,7 +697,7 @@
         }, 
         {
          "id":24,
-         "image":"..\/Tiled\/Project-eDot\/Sprites\/Factory\/button(fac).png",
+         "image":"..\/..\/Tiled\/Sprites\/Factory\/button(fac).png",
          "imageheight":32,
          "imagewidth":32,
          "objectgroup":
@@ -734,7 +738,7 @@
         }, 
         {
          "id":25,
-         "image":"..\/Tiled\/Project-eDot\/Sprites\/Factory\/box-of-robot-heads.png",
+         "image":"..\/..\/Tiled\/Sprites\/Factory\/box-of-robot-heads.png",
          "imageheight":32,
          "imagewidth":32,
          "objectgroup":

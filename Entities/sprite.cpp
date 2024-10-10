@@ -5,9 +5,10 @@
 Sprite::Sprite(QGraphicsItem * parent)
     : QObject(), QGraphicsPixmapItem(parent), m_SpriteID(-1), m_name("Unset"),
     m_type("Unset"), m_frameSize(), m_elapsed_time(0), m_currentFrame(0),
-    m_currentStateName("idle"), m_WALK_SPEED(1.5f/1000.0f), m_RUN_SPEED(3.0f/1000.0f),
+    m_currentStateName("idle"), m_vector(0,0), m_prevActiveVector(0,1),
+    m_WALK_SPEED(1.5f/1000.0f), m_RUN_SPEED(3.0f/1000.0f),
     m_SPRINT_SPEED(4.5f/1000.0f), m_defaultSpeed(m_RUN_SPEED),
-    m_currentSpeed(m_defaultSpeed), m_velocityX(0), m_velocityY(0)
+    m_currentSpeed(m_defaultSpeed)
 {}
 
 Sprite::~Sprite()
@@ -88,9 +89,9 @@ void Sprite::setHitbox(HitboxInfo* hitbox)
     m_hitboxes.append(new Hitbox(this));
     m_hitboxes.back()->setPen(QPen(Qt::transparent));
     m_hitboxes.back()->setRect(-hitbox->m_width*GLOBAL::Scale/2,
-                             -hitbox->m_height*GLOBAL::Scale/2,
-                             hitbox->m_width * GLOBAL::Scale,
-                             hitbox->m_height * GLOBAL::Scale);
+                               -hitbox->m_height*GLOBAL::Scale/2,
+                               hitbox->m_width * GLOBAL::Scale,
+                               hitbox->m_height * GLOBAL::Scale);
     m_hitboxes.back()->m_solid = hitbox->m_solid;
     m_hitboxes.back()->m_interactable = hitbox->m_interactable;
     m_hitboxes.back()->setTransform(m_transform);
@@ -160,23 +161,29 @@ void Sprite::update(int deltaTime)
 
     // Check wall collisions
     QPointF prevPos;
+    m_vector.toUnitVector();
+    m_vector *= m_currentSpeed;
 
     for (int i = 0; i < 10; i++)
     {
         prevPos = pos();
-        setX(x()+(m_dir[0] * m_currentSpeed * GLOBAL::ObjectLength * deltaTime)/10);
+        setX(x()+(m_vector.i() * GLOBAL::ObjectLength * deltaTime)/10);
         if (collidedWithWall()) setPos(prevPos);
     }
     for (int i = 0; i < 10; i++)
-    { // TEST IF VECTSOR WORKS
+    {
         prevPos = pos();
-        setY(y()+(m_dir[1] * m_currentSpeed * GLOBAL::ObjectLength * deltaTime)/10);
+        setY(y()+(m_vector.j() * GLOBAL::ObjectLength * deltaTime)/10);
         if (collidedWithWall()) setPos(prevPos);
     }
     QGraphicsPixmapItem::setZValue(m_baseZ + y() + boundingRect().height());
 
-    m_dir[0] = 0;
-    m_dir[1] = 0;
+
+    if (!m_vector.null())
+    {
+        m_prevActiveVector = m_vector;
+    }
+    m_vector.setVector(0,0);
 }
 
 void Sprite::setAction(GLOBAL::Action action)
@@ -191,19 +198,19 @@ void Sprite::setAction(GLOBAL::Action action)
     // Movement
     if (action == GLOBAL::MOVE_LEFT)
     {
-        m_dir[0] = -1;
+        m_vector.setI(-1);
     }
     else if (action == GLOBAL::MOVE_RIGHT)
     {
-        m_dir[0] = 1;
+        m_vector.setI(1);
     }
     else if (action == GLOBAL::MOVE_UP)
     {
-        m_dir[1] = -1;
+        m_vector.setJ(-1);
     }
     else if (action == GLOBAL::MOVE_DOWN)
     {
-        m_dir[1] = 1;
+        m_vector.setJ(1);
     }
     else if (action == GLOBAL::SPRINT)
     {
@@ -213,11 +220,6 @@ void Sprite::setAction(GLOBAL::Action action)
     {
         m_currentSpeed = (m_currentSpeed == m_WALK_SPEED) ? m_defaultSpeed : m_SPRINT_SPEED;
     }
-
-    qreal mag;
-    mag = sqrt(pow(m_dir[0],2) + pow(m_dir[1],2));
-    m_dir[0] = m_dir[0]/mag;
-    m_dir[1] = m_dir[1]/mag;
 }
 
 void Sprite::setDefaultToWalk()
@@ -251,4 +253,14 @@ bool Sprite::collidedWithWall()
         }
     }
     return false;
+}
+
+Vector* Sprite::vector()
+{
+    return &m_vector;
+}
+
+Vector* Sprite::prevActiveVector()
+{
+    return &m_prevActiveVector;
 }

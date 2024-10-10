@@ -45,7 +45,7 @@
     <qresource prefix="/tileset">
         <file>res/General.tsj</file>
         <file>res/Factory.tsj</file>
-        <file>res/Basic bullets..tsj</file>
+        <file>res/Basic bullets.tsj</file>
     </qresource>
     <qresource prefix="/image/bullet">
         <file>res/Basic_bullets.png</file>

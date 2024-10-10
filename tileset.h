@@ -3,27 +3,38 @@
 
 #include <QList>
 #include <QGraphicsRectItem>
+#include <QPixmap>
 
-struct HitboxInfo
+enum TileType
+{
+    Wall,
+    NOTYPE
+};
+
+struct Properties
+{
+    bool m_solid;
+    bool m_interactable;
+    TileType m_type = NOTYPE;
+};
+
+struct HitboxInfo : public Properties
 {
     int m_x;
     int m_y;
     qreal m_width;
     qreal m_height;
-    bool m_solid;
-    bool m_interactable;
 };
 
-struct Hitbox : public QGraphicsRectItem
+struct Hitbox : public QGraphicsRectItem, public Properties
 {
     Hitbox(QGraphicsItem* parent = 0) : QGraphicsRectItem(parent) {}
-    bool m_solid;
-    bool m_interactable;
 };
 
-struct TileInfo
+struct TileInfo : public Properties
 {
     QString m_path;
+    QPixmap m_pixmap;
     qreal m_height;
     qreal m_width;
     QList<HitboxInfo*> m_hitboxes;
@@ -44,6 +55,13 @@ public:
     static std::tuple<qint64, QTransform> formatGID(qint64 unformatted_GID);
 
 private:
+
+    void parseOnImageCollection(QJsonArray tileArray);
+    void parseOnTileSetImage(QJsonObject object);
+
+    void checkProperties(TileInfo* tile, QJsonObject val);
+    void setHitboxes(TileInfo* tile, QJsonObject val);
+
 
     static const unsigned FLIPPED_HORIZONTALLY_FLAG  = 0x80000000;
     static const unsigned FLIPPED_VERTICALLY_FLAG    = 0x40000000;
