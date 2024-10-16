@@ -255,12 +255,12 @@ bool Sprite::collidedWithWall()
     return false;
 }
 
-Vector* Sprite::vector()
+Vector Sprite::vector()
 {
-    return &m_vector;
+    return m_vector;
 }
 
-Vector* Sprite::prevActiveVector()
+Vector Sprite::prevActiveVector()
 {
-    return &m_prevActiveVector;
+    return m_prevActiveVector;
 }

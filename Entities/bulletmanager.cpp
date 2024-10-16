@@ -2,47 +2,69 @@
 
 #include "../tileset.h"
 
-BulletManager::BulletManager() {}
+BulletManager::BulletManager()
+{
+    m_bulletFields.append(new BulletField);
+}
 
 BulletManager::~BulletManager()
 {
-    qDeleteAll(m_bullets);
-    m_bullets.clear();
+    for (auto b : m_bulletFields)
+    {
+        qDeleteAll(b->m_fields);
+        b->m_bullets.clear();
+        b->m_fields.clear();
+    }
+    qDeleteAll(m_bulletFields);
+    m_bulletFields.clear();
 }
 
 void BulletManager::update(int deltatime)
 {
-    int i = 0;
-    int size = m_bullets.size();
-
-    while (i < size && !m_bullets.empty())
+    QList<int> fieldToDelete;
+    for (const auto b : std::as_const(m_bulletFields))
     {
-        m_bullets[i]->update(deltatime);
-        if (bulletRemoved(m_bullets[i]))
+        int i = 0;
+        int size = b->m_bullets.size();
+        while (i < size && !b->m_bullets.empty())
         {
-            delete m_bullets.takeAt(i);
-            i--;
-            size--;
+            if (!b->m_fields.empty())
+            {
+                Vector v(0,0);
+                for (auto f: std::as_const(b->m_fields))
+                {
+                    v += f->getVector(b->m_bullets[i]->centre());
+                }
+                b->m_bullets[i]->setVector(v);
+            }
+            b->m_bullets[i]->update(deltatime);
+            if (b->m_bullets[i]->collided())
+            {
+                delete b->m_bullets.takeAt(i);
+                i--;
+                size--;
+            }
+            i++;
         }
-        i++;
+        if (b->m_bullets.empty())
+        {
+            fieldToDelete.append(m_bulletFields.indexOf(b));
+        }
+    }
+    int k = 0;
+    for (const auto i : fieldToDelete)
+    {
+        delete m_bulletFields.takeAt(i-k);
+        k++;
     }
 }
 
-bool BulletManager::bulletRemoved(Bullet *bullet)
+void BulletManager::addBullet(Bullet* bullet)
 {
-    QList<QGraphicsItem*> list = bullet->collidingItems();
-    for (const auto c : list)
-    {
-        if (typeid(*c) == typeid(Hitbox) &&
-            dynamic_cast<Hitbox*>(c)->m_type == Wall)
-        {
-            return true;
-        }
-    }
-    return false;
+    m_bulletFields[0]->m_bullets.append(bullet);
 }
 
-void BulletManager::addBullet(Bullet *bullet)
+void BulletManager::addBulletField(BulletField *field)
 {
-    m_bullets.append(bullet);
+    m_bulletFields.append(field);
 }

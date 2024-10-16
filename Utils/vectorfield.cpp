@@ -20,8 +20,8 @@ VectorField::VectorField(QString f_i, QString f_j)
 
 VectorField::~VectorField()
 {
-    delete m_parentF[0];
-    delete m_parentF[1];
+    clearNodes(m_parentF[0]);
+    clearNodes(m_parentF[1]);
 }
 
 void VectorField::setField(QString f_i, QString f_j)
@@ -43,18 +43,21 @@ void VectorField::setOrigin(qreal x, qreal y)
     m_origin.setY(y);
 }
 
-Vector VectorField::getVector(qreal a_x, qreal a_y, qreal p_x, qreal p_y)
+Vector VectorField::getVector(qreal a_x, qreal a_y)
 {
     Vector v;
     m_var["x"] = a_x - m_origin.x();
     m_var["y"] = a_y - m_origin.y();
-    m_var["px"] = p_x - m_origin.x();
-    m_var["py"] = p_y - m_origin.y();
     findVectorValue(m_parentF[0]);
     v.setI(m_RPNstack.pop());
     findVectorValue(m_parentF[1]);
     v.setJ(m_RPNstack.pop());
     return v;
+}
+
+Vector VectorField::getVector(QPointF pos)
+{
+    return getVector(pos.x(), pos.y());
 }
 
 Node* VectorField::toRPNtree(QString str)
@@ -247,6 +250,7 @@ void VectorField::findVectorValue(Node *parent)
     }
 }
 
+
 void VectorField::clearNodes(Node* &parent)
 {
     if (parent == nullptr)  return;
@@ -255,4 +259,42 @@ void VectorField::clearNodes(Node* &parent)
 
     delete parent;
     parent = nullptr;
+}
+
+QPointF VectorField::origin()
+{
+    return m_origin;
+}
+
+QString VectorField::getPrefixI()
+{
+    return m_fieldEq[0];
+}
+
+QString VectorField::getPrefixJ()
+{
+    return m_fieldEq[1];
+}
+
+QString VectorField::getPostfixI()
+{
+    return getPostfix(m_parentF[0]);
+}
+
+QString VectorField::getPostfixJ()
+{
+    return getPostfix(m_parentF[1]);
+}
+
+QString VectorField::getPostfix(Node *parent)
+{
+    if (parent == nullptr)  return "";
+    QString s = "";
+    s+= getPostfix(parent->m_left);
+    s+= " ";
+    s+= getPostfix(parent->m_right);
+
+    s+= " ";
+    s+= parent->m_data;
+    return s;
 }

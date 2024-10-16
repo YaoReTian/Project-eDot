@@ -42,7 +42,7 @@ public:
     int getID();
     QString getName();
     QString getType();
-    Vector* prevActiveVector();
+    Vector prevActiveVector();
 
     // For animations
     void setSpriteSheet(QPixmap spriteSheet);
@@ -55,7 +55,7 @@ public:
     void setDefaultToRun();
     bool collidedWithWall();
 
-    Vector* vector();
+    Vector vector();
 
 private:
     // Sprite data

@@ -12,7 +12,7 @@ Player::Player(QGraphicsItem * parent)
 
 Player::~Player()
 {
-
+    delete m_bulletManager;
 }
 
 void Player::update(int deltaTime)
@@ -30,11 +30,16 @@ void Player::input(KeyMap* keys)
         {
             m_elapsedTime = 0;
             Bullet* b = new Bullet(parentItem());
-            b->setI(prevActiveVector()->i()*2);
-            b->setJ(prevActiveVector()->j()*2);
-            b->setPos(x()+boundingRect().width()/2 -  b->boundingRect().width()/2,
-                      y()+boundingRect().width()/2 - b->boundingRect().width()/2);
-            m_bulletManager->addBullet(b);
+            b->setVector(0,0);
+            b->setPos(x()+boundingRect().width()/2 - b->boundingRect().width()/2 + prevActiveVector().i(),
+                      y()+boundingRect().height()/2 - b->boundingRect().height()/2 + prevActiveVector().j());
+            b->setUnitSpeed(4.5f/1000.0f);
+            VectorField* f = new VectorField("x/sqrt(x^2 + y^2)","y/sqrt(x^2 + y^2)");
+            f->setOrigin(x()+boundingRect().width()/2, y()+boundingRect().height()/2);
+            BulletField *bf = new BulletField;
+            bf->m_bullets.append(b);
+            bf->m_fields.append(f);
+            m_bulletManager->addBulletField(bf);
         }
     }
     if (keys->keyHeldStatus(GLOBAL::MOVE_LEFT))

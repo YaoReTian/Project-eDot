@@ -3,19 +3,26 @@
 
 #include "bullet.h"
 #include "../gameobject.h"
-#include "../utils/vectorfield.h"
+#include "../Utils/vectorfield.h"
+
+struct BulletField
+{
+    QList<VectorField*> m_fields;
+    QList<Bullet*> m_bullets;
+};
 
 class BulletManager : public GameObject
 {
 public:
     BulletManager();
     ~BulletManager();
-    void update(int deltatime);
+    virtual void update(int deltatime) override;
     void addBullet(Bullet* bullet);
+    void addBulletField(BulletField* field);
+    void addBulletToField(Bullet* bullet);
 
 private:
-    bool bulletRemoved(Bullet* bullet);
-    QList<Bullet*> m_bullets;
+    QList<BulletField*> m_bulletFields;
 };
 
 #endif // BULLETMANAGER_H

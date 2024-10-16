@@ -18,12 +18,6 @@ struct Node
     Node* m_right = nullptr;
 
     Node(QString data = "") : m_data(data) {}
-    ~Node()
-    {
-        qDebug() << "Test";
-        delete m_left;
-        delete m_right;
-    }
 };
 
 class VectorField
@@ -36,7 +30,14 @@ public:
     void setField(QString f_i, QString f_j);
     void setOrigin(qreal x, qreal y);
     void setOrigin(QPointF point);
-    Vector getVector(qreal a_x = 0, qreal a_y = 0, qreal p_x = 0, qreal p_y = 0);
+    Vector getVector(qreal a_x = 0, qreal a_y = 0);
+    Vector getVector(QPointF pos);
+
+    QPointF origin();
+    QString getPrefixI();
+    QString getPrefixJ();
+    QString getPostfixI();
+    QString getPostfixJ();
 
 private:
     void clearNodes(Node* &parent);
@@ -52,6 +53,8 @@ private:
 
     Node* toRPNtree(QString str);
     void findVectorValue(Node* parent);
+    QString getPostfix(Node* parent);
+
     Node* m_parentF[2];
     QString m_fieldEq[2];
     QPointF m_origin;
@@ -61,8 +64,6 @@ private:
     QMap<QString, qreal> m_var = {
         {"x", 0},
         {"y", 0},
-        {"px",0},
-        {"py",0},
         {"pi", M_PI},
         {"e", M_E}
     };
