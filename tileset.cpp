@@ -126,7 +126,11 @@ void TileSet::setHitboxes(TileInfo *tile, QJsonObject val)
 
 TileInfo* TileSet::getInfo(int GID)
 {
-
+    if (GID < m_firstGID)
+    {
+        qDebug() << "Error: GID < firstGID";
+        return nullptr;
+    }
     return m_tiles[GID-m_firstGID];
 }
 
@@ -142,14 +146,23 @@ int TileSet::firstGID()
 
 int TileSet::findTilesetIndex(int GID, QList<TileSet*> tilesets)
 {
-    int index = 0;
+    if (GID == 0)
+    {
+        qDebug() << "ERROR: Invalid GID";
+        return -1;
+    }
+
+    int index = -1;
 
     for (const auto &set : tilesets)
     {
-        if (GID < set->firstGID())  return index;
+        if (set->firstGID() > GID)
+        {
+            return index;
+        }
         index++;
     }
-    return index - 1;
+    return index;
 }
 
 std::tuple<qint64, QTransform> TileSet::formatGID(qint64 unformatted_GID)

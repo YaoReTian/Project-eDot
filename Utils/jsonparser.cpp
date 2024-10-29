@@ -19,6 +19,7 @@ QString JsonParser::parsePath(QString filepath)
     int pos = filepath.lastIndexOf("/");;
 
     if (filepath.endsWith(".tsx"))      return (":/tileset/res" + filepath.sliced(pos)).replace(".tsx",".tsj");
+    if (filepath.endsWith(".tsj"))      return (":/tileset/res" + filepath.sliced(pos));
     if (filepath.contains("Tiles"))     return ":/image/tile/res" + filepath.sliced(pos);
     if (filepath.contains("Sprites"))   return ":/image/sprite/res" + filepath.sliced(pos);
     if (filepath.contains("Bullets"))   return ":/image/bullet/res" + filepath.sliced(pos);

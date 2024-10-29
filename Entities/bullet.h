@@ -2,10 +2,10 @@
 #define BULLET_H
 
 #include <QGraphicsPixmapItem>
-#include "../gameobject.h"
-#include "../utils/vector.h"
+#include "gameitem.h"
+#include "../Utils/vectorfield.h"
 
-class Bullet : public QGraphicsPixmapItem, public GameObject
+class Bullet : public GameItem
 {
 public:
     Bullet(QGraphicsItem* parent = 0);
@@ -13,23 +13,26 @@ public:
     void setFriendly(bool value = true);
     virtual void update(int deltaTime) override;
 
-    void setVector(Vector v);
-    void setVector(qreal i, qreal j);
     void setUnitSpeed(qreal spd);
+    void setPos(const QPointF &pos);
+    void setPos(qreal x, qreal y);
+    void addField(VectorField* field, QPointF origin);
+    void addField(VectorField* field, qreal x, qreal y);
+    void addField(VectorField *field, GameItem* originItem);
+    void hide();
 
-    Vector vector() const;
-    qreal i() const;
-    qreal j() const;
     bool collided() const;
     bool isFriendly() const;
-    QPointF centre() const;
     qreal unitSpeed() const;
 
 private:
-    Vector m_vector;
     int m_dmg;
     bool m_friendly;
     qreal m_unitSpeed; // scale factor for a unit vector
+    QList<VectorField*> m_staticFields;
+    QList<QPointF> m_origins;
+    QList<VectorField*> m_dynamicFields;
+    QList<GameItem*> m_originItems;
 };
 
 #endif // BULLET_H

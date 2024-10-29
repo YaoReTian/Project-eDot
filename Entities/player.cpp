@@ -12,7 +12,7 @@ Player::Player(QGraphicsItem * parent)
 
 Player::~Player()
 {
-    delete m_bulletManager;
+
 }
 
 void Player::update(int deltaTime)
@@ -29,17 +29,24 @@ void Player::input(KeyMap* keys)
         if (m_elapsedTime > 20)
         {
             m_elapsedTime = 0;
-            Bullet* b = new Bullet(parentItem());
-            b->setVector(0,0);
-            b->setPos(x()+boundingRect().width()/2 - b->boundingRect().width()/2 + prevActiveVector().i(),
-                      y()+boundingRect().height()/2 - b->boundingRect().height()/2 + prevActiveVector().j());
-            b->setUnitSpeed(4.5f/1000.0f);
-            VectorField* f = new VectorField("x/sqrt(x^2 + y^2)","y/sqrt(x^2 + y^2)");
-            f->setOrigin(x()+boundingRect().width()/2, y()+boundingRect().height()/2);
-            BulletField *bf = new BulletField;
-            bf->m_bullets.append(b);
-            bf->m_fields.append(f);
-            m_bulletManager->addBulletField(bf);
+            Bullet* b1 = m_bulletManager->getBulletFromPool();
+            Bullet* b2 = m_bulletManager->getBulletFromPool();
+            Vector v(boundingRect().height()/2, boundingRect().height()/2);
+            qreal a = prevActiveVector().angle();
+            b1->setPos(centre().x() + v.i()*qCos(a) + prevActiveVector().i(),
+                       centre().y() + v.j()*qSin(a) + prevActiveVector().j());
+            b2->setPos(centre().x() - v.i()*qCos(a) + prevActiveVector().i(),
+                       centre().y() - v.j()*qSin(a) + prevActiveVector().j());
+            b1->setUnitSpeed(4.5f/1000.0f);
+            b2->setUnitSpeed(4.5f/1000.0f);
+            VectorField* f1 = m_bulletManager->getField("UniformPositiveRadial");
+            VectorField* f2 = m_bulletManager->getField("UniformPositiveRadial");
+            b1->show();
+            b2->show();
+            b1->addField(f1,centre().x() + v.i()*qCos(a), centre().y() + v.i()*qSin(a));
+            b2->addField(f2,centre().x() - v.j()*qCos(a), centre().y() - v.j()*qSin(a));
+            m_bulletManager->addBullet(b1);
+            m_bulletManager->addBullet(b2);
         }
     }
     if (keys->keyHeldStatus(GLOBAL::MOVE_LEFT))

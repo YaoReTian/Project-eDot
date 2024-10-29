@@ -20,6 +20,7 @@ private:
     int m_elapsedTime;
     bool m_hitboxVisible;
     BulletManager* m_bulletManager;
+    QList<VectorField*> m_fields;
 };
 
 #endif // PLAYER_H

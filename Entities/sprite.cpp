@@ -3,9 +3,9 @@
 #include "../tileset.h"
 
 Sprite::Sprite(QGraphicsItem * parent)
-    : QObject(), QGraphicsPixmapItem(parent), m_SpriteID(-1), m_name("Unset"),
+    : QObject(), GameItem(parent), m_SpriteID(-1), m_name("Unset"),
     m_type("Unset"), m_frameSize(), m_elapsed_time(0), m_currentFrame(0),
-    m_currentStateName("idle"), m_vector(0,0), m_prevActiveVector(0,1),
+    m_currentStateName("idle"), m_prevActiveVector(0,1),
     m_WALK_SPEED(1.5f/1000.0f), m_RUN_SPEED(3.0f/1000.0f),
     m_SPRINT_SPEED(4.5f/1000.0f), m_defaultSpeed(m_RUN_SPEED),
     m_currentSpeed(m_defaultSpeed)
@@ -30,12 +30,6 @@ void Sprite::setName(QString name)
 void Sprite::setType(QString type)
 {
     m_type = type;
-}
-
-void Sprite::setZValue(float zValue)
-{
-    m_baseZ = zValue;
-    QGraphicsPixmapItem::setZValue(zValue + y() + boundingRect().height());
 }
 
 void Sprite::setTransform(QTransform transform)
@@ -161,29 +155,29 @@ void Sprite::update(int deltaTime)
 
     // Check wall collisions
     QPointF prevPos;
-    m_vector.toUnitVector();
-    m_vector *= m_currentSpeed;
+    Vector v = vector();
+    v.toUnitVector();
+    v *= m_currentSpeed;
 
     for (int i = 0; i < 10; i++)
     {
         prevPos = pos();
-        setX(x()+(m_vector.i() * GLOBAL::ObjectLength * deltaTime)/10);
+        setX(x()+(v.i() * GLOBAL::ObjectLength * deltaTime)/10);
         if (collidedWithWall()) setPos(prevPos);
     }
     for (int i = 0; i < 10; i++)
     {
         prevPos = pos();
-        setY(y()+(m_vector.j() * GLOBAL::ObjectLength * deltaTime)/10);
+        setY(y()+(v.j() * GLOBAL::ObjectLength * deltaTime)/10);
         if (collidedWithWall()) setPos(prevPos);
     }
-    QGraphicsPixmapItem::setZValue(m_baseZ + y() + boundingRect().height());
 
-
-    if (!m_vector.null())
+    if (!v.null())
     {
-        m_prevActiveVector = m_vector;
+        m_prevActiveVector = v;
     }
-    m_vector.setVector(0,0);
+    setVector(0,0);
+    GameItem::update(deltaTime);
 }
 
 void Sprite::setAction(GLOBAL::Action action)
@@ -198,19 +192,19 @@ void Sprite::setAction(GLOBAL::Action action)
     // Movement
     if (action == GLOBAL::MOVE_LEFT)
     {
-        m_vector.setI(-1);
+        setI(-1);
     }
     else if (action == GLOBAL::MOVE_RIGHT)
     {
-        m_vector.setI(1);
+        setI(1);
     }
     else if (action == GLOBAL::MOVE_UP)
     {
-        m_vector.setJ(-1);
+        setJ(-1);
     }
     else if (action == GLOBAL::MOVE_DOWN)
     {
-        m_vector.setJ(1);
+        setJ(1);
     }
     else if (action == GLOBAL::SPRINT)
     {
@@ -238,26 +232,18 @@ bool Sprite::collidedWithWall()
 {
     for (const auto h : std::as_const(m_hitboxes))
     {
-        if (h->m_solid)
-        {
-            QList<QGraphicsItem*> list = h->collidingItems();
+        QList<QGraphicsItem*> list = h->collidingItems();
 
-            for (const auto s : std::as_const(list))
+        for (const auto s : std::as_const(list))
+        {
+            if (typeid(*s) == typeid(Hitbox) &&
+                dynamic_cast<Hitbox*>(s)->m_solid)
             {
-                if (typeid(*s) == typeid(Hitbox) &&
-                    dynamic_cast<Hitbox*>(s)->m_solid)
-                {
-                    return true;
-                }
+                return true;
             }
         }
     }
     return false;
-}
-
-Vector Sprite::vector()
-{
-    return m_vector;
 }
 
 Vector Sprite::prevActiveVector()

@@ -73,6 +73,7 @@ void Chunk::setData(QJsonArray data, QList<TileSet*> tilesets)
             p.drawPixmap(x*GLOBAL::ObjectLength,y*GLOBAL::ObjectLength,
                          tile->m_pixmap.scaled(GLOBAL::ObjectSize).transformed(transform));
             setObjects(tile, transform, x, y);
+            tile = nullptr;
         }
 
         if (y > 15 || x > 15)

@@ -5,7 +5,7 @@
 #include <QGraphicsScene>
 
 #include "../Utils/global.h"
-#include "../gameobject.h"
+#include "gameitem.h"
 #include "../tileset.h"
 #include "../Utils/vector.h"
 
@@ -17,7 +17,7 @@ struct AnimationState
     QMap<GLOBAL::Action, QString> transitions;
 };
 
-class Sprite : public QObject, public QGraphicsPixmapItem, public GameObject
+class Sprite : public QObject, public GameItem
 {
     Q_OBJECT
 public:
@@ -28,7 +28,6 @@ public:
     void setName(QString name);
     void setSpriteSheet(QString spriteSheet);
     void setType(QString type);
-    void setZValue(float zValue);
     void setTransform(QTransform transform);
     void setHitbox(HitboxInfo* hitbox);
 
@@ -54,9 +53,6 @@ public:
     void setDefaultToWalk();
     void setDefaultToRun();
     bool collidedWithWall();
-
-    Vector vector();
-
 private:
     // Sprite data
     int m_SpriteID;
@@ -74,14 +70,12 @@ private:
     QTransform m_transform;
 
     // Movement
-    Vector m_vector;
     Vector m_prevActiveVector;
     const float m_WALK_SPEED;
     const float m_RUN_SPEED;
     const float m_SPRINT_SPEED;
     float m_defaultSpeed;
     float m_currentSpeed;
-    float m_baseZ;
 };
 
 #endif // SPRITE_H

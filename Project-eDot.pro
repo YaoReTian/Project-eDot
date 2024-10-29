@@ -11,6 +11,8 @@ CONFIG += c++17
 SOURCES += \
     Entities/bullet.cpp \
     Entities/bulletmanager.cpp \
+    Entities/enemy.cpp \
+    Entities/gameitem.cpp \
     Utils/jsonparser.cpp \
     Utils/vector.cpp \
     Utils/vectorfield.cpp \
@@ -30,6 +32,8 @@ SOURCES += \
 HEADERS += \
     Entities/bullet.h \
     Entities/bulletmanager.h \
+    Entities/enemy.h \
+    Entities/gameitem.h \
     Utils/jsonparser.h \
     Utils/vector.h \
     Utils/vectorfield.h \

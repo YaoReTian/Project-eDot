@@ -4,24 +4,51 @@
 #include "../tileset.h"
 
 Bullet::Bullet(QGraphicsItem* parent)
-    : QGraphicsPixmapItem(parent), m_vector(0,0), m_dmg(1), m_friendly(false)
+    : GameItem(parent), m_dmg(1), m_friendly(false), m_unitSpeed(4.5f/1000.0f)
 {
     TileSet t(":/tileset/res/Basic bullets.tsj",1);
     setPixmap(t.getInfo(182)->m_pixmap);
-
+    hide();
 }
 
 Bullet::~Bullet()
 {
-
+    m_staticFields.clear();
+    m_dynamicFields.clear();
+    m_originItems.clear();
 }
 
 void Bullet::update(int deltaTime)
 {
-    setPos(x() + m_unitSpeed * m_vector.i() * GLOBAL::ObjectLength * deltaTime,
-           y() + m_unitSpeed * m_vector.j() * GLOBAL::ObjectLength * deltaTime);
+    if (!m_staticFields.empty())
+    {
+        Vector v(0,0);
+        for (int i = 0; i < m_staticFields.size(); i++)
+        {
+            m_staticFields[i]->setOrigin(m_origins[i]);
+            v += m_staticFields[i]->getVector(centre());
+        }
+        for (int i = 0; i < m_dynamicFields.size(); i++)
+        {
+            m_dynamicFields[i]->setOrigin(m_originItems[i]->centre());
+            v += m_dynamicFields[i]->getVector(centre());
+        }
+        setVector(v);
+    }
+    GameItem::setPos(x() + m_unitSpeed * i() * GLOBAL::ObjectLength * deltaTime,
+                     y() + m_unitSpeed * j() * GLOBAL::ObjectLength * deltaTime);
     setTransformOriginPoint(boundingRect().width()/2, boundingRect().height()/2);
-    setRotation(m_vector.angle());
+    setRotation(angle());
+}
+
+void Bullet::setPos(const QPointF &pos)
+{
+    GameItem::setPos(pos.x()-boundingRect().width()/2, pos.y()-boundingRect().height()/2);
+}
+
+void Bullet::setPos(qreal x, qreal y)
+{
+    GameItem::setPos(x-boundingRect().width()/2, y-boundingRect().height()/2);
 }
 
 void Bullet::setUnitSpeed(qreal spd)
@@ -29,29 +56,35 @@ void Bullet::setUnitSpeed(qreal spd)
     m_unitSpeed = spd;
 }
 
-void Bullet::setVector(Vector v)
+void Bullet::addField(VectorField *field, QPointF origin)
 {
-    m_vector = v;
+    m_staticFields.append(field);
+    m_origins.append(origin);
 }
 
-void Bullet::setVector(qreal i, qreal j)
+void Bullet::addField(VectorField *field, qreal x, qreal y)
 {
-    m_vector.setVector(i,j);
+    m_staticFields.append(field);
+    m_origins.append(QPointF(x,y));
 }
 
-Vector Bullet::vector() const
+void Bullet::addField(VectorField *field, GameItem* originItem)
 {
-    return m_vector;
+    m_dynamicFields.append(field);
+    m_originItems.append(originItem);
 }
 
-qreal Bullet::i() const
+void Bullet::hide()
 {
-    return m_vector.i();
-}
-
-qreal Bullet::j() const
-{
-    return m_vector.j();
+    m_staticFields.clear();
+    m_dynamicFields.clear();
+    m_origins.clear();
+    m_originItems.clear();
+    setVector(0,0);
+    m_unitSpeed = 4.5f/1000.0f;
+    m_dmg = 1;
+    m_friendly = false;
+    QGraphicsPixmapItem::hide();
 }
 
 bool Bullet::collided() const
@@ -60,7 +93,7 @@ bool Bullet::collided() const
     for (const auto c : list)
     {
         if (typeid(*c) == typeid(Hitbox) &&
-            dynamic_cast<Hitbox*>(c)->m_type == Wall)
+            dynamic_cast<Hitbox*>(c)->m_solid)
         {
             return true;
         }
@@ -71,11 +104,6 @@ bool Bullet::collided() const
 bool Bullet::isFriendly() const
 {
     return m_friendly;
-}
-
-QPointF Bullet::centre() const
-{
-    return QPointF(x() + boundingRect().width()/2, y() + boundingRect().height()/2);
 }
 
 qreal Bullet::unitSpeed() const

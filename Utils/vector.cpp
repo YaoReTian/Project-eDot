@@ -99,6 +99,25 @@ Vector &Vector::operator+=(const Vector &other)
     return *this;
 }
 
+Vector Vector::operator-(const Vector &other) const
+{
+    Vector v(m_i - other.i(), m_j - other.j());
+    return v;
+}
+
+Vector Vector::operator -() const
+{
+    Vector v(-m_i, -m_j);
+    return v;
+}
+
+Vector &Vector::operator-=(const Vector &other)
+{
+    m_i -= other.i();
+    m_j -= other.j();
+    return *this;
+}
+
 Vector Vector::operator*(const qreal &val) const
 {
     Vector v(m_i*val, m_j*val);

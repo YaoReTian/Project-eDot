@@ -22,6 +22,9 @@ public:
 
     Vector operator+(const Vector &other) const;
     Vector &operator+=(const Vector &other);
+    Vector operator-(const Vector &other) const;
+    Vector operator-() const;
+    Vector &operator-=(const Vector &other);
     Vector operator*(const qreal &val) const;
     Vector &operator*=(const qreal &val);
     Vector operator/(const qreal &val) const;

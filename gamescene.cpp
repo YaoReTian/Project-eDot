@@ -30,11 +30,16 @@ GameScene::GameScene(QObject *parent) :
     m_player->setZValue(m_tilemap->getPlayerZ());
     m_player->setPos(4*GLOBAL::ObjectLength,4*GLOBAL::ObjectLength);
     m_player->setBulletManager(m_bulletManager);
+    for (int i = 0; i < 1000; i++)
+    {
+        m_bulletManager->createBullet(m_tilemap);
+    }
 }
 
 GameScene::~GameScene()
 {
     delete m_db;
+    delete m_bulletManager;
     clear();
 }
 
