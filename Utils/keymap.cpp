@@ -31,6 +31,7 @@ void KeyMap::setWorldBindings()
     m_keys[Qt::Key_Up]      = GLOBAL::PREV_OPTION;
     m_keys[Qt::Key_R]       = GLOBAL::SHOW_HITBOX;
     m_keys[Qt::Key_Space]   = GLOBAL::SHOOT;
+    m_keys[Qt::Key_Shift]   = GLOBAL::SHOW_PLAYER_HITBOX;
 }
 
 void KeyMap::setBinding(Qt::Key key, GLOBAL::Action action)

@@ -24,6 +24,7 @@ public:
     bool collided() const;
     bool isFriendly() const;
     qreal unitSpeed() const;
+    int dmg() const;
 
 private:
     int m_dmg;

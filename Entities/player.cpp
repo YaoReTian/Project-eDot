@@ -3,11 +3,15 @@
 #include "../Utils/global.h"
 #include "sprite.h"
 #include "bullet.h"
+#include "../tileset.h"
 
 Player::Player(QGraphicsItem * parent)
-    : Sprite(parent), m_elapsedTime(0), m_hitboxVisible(false)
+    : m_HP(10),Sprite(parent), m_elapsedTime(0), m_hitboxVisible(false
 {
-
+    TileSet t(":/tileset/res/Basic bullets.tsj",1);
+    m_hitbox.setPixmap(t.getInfo(40)->m_pixmap);
+    m_hitbox.setParentItem(parent);
+    m_hitbox.setOpacity(0);
 }
 
 Player::~Player()
@@ -15,10 +19,24 @@ Player::~Player()
 
 }
 
+void Player::setParentItem(QGraphicsItem *parent)
+{
+    Sprite::setParentItem(parent);
+    m_hitbox.setParentItem(parent);
+}
+
 void Player::update(int deltaTime)
 {
     m_elapsedTime += deltaTime;
     Sprite::update(deltaTime);
+    m_hitbox.setPos(centre().x() - m_hitbox.boundingRect().width()/2,
+                    centre().y() - m_hitbox.boundingRect().height()/2);
+    m_hitbox.setZValue(zValue()+1);
+}
+
+void Player::setHitboxPixmap(QPixmap p)
+{
+    m_hitbox.setPixmap(p);
 }
 
 void Player::input(KeyMap* keys)
@@ -26,7 +44,7 @@ void Player::input(KeyMap* keys)
     bool actionTaken = false;
     if (keys->keyHeldStatus(GLOBAL::SHOOT))
     {
-        if (m_elapsedTime > 20)
+        if (m_elapsedTime > 50)
         {
             m_elapsedTime = 0;
             Bullet* b1 = m_bulletManager->getBulletFromPool();
@@ -45,6 +63,8 @@ void Player::input(KeyMap* keys)
             b2->show();
             b1->addField(f1,centre().x() + v.i()*qCos(a), centre().y() + v.i()*qSin(a));
             b2->addField(f2,centre().x() - v.j()*qCos(a), centre().y() - v.j()*qSin(a));
+            b1->setFriendly();
+            b2->setFriendly();
             m_bulletManager->addBullet(b1);
             m_bulletManager->addBullet(b2);
         }
@@ -79,6 +99,16 @@ void Player::input(KeyMap* keys)
         m_hitboxVisible = false;
         hideHitbox();
     }
+    if (keys->keyHeldStatus(GLOBAL::SHOW_PLAYER_HITBOX))
+    {
+        m_hitbox.setOpacity(1);
+        setDefaultToWalk();
+    }
+    else if (m_hitbox.opacity() > 0)
+    {
+        m_hitbox.setOpacity(0);
+        setDefaultToRun();
+    }
     if (!actionTaken)
     {
         setAction(GLOBAL::NONE);
@@ -88,4 +118,24 @@ void Player::input(KeyMap* keys)
 void Player::setBulletManager(BulletManager *manager)
 {
     m_bulletManager = manager;
+}
+
+void Player::heal(int hpToAdd)
+{
+    m_HP += hpToAdd;
+}
+
+void Player::takeHit()
+{
+    m_HP--;
+}
+
+int Player::HP() const
+{
+    return m_HP;
+}
+
+QGraphicsItem* Player::hitboxItem()
+{
+    return &m_hitbox;
 }

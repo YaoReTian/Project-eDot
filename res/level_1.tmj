@@ -397,13 +397,35 @@
                          "name":"Enemy",
                          "type":"bool",
                          "value":true
+                        }, 
+                        {
+                         "name":"FieldKey",
+                         "type":"string",
+                         "value":"UniformCircularCW"
+                        }, 
+                        {
+                         "name":"FieldOrigin",
+                         "type":"object",
+                         "value":35
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":72,
-                 "x":709.757180156658,
-                 "y":319.524804177546
+                 "x":747.289817232376,
+                 "y":306.46997389034
+                }, 
+                {
+                 "height":0,
+                 "id":35,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":737,
+                 "y":317
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -514,7 +536,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":35,
+ "nextobjectid":36,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.0",

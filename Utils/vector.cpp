@@ -6,8 +6,16 @@
 
 Vector::Vector(qreal i, qreal j)
     : m_i(i), m_j(j)
-{
+{}
 
+Vector::Vector(QPointF p1, QPointF p2)
+    : m_i(p2.x()-p1.x()), m_j(p2.y()-p1.y())
+{}
+
+void Vector::setVector(QPointF p1, QPointF p2)
+{
+    m_i = p2.x() - p1.x();
+    m_j = p2.y() - p1.y();
 }
 
 void Vector::setVector(qreal i, qreal j)

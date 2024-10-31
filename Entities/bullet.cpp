@@ -2,6 +2,8 @@
 #include "../Utils/global.h"
 
 #include "../tileset.h"
+#include "enemy.h"
+#include "player.h"
 
 Bullet::Bullet(QGraphicsItem* parent)
     : GameItem(parent), m_dmg(1), m_friendly(false), m_unitSpeed(4.5f/1000.0f)
@@ -16,6 +18,11 @@ Bullet::~Bullet()
     m_staticFields.clear();
     m_dynamicFields.clear();
     m_originItems.clear();
+}
+
+void Bullet::setFriendly(bool value)
+{
+    m_friendly = value;
 }
 
 void Bullet::update(int deltaTime)
@@ -97,6 +104,19 @@ bool Bullet::collided() const
         {
             return true;
         }
+        else if (m_friendly && typeid(*c) == typeid(Enemy))
+        {
+            dynamic_cast<Enemy*>(c)->takeDmg(m_dmg);
+            return true;
+        }
+        else if (!m_friendly && typeid(*c) == typeid(Player))
+        {
+            Player* p = dynamic_cast<Player*>(c);
+            if (collidesWithItem(p->hitboxItem()))
+            {
+                return true;
+            }
+        }
     }
     return false;
 }
@@ -109,4 +129,9 @@ bool Bullet::isFriendly() const
 qreal Bullet::unitSpeed() const
 {
     return m_unitSpeed;
+}
+
+int Bullet::dmg() const
+{
+    return m_dmg;
 }

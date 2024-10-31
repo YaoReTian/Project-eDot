@@ -6,7 +6,7 @@ Sprite::Sprite(QGraphicsItem * parent)
     : QObject(), GameItem(parent), m_SpriteID(-1), m_name("Unset"),
     m_type("Unset"), m_frameSize(), m_elapsed_time(0), m_currentFrame(0),
     m_currentStateName("idle"), m_prevActiveVector(0,1),
-    m_WALK_SPEED(1.5f/1000.0f), m_RUN_SPEED(3.0f/1000.0f),
+    m_WALK_SPEED(2.0f/1000.0f), m_RUN_SPEED(3.0f/1000.0f),
     m_SPRINT_SPEED(4.5f/1000.0f), m_defaultSpeed(m_RUN_SPEED),
     m_currentSpeed(m_defaultSpeed)
 {}
@@ -173,7 +173,7 @@ void Sprite::update(int deltaTime)
     }
 
     if (!v.null())
-    {
+    {// Check this guy
         m_prevActiveVector = v;
     }
     setVector(0,0);

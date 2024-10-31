@@ -104,14 +104,38 @@ void Tilemap::createSpriteLayer(QJsonObject objectGroup, int zValue)
     int GID;
     QTransform transform;
     QJsonArray objects = objectGroup.value("objects").toArray();
+    QMap<int, QPointF> points;
+    QList<QJsonObject> invisibleObjects;
+    QList<QJsonObject> sprites;
     for (const auto o : std::as_const(objects))
     {
         QJsonObject obj = o.toObject();
-        std::tie(GID,transform) = TileSet::formatGID(obj.value("gid").toInteger());
+        if (!obj.value("point").isUndefined())
+        {
+            invisibleObjects.append(obj);
+        }
+        else
+        {
+            sprites.append(obj);
+        }
+    }
+    // Creating invisible objects
+    for (auto &i : invisibleObjects)
+    {
+        if (i.value("point").toBool())
+        {
+            points[i.value("id").toInt()]  = QPointF(i.value("x").toDouble()*GLOBAL::Scale,
+                                                    i.value("y").toDouble()*GLOBAL::Scale);
+        }
+    }
+    // Creating sprites and enemies
+    for (auto &s : sprites)
+    {
+        std::tie(GID,transform) = TileSet::formatGID(s.value("gid").toInteger());
         index = TileSet::findTilesetIndex(GID, m_tilesets);
         sprite = m_tilesets[index]->getInfo(GID);
-        if (!obj.value("properties").isUndefined() &&
-            obj.value("properties").toArray()[0].toObject().value("value").toBool())
+        if (!s.value("properties").isUndefined() &&
+            s.value("properties").toArray()[0].toObject().value("value").toBool())
         {
             m_enemies.append(new Enemy(this));
             m_db->setEnemyData(sprite->m_path, m_enemies.back());
@@ -122,9 +146,11 @@ void Tilemap::createSpriteLayer(QJsonObject objectGroup, int zValue)
             }
             m_enemies.back()->setBulletManager(m_bulletManager);
             m_enemies.back()->update(0);
-            m_enemies.back()->setPos(obj.value("x").toDouble()*GLOBAL::Scale,
-                                     (obj.value("y").toDouble()-obj.value("height").toDouble())*GLOBAL::Scale);
+            m_enemies.back()->setPos(s.value("x").toDouble()*GLOBAL::Scale,
+                                     (s.value("y").toDouble()-s.value("height").toDouble())*GLOBAL::Scale);
             m_enemies.back()->setZValue(zValue);
+            m_enemies.back()->addFieldKey(s.value("properties").toArray()[1].toObject().value("value").toString(),
+                                          points[s.value("properties").toArray()[2].toObject().value("value").toInt()]);
         }
         else
         {
@@ -136,8 +162,8 @@ void Tilemap::createSpriteLayer(QJsonObject objectGroup, int zValue)
                 m_sprites.back()->setHitbox(h);
             }
             m_sprites.back()->update(0);
-            m_sprites.back()->setPos(obj.value("x").toDouble()*GLOBAL::Scale,
-                                     (obj.value("y").toDouble()-obj.value("height").toDouble())*GLOBAL::Scale);
+            m_sprites.back()->setPos(s.value("x").toDouble()*GLOBAL::Scale,
+                                     (s.value("y").toDouble()-s.value("height").toDouble())*GLOBAL::Scale);
             m_sprites.back()->setZValue(zValue);
         }
     }
@@ -173,38 +199,60 @@ QRgb Tilemap::bgColour()
     return m_backgroundColour;
 }
 
-void Tilemap::input(KeyMap* keys)
+void Tilemap::input(KeyMap* keys, QPointF playerPos)
 {
     if (keys->keyHeldStatus(GLOBAL::SHOW_HITBOX))
     {
         m_hitboxesVisible = true;
-        for (const auto &l : std::as_const(m_layers))
+        for (auto &l : m_layers)
         {
             l->showHitboxes();
         }
-        for (const auto &s: std::as_const(m_sprites))
+        for (auto &s: m_sprites)
         {
             s->showHitbox();
+        }
+        for (auto &e : m_enemies)
+        {
+            e->showHitbox();
         }
     }
     else if (m_hitboxesVisible)
     {
         m_hitboxesVisible = false;
-        for (const auto &l : std::as_const(m_layers))
+        for (auto &l : m_layers)
         {
             l->hideHitboxes();
         }
-        for (const auto &s : std::as_const(m_sprites))
+        for (auto &s : m_sprites)
         {
             s->hideHitbox();
         }
+        for (auto &e : m_enemies)
+        {
+            e->hideHitbox();
+        }
+    }
+    for (auto &e : m_enemies)
+    {
+        e->input(playerPos);
     }
 }
 
 void Tilemap::update(int deltatime)
 {
-    for (auto e : m_enemies)
+    int i = 0;
+    int size = m_enemies.size();
+    while (i < size && !m_enemies.empty())
     {
-        e->update(deltatime);
+        m_enemies[i]->update(deltatime);
+        if (m_enemies[i]->HP() <= 0)
+        {
+            m_enemies[i]->hide();
+            m_enemyPool.enqueue(m_enemies.takeAt(i));
+            i--;
+            size--;
+        }
+        i++;
     }
 }

@@ -29,6 +29,7 @@ enum Action
     OVERDRIVE_3,
     OVERDRIVE_4,
     SHOW_HITBOX,
+    SHOW_PLAYER_HITBOX,
     SHOOT,
     NONE
 };

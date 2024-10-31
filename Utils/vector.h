@@ -2,14 +2,17 @@
 #define VECTOR_H
 
 #include <QtGlobal>
+#include <QPointF>
 
 class Vector
 {
 public:
     Vector(qreal i=0, qreal j=0);
+    Vector(QPointF p1, QPointF p2);
 
     void setVector(qreal i, qreal j);
     void setVector(Vector v);
+    void setVector(QPointF p1, QPointF p2);
     void setI(qreal i);
     void setJ(qreal j);
     void toUnitVector();

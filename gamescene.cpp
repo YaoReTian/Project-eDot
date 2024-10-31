@@ -29,7 +29,7 @@ GameScene::GameScene(QObject *parent) :
         m_player->setHitbox(h);
     }
     m_player->setZValue(m_tilemap->getPlayerZ());
-    m_player->setPos(4*GLOBAL::ObjectLength,4*GLOBAL::ObjectLength);
+    m_player->setPos(20*GLOBAL::ObjectLength,8*GLOBAL::ObjectLength);
     m_player->setBulletManager(m_bulletManager);
 }
 
@@ -43,7 +43,7 @@ GameScene::~GameScene()
 void GameScene::input(KeyMap* keys)
 {
     m_player->input(keys);
-    m_tilemap->input(keys);
+    m_tilemap->input(keys, m_player->pos());
 }
 
 void GameScene::update(int deltatime)

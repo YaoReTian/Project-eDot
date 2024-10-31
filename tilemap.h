@@ -28,7 +28,7 @@ public:
     qreal getPlayerZ();
     QRgb bgColour();
 
-    void input(KeyMap* keys);
+    void input(KeyMap* keys, QPointF playerPos);
     virtual void update(int deltatime) override;
 
 private:
@@ -43,6 +43,7 @@ private:
     // Attributes of objects on the map
     QList<Sprite*> m_sprites;
     QList<Enemy*> m_enemies;
+    QQueue<Enemy*> m_enemyPool;
 
     // Map info
     int m_mapID;
