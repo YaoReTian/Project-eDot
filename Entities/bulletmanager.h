@@ -9,23 +9,23 @@
 class BulletManager : public GameObject
 {
 public:
-    BulletManager();
+    BulletManager(QGraphicsItem* parent = 0);
     ~BulletManager();
     virtual void update(int deltatime) override;
     void addBullet(Bullet* bullet);
-    void createBullet(QGraphicsItem* parent = 0);
+    void setParent(QGraphicsItem* parent);
 
-    // Testing
     void addField(VectorField* field, QString fieldKey);
     VectorField* getField(QString fieldKey);
-    void removeField(QString fieldKey);
     Bullet* getBulletFromPool();
+
+    void clear();
 
 private:
     QList<Bullet*> m_activeBullets;
     QQueue<Bullet*> m_pool;
     QMap<QString, VectorField*> m_fields;
-    QMap<QString, int> m_fieldCount;
+    QGraphicsItem* m_parent;
 };
 
 #endif // BULLETMANAGER_H

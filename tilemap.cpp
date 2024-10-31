@@ -29,6 +29,12 @@ void Tilemap::setDatabase(Database* db)
     m_db = db;
 }
 
+void Tilemap::setBulletManager(BulletManager *manager)
+{
+    m_bulletManager = manager;
+    m_bulletManager->setParent(this);
+}
+
 void Tilemap::setMap(int MapID)
 {
 
@@ -104,16 +110,36 @@ void Tilemap::createSpriteLayer(QJsonObject objectGroup, int zValue)
         std::tie(GID,transform) = TileSet::formatGID(obj.value("gid").toInteger());
         index = TileSet::findTilesetIndex(GID, m_tilesets);
         sprite = m_tilesets[index]->getInfo(GID);
-        m_sprites.append(m_db->getSprite(sprite->m_path, this));
-        m_sprites.back()->setTransform(transform);
-        for (const auto h : std::as_const(sprite->m_hitboxes))
+        if (!obj.value("properties").isUndefined() &&
+            obj.value("properties").toArray()[0].toObject().value("value").toBool())
         {
-            m_sprites.back()->setHitbox(h);
+            m_enemies.append(new Enemy(this));
+            m_db->setEnemyData(sprite->m_path, m_enemies.back());
+            m_enemies.back()->setTransform(transform);
+            for (const auto h : std::as_const(sprite->m_hitboxes))
+            {
+                m_enemies.back()->setHitbox(h);
+            }
+            m_enemies.back()->setBulletManager(m_bulletManager);
+            m_enemies.back()->update(0);
+            m_enemies.back()->setPos(obj.value("x").toDouble()*GLOBAL::Scale,
+                                     (obj.value("y").toDouble()-obj.value("height").toDouble())*GLOBAL::Scale);
+            m_enemies.back()->setZValue(zValue);
         }
-        m_sprites.back()->update(0);
-        m_sprites.back()->setPos(obj.value("x").toDouble()*GLOBAL::Scale,
-                                 (obj.value("y").toDouble()-obj.value("height").toDouble())*GLOBAL::Scale);
-        m_sprites.back()->setZValue(zValue);
+        else
+        {
+            m_sprites.append(new Sprite(this));
+            m_db->setSpriteData(sprite->m_path, m_sprites.back());
+            m_sprites.back()->setTransform(transform);
+            for (const auto h : std::as_const(sprite->m_hitboxes))
+            {
+                m_sprites.back()->setHitbox(h);
+            }
+            m_sprites.back()->update(0);
+            m_sprites.back()->setPos(obj.value("x").toDouble()*GLOBAL::Scale,
+                                     (obj.value("y").toDouble()-obj.value("height").toDouble())*GLOBAL::Scale);
+            m_sprites.back()->setZValue(zValue);
+        }
     }
 }
 
@@ -177,9 +203,8 @@ void Tilemap::input(KeyMap* keys)
 
 void Tilemap::update(int deltatime)
 {
-    for (const auto s : std::as_const(m_sprites))
+    for (auto e : m_enemies)
     {
-        s->setAction(GLOBAL::NONE);
-        s->update(deltatime);
+        e->update(deltatime);
     }
 }

@@ -2,12 +2,16 @@
 
 #include "../tileset.h"
 
-BulletManager::BulletManager()
+BulletManager::BulletManager(QGraphicsItem* parent)
+    : m_parent(parent)
 {
     m_fields["UniformPositiveRadial"] = new VectorField("x/sqrt(x^2 + y^2)", "y/sqrt(x^2 + y^2)");
     m_fields["UniformNegativeRadial"] = new VectorField("-x/sqrt(x^2 + y^2)", "-y/sqrt(x^2 + y^2)");
-    m_fieldCount["UniformPositiveRadial"] = 1;
-    m_fieldCount["UniformNegativeRadial"] = 1;
+
+    for (int i = 0; i < 1000; i++)
+    {
+        m_pool.append(new Bullet);
+    }
 }
 
 BulletManager::~BulletManager()
@@ -16,6 +20,11 @@ BulletManager::~BulletManager()
     m_pool.clear();
     qDeleteAll(m_fields);
     m_fields.clear();
+}
+
+void BulletManager::setParent(QGraphicsItem *parent)
+{
+    m_parent = parent;
 }
 
 void BulletManager::update(int deltatime)
@@ -41,32 +50,23 @@ void BulletManager::addBullet(Bullet* bullet)
     m_activeBullets.append(bullet);
 }
 
-void BulletManager::createBullet(QGraphicsItem *parent)
-{
-    m_pool.enqueue(new Bullet(parent));
-}
-
 Bullet* BulletManager::getBulletFromPool()
 {
     if (m_pool.empty())
     {
-        qDebug() << "ERROR: empty pool";
-        return nullptr;
+        for (int i = 0; i < 10; i++)
+        {
+            m_pool.append(new Bullet);
+        }
     }
-    return m_pool.dequeue();
+    Bullet* b = m_pool.dequeue();
+    b->setParentItem(m_parent);
+    return b;
 }
 
 void BulletManager::addField(VectorField* field, QString fieldKey)
 {
-    if (m_fieldCount.contains(fieldKey))
-    {
-        m_fieldCount[fieldKey]++;
-    }
-    else
-    {
-        m_fieldCount[fieldKey] = 1;
-        m_fields[fieldKey] = field;
-    }
+    m_fields[fieldKey] = field;
 }
 
 VectorField* BulletManager::getField(QString fieldKey)
@@ -79,19 +79,11 @@ VectorField* BulletManager::getField(QString fieldKey)
     return m_fields[fieldKey];
 }
 
-void BulletManager::removeField(QString fieldKey)
+void BulletManager::clear()
 {
-    if (!m_fields.contains(fieldKey))
+    while (!m_activeBullets.empty())
     {
-        qDebug() << "Error, key not found";
-    }
-    if (m_fieldCount[fieldKey] == 1)
-    {
-        delete m_fields[fieldKey];
-        m_fieldCount.remove(fieldKey);
-    }
-    else
-    {
-        m_fieldCount[fieldKey]--;
+        m_activeBullets.back()->hide();
+        m_pool.enqueue(m_activeBullets.takeLast());
     }
 }

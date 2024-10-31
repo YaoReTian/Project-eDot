@@ -21,8 +21,10 @@
 
 struct Pattern
 {
-    QList<Bullet*> m_bullets;
-    int spawnRate;
+    QList<QPointF> m_spawnPos;
+    QString m_fieldKey;
+    int m_spawnRate;
+    int m_elapsedTime;
 };
 
 struct Phase
@@ -30,6 +32,12 @@ struct Phase
     QList<Pattern*> m_patterns;
     int m_phaseTime;
     int m_hp;
+
+    ~Phase()
+    {
+        qDeleteAll(m_patterns);
+        m_patterns.clear();
+    }
 };
 
 class Enemy : public Sprite
@@ -40,13 +48,22 @@ public:
 
     virtual void update(int deltaTime) override;
     void setBulletManager(BulletManager* manager);
-    void setFieldKey(QString key);
+    void addFieldKey(QString key);
+    void removeFieldKey(QString key);
     void addPhase(Phase* phase);
 
+    int HP() const;
+
 private:
+
+    void updatePhases(int deltatime);
+
     BulletManager* m_bulletManager;
     QList<QString> m_fieldKeys;
-    QQueue<Phase*> m_phases;
+    QList<Phase*> m_phases;
+    int m_HP;
+    int m_phaseIndex;
+    int m_elapsedTime;
 };
 
 #endif // ENEMY_H

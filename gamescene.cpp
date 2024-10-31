@@ -12,10 +12,11 @@
 
 GameScene::GameScene(QObject *parent) :
     QGraphicsScene(parent), m_tilemap(new Tilemap), m_db(new Database),
-    m_player(new Player(m_tilemap)), m_bulletManager(new BulletManager),
+    m_player(new Player(m_tilemap)), m_bulletManager(m_db->getBulletManager()),
     m_cameraPosX(0), m_cameraPosY(0)
 {
     m_tilemap->setDatabase(m_db);
+    m_tilemap->setBulletManager(m_bulletManager);
     m_tilemap->setMap(3);
     addItem(m_tilemap);
     setBackgroundBrush(QBrush(m_tilemap->bgColour()));
@@ -30,10 +31,6 @@ GameScene::GameScene(QObject *parent) :
     m_player->setZValue(m_tilemap->getPlayerZ());
     m_player->setPos(4*GLOBAL::ObjectLength,4*GLOBAL::ObjectLength);
     m_player->setBulletManager(m_bulletManager);
-    for (int i = 0; i < 1000; i++)
-    {
-        m_bulletManager->createBullet(m_tilemap);
-    }
 }
 
 GameScene::~GameScene()
@@ -55,6 +52,7 @@ void GameScene::update(int deltatime)
     m_bulletManager->update(deltatime);
     updateCamera();
     m_tilemap->setPos(-m_cameraPosX, -m_cameraPosY);
+    m_tilemap->update(deltatime);
 }
 
 void GameScene::updateCamera()

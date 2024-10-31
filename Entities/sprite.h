@@ -43,6 +43,7 @@ public:
     QString getType();
     Vector prevActiveVector();
 
+
     // For animations
     void setSpriteSheet(QPixmap spriteSheet);
     void setFrameSize(QSize frameSize);

@@ -121,6 +121,19 @@ Sprite* Database::getSprite(QString path, QGraphicsItem* parent)
     return sprite;
 }
 
+BulletManager* Database::getBulletManager()
+{
+    QSqlQuery query(QString("SELECT * FROM Field"));
+    BulletManager* b  = new BulletManager;
+    while (query.next())
+    {
+        VectorField* v = new VectorField;
+        v->setField(query.value("i").toString(), query.value("j").toString());
+        b->addField(v, query.value("FieldKey").toString());
+    }
+    return b;
+}
+
 void Database::setSpriteData(QString path, Sprite* source)
 {
     QSqlQuery query(QString("SELECT * FROM Sprite "
@@ -153,6 +166,37 @@ void Database::setSpriteData(QString path, Sprite* source)
                                   stringToAction(transitionQuery.value("Action").toString()),
                                   transitionQuery.value("EndStateName").toString());
         }
+    }
+}
+
+void Database::setEnemyData(QString path, Enemy *source)
+{
+    setSpriteData(path, source);
+    QSqlQuery query(QString("SELECT * FROM Phase WHERE (SpriteID = %1)").arg(source->getID()));
+
+    while(query.next())
+    {
+        Phase* p = new Phase;
+        p->m_hp = query.value("HP").toInt();
+        p->m_phaseTime = query.value("PhaseTime").toInt();
+        QSqlQuery patterns(QString("SELECT * FROM PhasePattern, Pattern "
+                                   "WHERE (PhasePattern.PatternID = Pattern.PatternID) "
+                                   "AND (PhaseID = %1)").arg(query.value("PhaseID").toInt()));
+
+        while (patterns.next())
+        {
+            p->m_patterns.append(new Pattern);
+            p->m_patterns.back()->m_spawnRate = patterns.value("BulletSpawnRate").toInt();
+            p->m_patterns.back()->m_fieldKey = patterns.value("FieldKey").toString();
+            QSqlQuery spawnPos(QString("SELECT * FROM BulletPatternPos, BulletInPattern "
+                                      "WHERE (BulletPatternPos.BulletInPatternID = BulletInPattern.BulletInPatternID) "
+                                      "AND (PatternID = %1)").arg(patterns.value("PatternID").toInt()));
+            while (spawnPos.next())
+            {
+                p->m_patterns.back()->m_spawnPos.append(QPointF(spawnPos.value("PosX").toInt(), spawnPos.value("PosY").toInt()));
+            }
+        }
+        source->addPhase(p);
     }
 }
 

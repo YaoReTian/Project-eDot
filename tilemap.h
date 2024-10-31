@@ -10,6 +10,8 @@
 #include "tilelayer.h"
 #include "tileset.h"
 #include "Utils/keymap.h"
+#include "Entities/bulletmanager.h"
+#include "Entities/enemy.h"
 
 class Tilemap : public GameObject, public QGraphicsRectItem
 {
@@ -17,6 +19,7 @@ public:
     Tilemap(QGraphicsItem* parent = 0);
     ~Tilemap();
     void setDatabase(Database* db);
+    void setBulletManager(BulletManager* manager);
     void setMap(int MapID);
     QString getMapName();
     QString getMapDesc();
@@ -33,11 +36,13 @@ private:
     void createTileLayer(QJsonObject chunks, int zValue);
     void createSpriteLayer(QJsonObject objectGroup, int zValue);
 
-    // Attributes for creating the map
+    // Utilities
     Database* m_db;
+    BulletManager* m_bulletManager;
 
     // Attributes of objects on the map
     QList<Sprite*> m_sprites;
+    QList<Enemy*> m_enemies;
 
     // Map info
     int m_mapID;

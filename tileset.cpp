@@ -105,6 +105,7 @@ void TileSet::checkProperties(TileInfo* tile, QJsonObject val)
     QJsonArray properties = val.value("properties").toArray();
     tile->m_interactable = properties[0].toObject().value("value").toBool();
     tile->m_solid = properties[1].toObject().value("value").toBool();
+
 }
 
 void TileSet::setHitboxes(TileInfo *tile, QJsonObject val)
