@@ -6,7 +6,7 @@
 #include "../tileset.h"
 
 Player::Player(QGraphicsItem * parent)
-    : m_HP(10),Sprite(parent), m_elapsedTime(0), m_hitboxVisible(false
+    : m_HP(10),Sprite(parent), m_elapsedTime(0), m_hitboxVisible(false)
 {
     TileSet t(":/tileset/res/Basic bullets.tsj",1);
     m_hitbox.setPixmap(t.getInfo(40)->m_pixmap);
