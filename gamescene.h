@@ -7,6 +7,7 @@
 #include "Utils/keymap.h"
 #include "database.h"
 #include "Entities/player.h"
+#include "gameover.h"
 
 class GameScene : public QGraphicsScene
 {
@@ -26,6 +27,8 @@ private:
     BulletManager *m_bulletManager;
     double m_cameraPosX;
     double m_cameraPosY;
+
+    GameOver* m_gameOver;
 };
 
 #endif // GAMESCENE_H

@@ -3,21 +3,7 @@
 
 #include "sprite.h"
 #include "bulletmanager.h"
-
-/*
- * What we need:
- *
- *  Pattern:
- *      Number of bullets
- *      Trajectory (field)
- *      Bullet spawn rate
- *      Type of bullet
- *
- *  Phase:
- *      List of patterns
- *      Phase time
- *      HP
- */
+#include "../UI/progressbar.h"
 
 struct Pattern
 {
@@ -57,6 +43,7 @@ public:
     int HP() const;
 
     void hide();
+    void setFrameSize(QSize frameSize);
 
 private:
 
@@ -70,6 +57,8 @@ private:
     int m_phaseIndex;
     int m_elapsedTime;
     bool m_playerDetected;
+
+    ProgressBar* m_healthBar;
 };
 
 #endif // ENEMY_H

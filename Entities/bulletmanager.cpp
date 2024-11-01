@@ -61,6 +61,7 @@ Bullet* BulletManager::getBulletFromPool()
     }
     Bullet* b = m_pool.dequeue();
     b->setParentItem(m_parent);
+    b->setZValue(m_baseZ);
     return b;
 }
 
@@ -86,4 +87,9 @@ void BulletManager::clear()
         m_activeBullets.back()->hide();
         m_pool.enqueue(m_activeBullets.takeLast());
     }
+}
+
+void BulletManager::setBaseZ(qreal zValue)
+{
+    m_baseZ = zValue;
 }

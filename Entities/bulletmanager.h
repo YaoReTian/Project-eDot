@@ -18,6 +18,7 @@ public:
     void addField(VectorField* field, QString fieldKey);
     VectorField* getField(QString fieldKey);
     Bullet* getBulletFromPool();
+    void setBaseZ(qreal zValue);
 
     void clear();
 
@@ -26,6 +27,7 @@ private:
     QQueue<Bullet*> m_pool;
     QMap<QString, VectorField*> m_fields;
     QGraphicsItem* m_parent;
+    qreal m_baseZ;
 };
 
 #endif // BULLETMANAGER_H

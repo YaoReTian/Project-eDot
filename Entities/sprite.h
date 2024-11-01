@@ -49,6 +49,7 @@ public:
     void setFrameSize(QSize frameSize);
     void addAnimationState(QString stateName, int startFrame, int endFrame, float frameTime);
     void addTransition(QString startStateName, GLOBAL::Action triggerAction, QString endStateName);
+    QSize frameSize();
 
     // Movement
     void setDefaultToWalk();

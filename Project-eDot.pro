@@ -13,12 +13,14 @@ SOURCES += \
     Entities/bulletmanager.cpp \
     Entities/enemy.cpp \
     Entities/gameitem.cpp \
+    UI/progressbar.cpp \
     Utils/jsonparser.cpp \
     Utils/vector.cpp \
     Utils/vectorfield.cpp \
     chunk.cpp \
     database.cpp \
     Utils/keymap.cpp \
+    gameover.cpp \
     gamescene.cpp \
     main.cpp \
     Entities/player.cpp \
@@ -34,6 +36,7 @@ HEADERS += \
     Entities/bulletmanager.h \
     Entities/enemy.h \
     Entities/gameitem.h \
+    UI/progressbar.h \
     Utils/jsonparser.h \
     Utils/vector.h \
     Utils/vectorfield.h \
@@ -44,6 +47,7 @@ HEADERS += \
     Entities/player.h \
     Entities/sprite.h \
     gameobject.h \
+    gameover.h \
     gamescene.h \
     mainwindow.h \
     tilelayer.h \

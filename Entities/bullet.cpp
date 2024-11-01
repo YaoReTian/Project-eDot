@@ -114,6 +114,7 @@ bool Bullet::collided() const
             Player* p = dynamic_cast<Player*>(c);
             if (collidesWithItem(p->hitboxItem()))
             {
+                p->takeHit();
                 return true;
             }
         }

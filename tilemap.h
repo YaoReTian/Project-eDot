@@ -31,6 +31,8 @@ public:
     void input(KeyMap* keys, QPointF playerPos);
     virtual void update(int deltatime) override;
 
+    void reset();
+
 private:
     // Methods for creating the map
     void createTileLayer(QJsonObject chunks, int zValue);

@@ -13,7 +13,7 @@
 GameScene::GameScene(QObject *parent) :
     QGraphicsScene(parent), m_tilemap(new Tilemap), m_db(new Database),
     m_player(new Player(m_tilemap)), m_bulletManager(m_db->getBulletManager()),
-    m_cameraPosX(0), m_cameraPosY(0)
+    m_cameraPosX(0), m_cameraPosY(0), m_gameOver(new GameOver)
 {
     m_tilemap->setDatabase(m_db);
     m_tilemap->setBulletManager(m_bulletManager);
@@ -31,6 +31,10 @@ GameScene::GameScene(QObject *parent) :
     m_player->setZValue(m_tilemap->getPlayerZ());
     m_player->setPos(20*GLOBAL::ObjectLength,8*GLOBAL::ObjectLength);
     m_player->setBulletManager(m_bulletManager);
+
+    m_tilemap->setZValue(0);
+    m_gameOver->setZValue(1);
+    addItem(m_gameOver);
 }
 
 GameScene::~GameScene()
@@ -42,17 +46,33 @@ GameScene::~GameScene()
 
 void GameScene::input(KeyMap* keys)
 {
-    m_player->input(keys);
-    m_tilemap->input(keys, m_player->pos());
+    if (m_player->HP() == 0)
+    {
+        m_gameOver->setRect(0,0, width(), height());
+        m_gameOver->show();
+    }
+    else
+    {
+        keys->setMousePos(keys->mousePos().x() + m_cameraPosX, keys->mousePos().y() + m_cameraPosY);
+        m_player->input(keys);
+        m_tilemap->input(keys, m_player->pos());
+    }
 }
 
 void GameScene::update(int deltatime)
 {
-    m_player->update(deltatime);
-    m_bulletManager->update(deltatime);
-    updateCamera();
-    m_tilemap->setPos(-m_cameraPosX, -m_cameraPosY);
-    m_tilemap->update(deltatime);
+    if (m_player->HP() == 0)
+    {
+        m_gameOver->update(deltatime);
+    }
+    else
+    {
+        m_player->update(deltatime);
+        m_bulletManager->update(deltatime);
+        updateCamera();
+        m_tilemap->setPos(-m_cameraPosX, -m_cameraPosY);
+        m_tilemap->update(deltatime);
+    }
 }
 
 void GameScene::updateCamera()

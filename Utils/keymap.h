@@ -4,6 +4,7 @@
 #include <QMap>
 #include <QtGlobal>
 #include "global.h"
+#include <QPointF>
 
 struct KeyStatus
 {
@@ -13,6 +14,7 @@ struct KeyStatus
 
 struct MouseStatus
 {
+    QPointF m_pos;
     bool m_held = false;
     bool m_released = false;
     int m_framesHeld = 0;
@@ -39,6 +41,9 @@ public:
     bool mouseHeldStatus();
     bool mouseReleasedStatus();
     int mouseFramesHeld();
+    void setMousePos(QPointF pos);
+    void setMousePos(qreal x, qreal y);
+    QPointF mousePos();
 
 private:
     QMap<Qt::Key, GLOBAL::Action> m_keys;

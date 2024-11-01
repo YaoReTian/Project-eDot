@@ -5,6 +5,7 @@
 #include "sprite.h"
 #include "bulletmanager.h"
 #include "../Utils/keymap.h"
+#include "../UI/progressbar.h"
 
 class Player : public Sprite
 {
@@ -31,6 +32,8 @@ private:
     BulletManager* m_bulletManager;
     QList<VectorField*> m_fields;
     QGraphicsPixmapItem m_hitbox;
+
+    ProgressBar* m_healthBar;
 };
 
 #endif // PLAYER_H

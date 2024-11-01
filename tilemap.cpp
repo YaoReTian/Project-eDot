@@ -83,6 +83,7 @@ void Tilemap::setMap(int MapID)
             numSpriteLayers++;
         }
     }
+    m_bulletManager->setBaseZ(layers.size() + numSpriteLayers*m_mapSizeY*GLOBAL::ObjectLength);
 }
 
 void Tilemap::createTileLayer(QJsonObject chunks, int zValue)
@@ -255,4 +256,13 @@ void Tilemap::update(int deltatime)
         }
         i++;
     }
+}
+
+void Tilemap::reset()
+{
+    while (!m_enemyPool.empty())
+    {
+        m_enemies.append(m_enemyPool.dequeue());
+    }
+    m_bulletManager->clear();
 }

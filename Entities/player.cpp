@@ -6,8 +6,11 @@
 #include "../tileset.h"
 
 Player::Player(QGraphicsItem * parent)
-    : m_HP(10),Sprite(parent), m_elapsedTime(0), m_hitboxVisible(false)
+    : Sprite(parent), m_HP(10), m_elapsedTime(0), m_hitboxVisible(false)
 {
+    m_healthBar = new ProgressBar(this);
+    m_healthBar->setMaximum(m_HP);
+    m_healthBar->setValue(m_HP);
     TileSet t(":/tileset/res/Basic bullets.tsj",1);
     m_hitbox.setPixmap(t.getInfo(40)->m_pixmap);
     m_hitbox.setParentItem(parent);
@@ -16,7 +19,7 @@ Player::Player(QGraphicsItem * parent)
 
 Player::~Player()
 {
-
+    delete m_healthBar;
 }
 
 void Player::setParentItem(QGraphicsItem *parent)
@@ -32,6 +35,10 @@ void Player::update(int deltaTime)
     m_hitbox.setPos(centre().x() - m_hitbox.boundingRect().width()/2,
                     centre().y() - m_hitbox.boundingRect().height()/2);
     m_hitbox.setZValue(zValue()+1);
+    m_healthBar->setValue(m_HP);
+    m_healthBar->setZValue(zValue() + 1);
+    m_healthBar->setRect(-GLOBAL::Scale, -6*GLOBAL::Scale, (frameSize().width()+2)*GLOBAL::Scale, 5*GLOBAL::Scale);
+    m_healthBar->update(deltaTime);
 }
 
 void Player::setHitboxPixmap(QPixmap p)
@@ -50,11 +57,13 @@ void Player::input(KeyMap* keys)
             Bullet* b1 = m_bulletManager->getBulletFromPool();
             Bullet* b2 = m_bulletManager->getBulletFromPool();
             Vector v(boundingRect().height()/2, boundingRect().height()/2);
-            qreal a = prevActiveVector().angle();
-            b1->setPos(centre().x() + v.i()*qCos(a) + prevActiveVector().i(),
-                       centre().y() + v.j()*qSin(a) + prevActiveVector().j());
-            b2->setPos(centre().x() - v.i()*qCos(a) + prevActiveVector().i(),
-                       centre().y() - v.j()*qSin(a) + prevActiveVector().j());
+            Vector d(centre(), keys->mousePos());
+            d.toUnitVector();
+            qreal a = d.angle();
+            b1->setPos(centre().x() + v.i()*qCos(a) + d.i(),
+                       centre().y() + v.j()*qSin(a) + d.j());
+            b2->setPos(centre().x() - v.i()*qCos(a) + d.i(),
+                       centre().y() - v.j()*qSin(a) + d.j());
             b1->setUnitSpeed(4.5f/1000.0f);
             b2->setUnitSpeed(4.5f/1000.0f);
             VectorField* f1 = m_bulletManager->getField("UniformPositiveRadial");
@@ -128,6 +137,10 @@ void Player::heal(int hpToAdd)
 void Player::takeHit()
 {
     m_HP--;
+    if (m_HP < 0)
+    {
+        m_HP = 0;
+    }
 }
 
 int Player::HP() const

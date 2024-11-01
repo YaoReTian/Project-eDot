@@ -113,3 +113,19 @@ int KeyMap::mouseFramesHeld()
 {
     return m_mouseStatus->m_framesHeld;
 }
+
+void KeyMap::setMousePos(QPointF pos)
+{
+    m_mouseStatus->m_pos = pos;
+}
+
+void KeyMap::setMousePos(qreal x, qreal y)
+{
+    m_mouseStatus->m_pos.setX(x);
+    m_mouseStatus->m_pos.setY(y);
+}
+
+QPointF KeyMap::mousePos()
+{
+    return m_mouseStatus->m_pos;
+}

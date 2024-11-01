@@ -1,9 +1,9 @@
 #include "enemy.h"
 
 Enemy::Enemy(QGraphicsItem* parent)
-    : Sprite(parent), m_phaseIndex(-1), m_elapsedTime(0)
+    : Sprite(parent), m_phaseIndex(-1), m_elapsedTime(0), m_playerDetected(false)
 {
-
+    m_healthBar = new ProgressBar(this);
 }
 
 Enemy::~Enemy()
@@ -36,6 +36,8 @@ void Enemy::update(int deltaTime)
     {
         m_phaseIndex++;
         m_HP = m_phases[0]->m_hp;
+        m_healthBar->setMaximum(m_HP);
+        m_healthBar->setValue(m_HP);
     }
     if (m_playerDetected && m_phaseIndex < m_phases.size())
     {
@@ -45,6 +47,8 @@ void Enemy::update(int deltaTime)
         {
             m_phaseIndex++;
             m_HP = m_phases[m_phaseIndex]->m_hp;
+            m_healthBar->setMaximum(m_HP);
+            m_healthBar->setValue(m_HP);
             m_elapsedTime = 0;
         }
         else if (m_HP > 0)
@@ -54,6 +58,10 @@ void Enemy::update(int deltaTime)
     }
     m_playerDetected = false;
     Sprite::update(deltaTime);
+    m_healthBar->setZValue(zValue() + 1);
+    m_healthBar->setRect(-GLOBAL::Scale, -6*GLOBAL::Scale, (frameSize().width()+2)*GLOBAL::Scale, 5*GLOBAL::Scale);
+    m_healthBar->update(deltaTime);
+
 }
 
 void Enemy::updatePhases(int deltatime)
@@ -68,8 +76,8 @@ void Enemy::updatePhases(int deltatime)
             {
                 Bullet* b = m_bulletManager->getBulletFromPool();
                 b->setPos(centre().x() + v.x(), centre().y() + v.y());
-                b->setUnitSpeed(4.5f/1000.0f);
                 VectorField* f = m_bulletManager->getField(p->m_fieldKey);
+                b->setUnitSpeed(1.5f/1000.0f);
                 b->show();
                 b->addField(f,centre().x(), centre().y());
                 m_bulletManager->addBullet(b);
@@ -103,6 +111,11 @@ void Enemy::addPhase(Phase* phase)
 void Enemy::takeDmg(int dmg)
 {
     m_HP -= dmg;
+    if (m_HP < 0)
+    {
+        m_HP = 0;
+    }
+    m_healthBar->setValue(m_HP);
 }
 
 int Enemy::HP() const
@@ -122,4 +135,10 @@ void Enemy::hide()
     m_elapsedTime = 0;
     m_playerDetected = false;
     Sprite::hide();
+}
+
+void Enemy::setFrameSize(QSize frameSize)
+{
+    m_healthBar->setRect(-GLOBAL::Scale, -4*GLOBAL::Scale, frameSize.width()+2*GLOBAL::Scale, 3*GLOBAL::Scale);
+    Sprite::setFrameSize(frameSize);
 }

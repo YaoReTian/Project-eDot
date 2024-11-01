@@ -16,6 +16,7 @@ View::~View()
 
 void View::input(KeyMap* keys)
 {
+    keys->setMousePos(mapToScene(mapFromGlobal(QCursor::pos())));
     m_gamescene->input(keys);
 }
 
