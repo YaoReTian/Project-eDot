@@ -36,7 +36,11 @@
         <file>res/Corner path exterior.png</file>
         <file>res/1 block corner path.png</file>
     </qresource>
-    <qresource prefix="/image/UI"/>
+    <qresource prefix="/image/UI">
+        <file>res/PopupButtonClicked.png</file>
+        <file>res/PopupButtonDefault.png</file>
+        <file>res/PopupButtonFocused.png</file>
+    </qresource>
     <qresource prefix="/image/background"/>
     <qresource prefix="/database">
         <file>GameDatabase.db</file>

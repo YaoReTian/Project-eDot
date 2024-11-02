@@ -137,6 +137,10 @@ void Player::heal(int hpToAdd)
 void Player::takeHit()
 {
     m_HP--;
+    if (m_HP == 0)
+    {
+        emit dead();
+    }
     if (m_HP < 0)
     {
         m_HP = 0;
@@ -151,4 +155,9 @@ int Player::HP() const
 QGraphicsItem* Player::hitboxItem()
 {
     return &m_hitbox;
+}
+
+void Player::reset()
+{
+    m_HP = 10;
 }

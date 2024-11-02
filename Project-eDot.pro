@@ -13,6 +13,8 @@ SOURCES += \
     Entities/bulletmanager.cpp \
     Entities/enemy.cpp \
     Entities/gameitem.cpp \
+    UI/button.cpp \
+    UI/buttonmanager.cpp \
     UI/progressbar.cpp \
     Utils/jsonparser.cpp \
     Utils/vector.cpp \
@@ -36,6 +38,8 @@ HEADERS += \
     Entities/bulletmanager.h \
     Entities/enemy.h \
     Entities/gameitem.h \
+    UI/button.h \
+    UI/buttonmanager.h \
     UI/progressbar.h \
     Utils/jsonparser.h \
     Utils/vector.h \

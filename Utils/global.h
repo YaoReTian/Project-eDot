@@ -24,13 +24,11 @@ enum Action
     SELECT,
     NEXT_OPTION,
     PREV_OPTION,
-    OVERDRIVE_1,
-    OVERDRIVE_2,
-    OVERDRIVE_3,
-    OVERDRIVE_4,
+    OVERDRIVE,
     SHOW_HITBOX,
     SHOW_PLAYER_HITBOX,
     SHOOT,
+    PAUSE,
     NONE
 };
 

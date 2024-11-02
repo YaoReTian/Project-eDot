@@ -55,6 +55,9 @@ public:
     void setDefaultToWalk();
     void setDefaultToRun();
     bool collidedWithWall();
+
+public slots:
+
 private:
     // Sprite data
     int m_SpriteID;

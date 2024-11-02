@@ -9,6 +9,7 @@
 
 class Player : public Sprite
 {
+    Q_OBJECT
 public:
     Player(QGraphicsItem * parent = 0);
     ~Player();
@@ -21,9 +22,13 @@ public:
     void setHitboxPixmap(QPixmap p);
 
     void heal(int hpToAdd = 0);
+    void reset();
     void takeHit();
     int HP() const;
     QGraphicsItem* hitboxItem();
+
+signals:
+    void dead();
 
 private:
     int m_HP;

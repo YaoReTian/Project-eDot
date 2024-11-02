@@ -13,7 +13,8 @@
 GameScene::GameScene(QObject *parent) :
     QGraphicsScene(parent), m_tilemap(new Tilemap), m_db(new Database),
     m_player(new Player(m_tilemap)), m_bulletManager(m_db->getBulletManager()),
-    m_cameraPosX(0), m_cameraPosY(0), m_gameOver(new GameOver)
+    m_buttonManager(new ButtonManager), m_cameraPosX(0), m_cameraPosY(0),
+    m_gameOver(new GameOver)
 {
     m_tilemap->setDatabase(m_db);
     m_tilemap->setBulletManager(m_bulletManager);
@@ -35,6 +36,9 @@ GameScene::GameScene(QObject *parent) :
     m_tilemap->setZValue(0);
     m_gameOver->setZValue(1);
     addItem(m_gameOver);
+
+    m_buttonManager->setParentItem(m_tilemap);
+    connect(m_player, SIGNAL(dead()), this, SLOT(gameOver()));
 }
 
 GameScene::~GameScene()
@@ -46,10 +50,12 @@ GameScene::~GameScene()
 
 void GameScene::input(KeyMap* keys)
 {
+    m_buttonManager->input(keys);
     if (m_player->HP() == 0)
     {
         m_gameOver->setRect(0,0, width(), height());
-        m_gameOver->show();
+        m_buttonManager->setPos(m_gameOver->boundingRect().width()/2 - m_buttonManager->width()/2,
+                                m_gameOver->boundingRect().height()/2 + 10*GLOBAL::Scale);
     }
     else
     {
@@ -61,6 +67,7 @@ void GameScene::input(KeyMap* keys)
 
 void GameScene::update(int deltatime)
 {
+    m_buttonManager->update(deltatime);
     if (m_player->HP() == 0)
     {
         m_gameOver->update(deltatime);
@@ -83,4 +90,34 @@ void GameScene::updateCamera()
     m_cameraPosY = m_player->y() +
                    m_player->boundingRect().height()/2 -
                    sceneRect().height()/2;
+}
+
+void GameScene::gameOver()
+{
+    m_gameOver->show();
+    m_buttonManager->clear();
+    m_buttonManager->setParentItem(m_gameOver);
+    Button* b1 = m_buttonManager->getButtonFromPool();
+    Button* b2 = m_buttonManager->getButtonFromPool();
+    b1->setText("RESTART");
+    b2->setText("END GAME");
+
+    connect(b1, SIGNAL(triggered()), this, SLOT(restartFromCheckpoint()));
+    connect(b2, SIGNAL(triggered()), this, SLOT(endGame()));
+
+    m_buttonManager->addButton(b1);
+    m_buttonManager->addButton(b2);
+}
+
+void GameScene::endGame()
+{
+    QApplication::quit();
+}
+
+void GameScene::restartFromCheckpoint()
+{
+    m_gameOver->hide();
+    m_buttonManager->clear();
+    m_tilemap->reset();
+    m_player->reset();
 }

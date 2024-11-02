@@ -19,5 +19,5 @@ GameOver::~GameOver()
 void GameOver::update(int deltatime)
 {
     m_text->setPos(boundingRect().width()/2 - m_text->boundingRect().width()/2,
-                   boundingRect().height()/2 - m_text->boundingRect().height()/2 - 30);
+                   boundingRect().height()/2 - m_text->boundingRect().height() + 5*GLOBAL::Scale);
 }
