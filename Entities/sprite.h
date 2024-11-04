@@ -78,7 +78,6 @@ private:
     Vector m_prevActiveVector;
     const float m_WALK_SPEED;
     const float m_RUN_SPEED;
-    const float m_SPRINT_SPEED;
     float m_defaultSpeed;
     float m_currentSpeed;
 };

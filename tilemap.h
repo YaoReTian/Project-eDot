@@ -21,6 +21,7 @@ public:
     void setDatabase(Database* db);
     void setBulletManager(BulletManager* manager);
     void setMap(int MapID);
+    int mapID();
     QString getMapName();
     QString getMapDesc();
     int getMapSizeX();
@@ -32,6 +33,7 @@ public:
     virtual void update(int deltatime) override;
 
     void reset();
+    void clear();
 
 private:
     // Methods for creating the map

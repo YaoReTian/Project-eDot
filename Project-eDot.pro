@@ -22,12 +22,12 @@ SOURCES += \
     chunk.cpp \
     database.cpp \
     Utils/keymap.cpp \
-    gameover.cpp \
     gamescene.cpp \
     main.cpp \
     Entities/player.cpp \
     Entities/sprite.cpp \
     mainwindow.cpp \
+    menu.cpp \
     tilelayer.cpp \
     tilemap.cpp \
     tileset.cpp \
@@ -51,9 +51,9 @@ HEADERS += \
     Entities/player.h \
     Entities/sprite.h \
     gameobject.h \
-    gameover.h \
     gamescene.h \
     mainwindow.h \
+    menu.h \
     tilelayer.h \
     tilemap.h \
     tileset.h \

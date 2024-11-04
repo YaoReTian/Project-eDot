@@ -3,6 +3,7 @@
 #include <QDebug>
 
 #include "Entities/sprite.h"
+#include <QSqlError>
 
 #include <QFile>
 
@@ -15,6 +16,7 @@ Database::Database()
         {
             qDebug() << "ERROR: unable to generate initial database";
         }
+        QFile("GameDatabase.db").setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner);
     }
     m_db = QSqlDatabase::addDatabase("QSQLITE");
     m_db.setDatabaseName("GameDatabase.db");
@@ -24,6 +26,23 @@ Database::Database()
     }
     else {
         qDebug() << "Database opened";
+    }
+
+    for (int i = 0; i < 5; i++)
+    {
+        m_saveSlots[i] = new SaveSlot;
+    }
+
+    QSqlQuery query("SELECT * FROM PlayerData");
+
+    int i;
+    while (query.next())
+    {
+        i = query.value("PlayerID").toInt() - 1;
+        m_saveSlots[i]->m_username = query.value("Username").toString();
+        m_saveSlots[i]->m_tilePosX = query.value("PosX").toInt();
+        m_saveSlots[i]->m_tilePosY = query.value("PosY").toInt();
+        m_saveSlots[i]->m_mapID = query.value("MapID").toInt();
     }
 }
 
@@ -239,4 +258,49 @@ GLOBAL::Action Database::stringToAction(QString string)
     {
         return GLOBAL::NONE;
     }
+}
+
+void Database::saveGame(int slotID, QString username, qreal tilePosX, qreal tilePosY, int mapID)
+{
+    if (slotID > 5 || slotID < 1)
+    {
+        qDebug() << "ERROR: UNREGISTERED SAVE SLOT";
+        return;
+    }
+    m_saveSlots[slotID-1]->m_username = username;
+    m_saveSlots[slotID-1]->m_tilePosX = tilePosX;
+    m_saveSlots[slotID-1]->m_tilePosY = tilePosY;
+    m_saveSlots[slotID-1]->m_mapID = mapID;
+    if(m_db.transaction())
+    {
+        QString q("UPDATE PlayerData "
+                  "SET Username = '%1', PosX = %2, PosY = %3, MapID = %4 "
+                  "WHERE PlayerID = %5");
+        QSqlQuery query(q.arg(username).arg(tilePosX).arg(tilePosY).arg(mapID).arg(slotID));
+        if (!query.isActive())
+        {
+            qDebug() << "ERROR: query inactive";
+            qDebug() << query.lastError().text();
+        }
+
+        if(!m_db.commit())
+        {
+            qDebug() << "ERROR: Failed to commit";
+            m_db.rollback();
+        }
+    }
+    else
+    {
+        qDebug() << "ERROR: Failed to start transaction mode";
+    }
+}
+
+SaveSlot* Database::getSaveSlot(int slotID)
+{
+    if (slotID > 5 || slotID < 1)
+    {
+        qDebug() << "ERROR: UNREGISTERED SAVE SLOT";
+        return nullptr;
+    }
+    return m_saveSlots[slotID-1];
 }

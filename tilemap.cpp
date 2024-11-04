@@ -20,8 +20,7 @@ Tilemap::Tilemap(QGraphicsItem* parent)
 
 Tilemap::~Tilemap()
 {
-    qDeleteAll(m_sprites);
-    m_sprites.clear();
+    clear();
 }
 
 void Tilemap::setDatabase(Database* db)
@@ -170,6 +169,11 @@ void Tilemap::createSpriteLayer(QJsonObject objectGroup, int zValue)
     }
 }
 
+int Tilemap::mapID()
+{
+    return m_mapID;
+}
+
 QString Tilemap::getMapDesc()
 {
     return m_mapDesc;
@@ -265,4 +269,20 @@ void Tilemap::reset()
         m_enemies.append(m_enemyPool.dequeue());
     }
     m_bulletManager->clear();
+}
+
+void Tilemap::clear()
+{
+    qDeleteAll(m_sprites);
+    m_sprites.clear();
+    qDeleteAll(m_sprites);
+    m_sprites.clear();
+    qDeleteAll(m_enemies);
+    m_enemies.clear();
+    qDeleteAll(m_enemyPool);
+    m_enemyPool.clear();
+    qDeleteAll(m_layers);
+    m_layers.clear();
+    qDeleteAll(m_tilesets);
+    m_tilesets.clear();
 }

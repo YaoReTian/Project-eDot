@@ -27,10 +27,14 @@ public:
     int HP() const;
     QGraphicsItem* hitboxItem();
 
+    void setUsername(QString name);
+    QString username();
+
 signals:
     void dead();
 
 private:
+    QString m_username;
     int m_HP;
     int m_elapsedTime;
     bool m_hitboxVisible;

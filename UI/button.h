@@ -7,6 +7,7 @@
 #include <QPixmap>
 #include "../Utils/keymap.h"
 #include "../gameobject.h"
+#include "../database.h"
 
 class Button : public QObject, public QGraphicsPixmapItem, public GameObject
 {
@@ -34,8 +35,10 @@ public:
     bool isActive();
     bool isPaused();
 
+    void addTriggerValue(int n);
+
 signals:
-    void triggered();
+    void triggered(int n = 0);
 
 private:
     int m_elapsedTime;
@@ -55,6 +58,7 @@ private:
     QPixmap m_clickedPixmap;
 
     qreal m_baseZ;
+    int m_triggerValue;
 };
 
 #endif // BUTTON_H

@@ -8,6 +8,14 @@
 #include "Entities/enemy.h"
 #include "Utils/global.h"
 
+struct SaveSlot
+{
+    QString m_username;
+    qreal m_tilePosX;
+    qreal m_tilePosY;
+    int m_mapID;
+};
+
 class Database
 {
 public:
@@ -26,7 +34,11 @@ public:
     QSqlQuery getSpriteTransitions(int SpriteID, QString startStateName);
     GLOBAL::Action stringToAction(QString string);
 
+    void saveGame(int slotID, QString username, qreal tilePosX, qreal tilePosY, int mapID);
+    SaveSlot* getSaveSlot(int slotID);
+
 private:
+    SaveSlot* m_saveSlots[5];
     QSqlDatabase m_db;
 };
 

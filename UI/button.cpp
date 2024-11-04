@@ -8,7 +8,8 @@ Button::Button(QGraphicsItem* parent)
     m_focused(false), m_mouseMode(true), m_active(false), m_paused(false), m_trigger(GLOBAL::SELECT),
     m_defaultPixmap(":/image/UI/res/PopupButtonDefault.png"),
     m_focusedPixmap(":/image/UI/res/PopupButtonFocused.png"),
-    m_clickedPixmap(":/image/UI/res/PopupButtonClicked.png")
+    m_clickedPixmap(":/image/UI/res/PopupButtonClicked.png"),
+    m_triggerValue(0)
 {
     m_textBox = new QGraphicsTextItem(this);
     m_iconText = new QGraphicsTextItem(this);
@@ -59,7 +60,7 @@ void Button::input(KeyMap* keys)
     {
         m_released = true;
         m_clicked = false;
-        emit triggered();
+        emit triggered(m_triggerValue);
     }
     else if (m_clicked && (m_mouseMode && keys->mouseReleasedStatus() && !isUnderMouse()))
     {
@@ -104,6 +105,11 @@ void Button::update(int deltatime)
     }
 }
 
+void Button::addTriggerValue(int n)
+{
+    m_triggerValue = n;
+}
+
 void Button::hide()
 {
     m_clicked = false;
@@ -115,6 +121,7 @@ void Button::hide()
     m_trigger = GLOBAL::SELECT;
     m_textBox->setPlainText("");
     m_iconText->setPlainText("F");
+    m_triggerValue = 0;
     QGraphicsPixmapItem::hide();
 }
 

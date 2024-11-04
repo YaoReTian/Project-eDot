@@ -8,7 +8,7 @@
 #include "Utils/keymap.h"
 #include "database.h"
 #include "Entities/player.h"
-#include "gameover.h"
+#include "menu.h"
 #include "UI/buttonmanager.h"
 
 class GameScene : public QGraphicsScene
@@ -22,9 +22,18 @@ public:
     void updateCamera();
 
 public slots:
+    void start();
+    void newGame();
+    void saveSlots();
+    void loadGame(int slotID);
     void gameOver();
     void endGame();
+    void quit();
     void restartFromCheckpoint();
+    void pause();
+    void unpause();
+    void saveMenu();
+    void save(int slotID);
 
 private:
 
@@ -36,7 +45,11 @@ private:
     double m_cameraPosX;
     double m_cameraPosY;
 
-    GameOver* m_gameOver;
+    Menu* m_gameOver;
+    Menu* m_start;
+    Menu* m_pause;
+    Menu* m_loadGame;
+    Menu* m_saveGame;
 };
 
 #endif // GAMESCENE_H

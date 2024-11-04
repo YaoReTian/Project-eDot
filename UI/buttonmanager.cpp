@@ -70,8 +70,10 @@ void ButtonManager::addButton(Button *b)
 
 void ButtonManager::clear()
 {
+    m_focusedIndex = 0;
     while (!m_activeButtons.empty())
     {
+        m_activeButtons.back()->disconnect();
         m_activeButtons.back()->hide();
         m_pool.enqueue(m_activeButtons.takeLast());
     }
@@ -81,18 +83,11 @@ void ButtonManager::input(KeyMap* keys)
 {
     if (!m_activeButtons.empty())
     {
-        if (keys->keyHeldStatus(GLOBAL::NEXT_OPTION) && m_elapsedTime >= 100)
+        if (keys->keyHeldStatus(GLOBAL::NEXT_OPTION) && m_elapsedTime >= 200)
         {
             m_activeButtons[m_focusedIndex]->removeFocus();
             m_focusedIndex++;
             if (m_focusedIndex == m_activeButtons.size())  m_focusedIndex = 0;
-            m_elapsedTime = 0;
-        }
-        else if (keys->keyHeldStatus(GLOBAL::PREV_OPTION) && m_elapsedTime > 100)
-        {
-            m_activeButtons[m_focusedIndex]->removeFocus();
-            m_focusedIndex--;
-            if (m_focusedIndex == -1)  m_focusedIndex = m_activeButtons.size()-1;
             m_elapsedTime = 0;
         }
         m_activeButtons[m_focusedIndex]->setFocused();
@@ -110,10 +105,6 @@ void ButtonManager::update(int deltatime)
         m_activeButtons[i]->setPos(m_pos.x(),
                                    m_pos.y() + i * (m_activeButtons[i]->boundingRect().height() + 2 * GLOBAL::Scale));
         m_activeButtons[i]->update(deltatime);
-        if (m_activeButtons[i]->isTriggered())
-        {
-            clear();
-        }
         i++;
     }
 }

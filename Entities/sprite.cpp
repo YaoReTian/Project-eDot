@@ -7,8 +7,7 @@ Sprite::Sprite(QGraphicsItem * parent)
     m_type("Unset"), m_frameSize(0,0), m_elapsed_time(0), m_currentFrame(0),
     m_currentStateName("idle"), m_prevActiveVector(0,1),
     m_WALK_SPEED(2.0f/1000.0f), m_RUN_SPEED(3.0f/1000.0f),
-    m_SPRINT_SPEED(4.5f/1000.0f), m_defaultSpeed(m_RUN_SPEED),
-    m_currentSpeed(m_defaultSpeed)
+    m_defaultSpeed(m_RUN_SPEED), m_currentSpeed(m_defaultSpeed)
 {}
 
 Sprite::~Sprite()
@@ -173,7 +172,8 @@ void Sprite::update(int deltaTime)
     }
 
     if (!v.null())
-    {// Check this guy
+    {
+        m_currentStateName = "moving";
         m_prevActiveVector = v;
     }
     setVector(0,0);
@@ -205,14 +205,6 @@ void Sprite::setAction(GLOBAL::Action action)
     else if (action == GLOBAL::MOVE_DOWN)
     {
         setJ(1);
-    }
-    else if (action == GLOBAL::SPRINT)
-    {
-        m_currentSpeed = (m_currentSpeed == m_SPRINT_SPEED) ? m_defaultSpeed : m_SPRINT_SPEED;
-    }
-    else if (action == GLOBAL::WALK)
-    {
-        m_currentSpeed = (m_currentSpeed == m_WALK_SPEED) ? m_defaultSpeed : m_SPRINT_SPEED;
     }
 }
 

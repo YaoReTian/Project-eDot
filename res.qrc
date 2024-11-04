@@ -1,6 +1,8 @@
 <RCC>
     <qresource prefix="/image">
         <file>res/Game-over.png</file>
+        <file>res/Game-logo.png</file>
+        <file>res/gear.png</file>
     </qresource>
     <qresource prefix="/image/sprite">
         <file>res/test_sprite_1.png</file>

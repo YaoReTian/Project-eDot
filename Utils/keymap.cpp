@@ -25,11 +25,8 @@ void KeyMap::setWorldBindings()
     m_keys[Qt::Key_D]       = GLOBAL::MOVE_RIGHT;
     m_keys[Qt::Key_W]       = GLOBAL::MOVE_UP;
     m_keys[Qt::Key_S]       = GLOBAL::MOVE_DOWN;
-    m_keys[Qt::Key_Q]       = GLOBAL::SPRINT;
     m_keys[Qt::Key_F]       = GLOBAL::SELECT;
     m_keys[Qt::Key_Tab]     = GLOBAL::NEXT_OPTION;
-    m_keys[Qt::Key_Down]    = GLOBAL::NEXT_OPTION;
-    m_keys[Qt::Key_Up]      = GLOBAL::PREV_OPTION;
     m_keys[Qt::Key_R]       = GLOBAL::SHOW_HITBOX;
     m_keys[Qt::Key_Space]   = GLOBAL::SHOOT;
     m_keys[Qt::Key_Shift]   = GLOBAL::SHOW_PLAYER_HITBOX;

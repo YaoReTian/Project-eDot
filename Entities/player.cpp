@@ -6,7 +6,7 @@
 #include "../tileset.h"
 
 Player::Player(QGraphicsItem * parent)
-    : Sprite(parent), m_HP(10), m_elapsedTime(0), m_hitboxVisible(false)
+    : Sprite(parent), m_username("Default"), m_HP(10), m_elapsedTime(0), m_hitboxVisible(false)
 {
     m_healthBar = new ProgressBar(this);
     m_healthBar->setMaximum(m_HP);
@@ -160,4 +160,14 @@ QGraphicsItem* Player::hitboxItem()
 void Player::reset()
 {
     m_HP = 10;
+}
+
+void Player::setUsername(QString name)
+{
+    m_username = name;
+}
+
+QString Player::username()
+{
+    return m_username;
 }

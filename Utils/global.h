@@ -19,11 +19,8 @@ enum Action
     MOVE_RIGHT,
     MOVE_UP,
     MOVE_DOWN,
-    SPRINT,
-    WALK,
     SELECT,
     NEXT_OPTION,
-    PREV_OPTION,
     OVERDRIVE,
     SHOW_HITBOX,
     SHOW_PLAYER_HITBOX,
@@ -32,25 +29,35 @@ enum Action
     NONE
 };
 
-enum Element
-{
-    PHYSICAL,
-    QUANTUM,
-    IMAGINARY
-};
-
 /*
-static QString ElementToString(Element element)
+static QString ActionToString(Action a)
 {
-    switch (element)
+    switch (a)
     {
-    case (PHYSICAL):
-        return "Physical";
-    case (QUANTUM):
-        return "Quantum";
-    case (IMAGINARY):
-        return "Imaginary";
+    case MOVE_LEFT:
+        return "Move left";
+    case MOVE_RIGHT:
+        return "Move right";
+    case MOVE_UP:
+        return "Move up";
+    case MOVE_DOWN:
+        return "Move down";
+    case SELECT:
+        return "Select";
+    case NEXT_OPTION:
+        return "Next option";
+    case OVERDRIVE:
+        return "Quantum Overdrive";
+    case SHOW_HITBOX:
+        return "Show wall collision hitboxes";
+    case SHOW_PLAYER_HITBOX:
+        return "Slow / Show player hitbox";
+    case SHOOT:
+        return "Shoot";
+    case PAUSE:
+        return "Pause";
     }
+
     return "ERROR: NO TYPE FOUND";
 };
 */
