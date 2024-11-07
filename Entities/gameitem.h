@@ -17,16 +17,19 @@ public:
     void setI(qreal i);
     void setJ(qreal j);
     void setZValue(qreal zValue);
+    void setEngaged(bool value);
 
     QPointF centre() const;
     Vector vector() const;
     qreal i() const;
     qreal j() const;
     qreal angle() const;
+    bool engaged() const;
 
 private:
     Vector m_vector;
     qreal m_baseZ;
+    bool m_engaged;
 };
 
 #endif // GAMEITEM_H

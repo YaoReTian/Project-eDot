@@ -43,6 +43,8 @@ Database::Database()
         m_saveSlots[i]->m_tilePosX = query.value("PosX").toInt();
         m_saveSlots[i]->m_tilePosY = query.value("PosY").toInt();
         m_saveSlots[i]->m_mapID = query.value("MapID").toInt();
+        m_saveSlots[i]->m_HP = query.value("HP").toInt();
+        m_saveSlots[i]->m_charge = query.value("Charge").toInt();
     }
 }
 
@@ -86,8 +88,7 @@ Sprite* Database::getSprite(int SpriteID)
     animationQuery = getSpriteAnimations(sprite->getID());
     while (animationQuery.next()) {
         sprite->addAnimationState(animationQuery.value("StateName").toString(),
-                                  animationQuery.value("StartFrame").toInt(),
-                                  animationQuery.value("EndFrame").toInt(),
+                                  animationQuery.value("Line").toInt(),
                                   animationQuery.value("FrameTime").toFloat());
 
         transitionQuery = getSpriteTransitions(sprite->getID(),
@@ -124,8 +125,7 @@ Sprite* Database::getSprite(QString path, QGraphicsItem* parent)
     animationQuery = getSpriteAnimations(sprite->getID());
     while (animationQuery.next()) {
         sprite->addAnimationState(animationQuery.value("StateName").toString(),
-                                  animationQuery.value("StartFrame").toInt(),
-                                  animationQuery.value("EndFrame").toInt(),
+                                  animationQuery.value("Line").toInt(),
                                   animationQuery.value("FrameTime").toFloat());
 
         transitionQuery = getSpriteTransitions(sprite->getID(),
@@ -173,8 +173,7 @@ void Database::setSpriteData(QString path, Sprite* source)
     animationQuery = getSpriteAnimations(source->getID());
     while (animationQuery.next()) {
         source->addAnimationState(animationQuery.value("StateName").toString(),
-                                  animationQuery.value("StartFrame").toInt(),
-                                  animationQuery.value("EndFrame").toInt(),
+                                  animationQuery.value("Line").toInt(),
                                   animationQuery.value("FrameTime").toFloat());
 
         transitionQuery = getSpriteTransitions(source->getID(),
@@ -207,11 +206,15 @@ void Database::setEnemyData(QString path, Enemy *source)
             p->m_patterns.append(new Pattern);
             p->m_patterns.back()->m_spawnRate = patterns.value("BulletSpawnRate").toInt();
             p->m_patterns.back()->m_fieldKey = patterns.value("FieldKey").toString();
+            p->m_patterns.back()->m_fieldOrigin.setX(patterns.value("PhasePattern.PosX").toInt());
+            p->m_patterns.back()->m_fieldOrigin.setY(patterns.value("PhasePattern.PosY").toInt());
+            p->m_patterns.back()->m_unitSpeed = patterns.value("UnitSpeed").toDouble() / 1000.0f;
             QSqlQuery spawnPos(QString("SELECT * FROM BulletPatternPos, BulletInPattern "
                                       "WHERE (BulletPatternPos.BulletInPatternID = BulletInPattern.BulletInPatternID) "
                                       "AND (PatternID = %1)").arg(patterns.value("PatternID").toInt()));
             while (spawnPos.next())
             {
+                p->m_patterns.back()->m_bulletIDs.append(spawnPos.value("BulletID").toInt());
                 p->m_patterns.back()->m_spawnPos.append(QPointF(spawnPos.value("PosX").toInt(), spawnPos.value("PosY").toInt()));
             }
         }
@@ -221,7 +224,7 @@ void Database::setEnemyData(QString path, Enemy *source)
 
 QSqlQuery Database::getSpriteAnimations(int SpriteID)
 {
-    QSqlQuery query(QString("SELECT StateName, StartFrame, EndFrame, FrameTime "
+    QSqlQuery query(QString("SELECT StateName, Line, FrameTime "
                             "FROM SpriteAnimations "
                             "WHERE (SpriteID = %1)").arg(SpriteID));
     return query;
@@ -254,13 +257,41 @@ GLOBAL::Action Database::stringToAction(QString string)
     {
         return GLOBAL::MOVE_DOWN;
     }
+    else if (string == "SHOW_PLAYER_HITBOX")
+    {
+        return GLOBAL::SHOW_PLAYER_HITBOX;
+    }
+    else if (string == "OVERDRIVE")
+    {
+        return GLOBAL::OVERDRIVE;
+    }
+    else if (string == "SHOOT")
+    {
+        return GLOBAL::SHOOT;
+    }
+    else if (string == "DEAD")
+    {
+        return GLOBAL::DEAD;
+    }
+    else if (string == "ANIMATION_DONE")
+    {
+        return GLOBAL::ANIMATION_DONE;
+    }
+    else if (string == "ANY_OTHER")
+    {
+        return GLOBAL::ANY_OTHER;
+    }
+    else if (string == "HEAL")
+    {
+        return GLOBAL::HEAL;
+    }
     else
     {
         return GLOBAL::NONE;
     }
 }
 
-void Database::saveGame(int slotID, QString username, qreal tilePosX, qreal tilePosY, int mapID)
+void Database::saveGame(int slotID, QString username, qreal tilePosX, qreal tilePosY, int mapID, int HP, int charge)
 {
     if (slotID > 5 || slotID < 1)
     {
@@ -274,9 +305,9 @@ void Database::saveGame(int slotID, QString username, qreal tilePosX, qreal tile
     if(m_db.transaction())
     {
         QString q("UPDATE PlayerData "
-                  "SET Username = '%1', PosX = %2, PosY = %3, MapID = %4 "
-                  "WHERE PlayerID = %5");
-        QSqlQuery query(q.arg(username).arg(tilePosX).arg(tilePosY).arg(mapID).arg(slotID));
+                  "SET Username = '%1', PosX = %2, PosY = %3, MapID = %4, HP = %5, Charge = %6 "
+                  "WHERE PlayerID = %7");
+        QSqlQuery query(q.arg(username).arg(tilePosX).arg(tilePosY).arg(mapID).arg(HP).arg(charge).arg(slotID));
         if (!query.isActive())
         {
             qDebug() << "ERROR: query inactive";

@@ -34,6 +34,7 @@ void Chunk::setObjects(TileInfo* tile, QTransform transform, int x, int y)
             m_hitbox.back()->setPen(QPen(Qt::transparent));
             m_hitbox.back()->m_solid = o->m_solid;
             m_hitbox.back()->m_type = o->m_type;
+            m_hitbox.back()->m_mapLinkID = -1;
             m_hitbox.back()->m_interactable = o->m_interactable;
             m_hitbox.back()->setRect(o->m_x * GLOBAL::Scale - GLOBAL::ObjectLength/2,
                                      o->m_y * GLOBAL::Scale - GLOBAL::ObjectLength/2,

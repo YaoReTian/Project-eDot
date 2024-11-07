@@ -10,6 +10,8 @@
 #include "Entities/player.h"
 #include "menu.h"
 #include "UI/buttonmanager.h"
+#include "UI/message.h"
+#include "UI/inputbox.h"
 
 class GameScene : public QGraphicsScene
 {
@@ -24,6 +26,7 @@ public:
 public slots:
     void start();
     void newGame();
+    void intro(QString username);
     void saveSlots();
     void loadGame(int slotID);
     void gameOver();
@@ -34,6 +37,15 @@ public slots:
     void unpause();
     void saveMenu();
     void save(int slotID);
+    void message(QString dialogue, Message::FinishCondition condition = Message::timeout, QString name = "");
+    void movementTutorial();
+    void slowTutorial();
+    void shootTutorial();
+    void overdriveTutorial();
+    void finishTutorial();
+    void nextMapButton(int mapID);
+    void closeMapButton();
+    void changeMap(int mapID);
 
 private:
 
@@ -50,6 +62,12 @@ private:
     Menu* m_pause;
     Menu* m_loadGame;
     Menu* m_saveGame;
+
+    Message* m_messageBox;
+    InputBox* m_inputBox;
+
+    bool m_nextMapButtonVisible;
+    bool m_otherButtonActive;
 };
 
 #endif // GAMESCENE_H

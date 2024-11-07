@@ -15,6 +15,8 @@ SOURCES += \
     Entities/gameitem.cpp \
     UI/button.cpp \
     UI/buttonmanager.cpp \
+    UI/inputbox.cpp \
+    UI/message.cpp \
     UI/progressbar.cpp \
     Utils/jsonparser.cpp \
     Utils/vector.cpp \
@@ -40,6 +42,8 @@ HEADERS += \
     Entities/gameitem.h \
     UI/button.h \
     UI/buttonmanager.h \
+    UI/inputbox.h \
+    UI/message.h \
     UI/progressbar.h \
     Utils/jsonparser.h \
     Utils/vector.h \

@@ -1,7 +1,7 @@
 #include "enemy.h"
 
 Enemy::Enemy(QGraphicsItem* parent)
-    : Sprite(parent), m_phaseIndex(-1), m_elapsedTime(0), m_playerDetected(false)
+    : Sprite(parent), m_phaseIndex(-1), m_elapsedTime(0), m_playerDetected(false), m_dead(false)
 {
     m_healthBar = new ProgressBar(this);
 }
@@ -23,6 +23,10 @@ void Enemy::input(QPointF playerPos)
 
 void Enemy::update(int deltaTime)
 {
+    if (m_dead)
+    {
+        return;
+    }
     int numFields = m_fieldKeys.size();
     Vector v(0,0);
     for (int i = 0; i < numFields; i++)
@@ -41,20 +45,32 @@ void Enemy::update(int deltaTime)
     }
     if (m_playerDetected && m_phaseIndex < m_phases.size())
     {
+        setEngaged(true);
         m_elapsedTime += deltaTime;
-        if (m_phases[m_phaseIndex]->m_phaseTime != -1 &&
-            (m_elapsedTime >= m_phases[m_phaseIndex]->m_phaseTime || m_HP <= 0))
+        if (m_HP <= 0 ||
+            (m_phases[m_phaseIndex]->m_phaseTime != -1 && m_elapsedTime >= m_phases[m_phaseIndex]->m_phaseTime))
         {
             m_phaseIndex++;
-            m_HP = m_phases[m_phaseIndex]->m_hp;
-            m_healthBar->setMaximum(m_HP);
-            m_healthBar->setValue(m_HP);
-            m_elapsedTime = 0;
+            if (m_phaseIndex >= m_phases.size())
+            {
+                m_dead = true;
+            }
+            else
+            {
+                m_HP = m_phases[m_phaseIndex]->m_hp;
+                m_healthBar->setMaximum(m_HP);
+                m_healthBar->setValue(m_HP);
+                m_elapsedTime = 0;
+            }
         }
         else if (m_HP > 0)
         {
             updatePhases(deltaTime);
         }
+    }
+    else if (engaged())
+    {
+        setEngaged(false);
     }
     m_playerDetected = false;
     Sprite::update(deltaTime);
@@ -72,15 +88,19 @@ void Enemy::updatePhases(int deltatime)
         if (p->m_elapsedTime >= p->m_spawnRate)
         {
             p->m_elapsedTime = 0;
+            int i = 0;
             for (auto v : p->m_spawnPos)
             {
                 Bullet* b = m_bulletManager->getBulletFromPool();
                 b->setPos(centre().x() + v.x(), centre().y() + v.y());
                 VectorField* f = m_bulletManager->getField(p->m_fieldKey);
-                b->setUnitSpeed(1.5f/1000.0f);
+                b->setBulletID(p->m_bulletIDs[i]);
+                b->setUnitSpeed(p->m_unitSpeed);
                 b->show();
-                b->addField(f,centre().x(), centre().y());
+                b->addField(f,centre().x() + p->m_fieldOrigin.x(), centre().y()+ p->m_fieldOrigin.y());
                 m_bulletManager->addBullet(b);
+                m_bulletManager->setPrevEnemy(this);
+                i++;
             }
         }
     }
@@ -134,6 +154,7 @@ void Enemy::hide()
     }
     m_elapsedTime = 0;
     m_playerDetected = false;
+    m_dead = false;
     Sprite::hide();
 }
 
@@ -141,4 +162,9 @@ void Enemy::setFrameSize(QSize frameSize)
 {
     m_healthBar->setRect(-GLOBAL::Scale, -4*GLOBAL::Scale, frameSize.width()+2*GLOBAL::Scale, 3*GLOBAL::Scale);
     Sprite::setFrameSize(frameSize);
+}
+
+bool Enemy::dead()
+{
+    return m_dead;
 }

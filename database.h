@@ -14,6 +14,8 @@ struct SaveSlot
     qreal m_tilePosX;
     qreal m_tilePosY;
     int m_mapID;
+    int m_HP;
+    int m_charge;
 };
 
 class Database
@@ -34,7 +36,7 @@ public:
     QSqlQuery getSpriteTransitions(int SpriteID, QString startStateName);
     GLOBAL::Action stringToAction(QString string);
 
-    void saveGame(int slotID, QString username, qreal tilePosX, qreal tilePosY, int mapID);
+    void saveGame(int slotID, QString username, qreal tilePosX, qreal tilePosY, int mapID, int HP, int charge);
     SaveSlot* getSaveSlot(int slotID);
 
 private:

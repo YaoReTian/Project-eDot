@@ -16,10 +16,10 @@ Button::Button(QGraphicsItem* parent)
     m_iconText->setPlainText("F");
     m_textBox->setDefaultTextColor(Qt::white);
     m_iconText->setDefaultTextColor(Qt::white);
-    QFont font("Mono", 5 * GLOBAL::Scale);
+    QFont font("rainyhearts", 7 * GLOBAL::Scale);
     font.setBold(true);
     m_textBox->setFont(font);
-    font.setPointSize(8 * GLOBAL::Scale);
+    font.setPointSize(9 * GLOBAL::Scale);
     m_iconText->setFont(font);
 
     setPixmap(m_defaultPixmap.scaled(m_defaultPixmap.width() * GLOBAL::Scale,
@@ -125,6 +125,11 @@ void Button::hide()
     QGraphicsPixmapItem::hide();
 }
 
+void Button::hideStandard()
+{
+    QGraphicsPixmapItem::hide();
+}
+
 void Button::setText(QString text)
 {
     m_textBox->setPlainText(text);
@@ -183,4 +188,9 @@ bool Button::isActive()
 bool Button::isPaused()
 {
     return m_paused;
+}
+
+QString Button::text() const
+{
+    return m_textBox->toPlainText();
 }

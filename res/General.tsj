@@ -8,9 +8,9 @@
  "margin":0,
  "name":"General",
  "spacing":0,
- "tilecount":1,
+ "tilecount":3,
  "tiledversion":"1.11.0",
- "tileheight":32,
+ "tileheight":288,
  "tiles":[
         {
          "id":0,
@@ -50,8 +50,86 @@
                  "type":"bool",
                  "value":false
                 }]
+        }, 
+        {
+         "id":1,
+         "image":"..\/..\/Tiled\/Sprites\/General\/hoodGuy.png",
+         "imageheight":288,
+         "imagewidth":256,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "name":"",
+             "objects":[
+                    {
+                     "height":9,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":18,
+                     "x":6,
+                     "y":23
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"Interactable",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"Solid",
+                 "type":"bool",
+                 "value":false
+                }]
+        }, 
+        {
+         "id":2,
+         "image":"..\/..\/Tiled\/Sprites\/General\/pink monster.png",
+         "imageheight":128,
+         "imagewidth":256,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "name":"",
+             "objects":[
+                    {
+                     "height":7,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":19,
+                     "x":6,
+                     "y":25
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"Interactable",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"Solid",
+                 "type":"bool",
+                 "value":false
+                }]
         }],
- "tilewidth":72,
+ "tilewidth":256,
  "type":"tileset",
  "version":"1.10"
 }

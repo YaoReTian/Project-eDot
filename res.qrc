@@ -3,6 +3,8 @@
         <file>res/Game-over.png</file>
         <file>res/Game-logo.png</file>
         <file>res/gear.png</file>
+        <file>res/textbox.png</file>
+        <file>res/namedTextbox.png</file>
     </qresource>
     <qresource prefix="/image/sprite">
         <file>res/test_sprite_1.png</file>
@@ -19,6 +21,8 @@
         <file>res/telp-(horizontal).png</file>
         <file>res/telp-buton(E).png</file>
         <file>res/telp-corner-interior(NE).png</file>
+        <file>res/hoodGuy.png</file>
+        <file>res/pink monster.png</file>
     </qresource>
     <qresource prefix="/image/tile">
         <file>res/test_tile_1.png</file>
@@ -49,6 +53,7 @@
     </qresource>
     <qresource prefix="/map">
         <file>res/level_1.tmj</file>
+        <file>res/level_2.tmj</file>
     </qresource>
     <qresource prefix="/tileset">
         <file>res/General.tsj</file>

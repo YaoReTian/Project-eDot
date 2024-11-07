@@ -26,6 +26,12 @@ enum Action
     SHOW_PLAYER_HITBOX,
     SHOOT,
     PAUSE,
+    DEAD,
+    ANIMATION_DONE,
+    ANY_OTHER,
+    HEAL,
+    ENTER,
+    DELETE,
     NONE
 };
 

@@ -42,21 +42,24 @@ public:
     QString getName();
     QString getType();
     Vector prevActiveVector();
-
+    QTransform transform();
 
     // For animations
     void setSpriteSheet(QPixmap spriteSheet);
     void setFrameSize(QSize frameSize);
-    void addAnimationState(QString stateName, int startFrame, int endFrame, float frameTime);
+    void addAnimationState(QString stateName, int line, float frameTime);
     void addTransition(QString startStateName, GLOBAL::Action triggerAction, QString endStateName);
     QSize frameSize();
+    bool animationDone();
 
     // Movement
     void setDefaultToWalk();
     void setDefaultToRun();
     bool collidedWithWall();
 
-public slots:
+signals:
+    void animationComplete();
+    void collidedWithLink(int mapID);
 
 private:
     // Sprite data
@@ -73,6 +76,7 @@ private:
     QPixmap m_spriteSheet;
     QMap<QString, AnimationState*> m_states;
     QTransform m_transform;
+    bool m_animationComplete;
 
     // Movement
     Vector m_prevActiveVector;
@@ -80,6 +84,7 @@ private:
     const float m_RUN_SPEED;
     float m_defaultSpeed;
     float m_currentSpeed;
+    QTransform m_leftTransform;
 };
 
 #endif // SPRITE_H

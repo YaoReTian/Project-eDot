@@ -21,15 +21,18 @@ public:
     virtual void update(int deltatime) override;
 
     void hide();
+    void hideStandard();
     void setText(QString text);
     void setZValue(qreal z);
     void setFocused();
     void setActive(bool value);
-    void setTriggerAction(GLOBAL::Action);
+    void setTriggerAction(GLOBAL::Action action);
     void removeFocus();
     void setIconText(QString text);
     void setMousemode(bool value);
     void pause();
+
+    QString text() const;
 
     bool isTriggered();
     bool isActive();

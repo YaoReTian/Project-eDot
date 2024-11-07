@@ -13,7 +13,7 @@
 
 Tilemap::Tilemap(QGraphicsItem* parent)
     : QGraphicsRectItem(parent), m_mapID(0), m_mapName("Unset"), m_mapDesc("Unset"),
-    m_mapSizeX(0), m_mapSizeY(0), m_hitboxesVisible(false)
+    m_mapSizeX(0), m_mapSizeY(0), m_startPos(10,10), m_hitboxesVisible(false)
 {
     setPen(QPen(Qt::transparent));
 }
@@ -36,7 +36,7 @@ void Tilemap::setBulletManager(BulletManager *manager)
 
 void Tilemap::setMap(int MapID)
 {
-
+    clear();
     QSqlQuery query;
 
     if (m_db->isOpen()) {
@@ -49,6 +49,8 @@ void Tilemap::setMap(int MapID)
     m_mapID = query.value("MapID").toInt();
     m_mapName = query.value("MapName").toString();
     m_mapDesc = query.value("MapDescription").toString();
+    m_startPos.setX(query.value("StartX").toInt()*GLOBAL::ObjectLength);
+    m_startPos.setY(query.value("StartY").toInt()*GLOBAL::ObjectLength);
 
     QJsonObject mapData = JsonParser::parse(query.value("MapPath").toString());
     m_mapSizeX = mapData.value("width").toInt();
@@ -66,7 +68,6 @@ void Tilemap::setMap(int MapID)
                                       s.value("firstgid").toInt()));
     }
 
-
     QJsonArray layers = mapData.value("layers").toArray();
     int numSpriteLayers = 0;
     for (int i = 0; i < layers.size(); i++)
@@ -83,6 +84,11 @@ void Tilemap::setMap(int MapID)
         }
     }
     m_bulletManager->setBaseZ(layers.size() + numSpriteLayers*m_mapSizeY*GLOBAL::ObjectLength);
+}
+
+void Tilemap::setPlayerStartPos(QPointF pos)
+{
+    m_startPos = pos;
 }
 
 void Tilemap::createTileLayer(QJsonObject chunks, int zValue)
@@ -104,43 +110,24 @@ void Tilemap::createSpriteLayer(QJsonObject objectGroup, int zValue)
     int GID;
     QTransform transform;
     QJsonArray objects = objectGroup.value("objects").toArray();
-    QMap<int, QPointF> points;
-    QList<QJsonObject> invisibleObjects;
-    QList<QJsonObject> sprites;
-    for (const auto o : std::as_const(objects))
-    {
-        QJsonObject obj = o.toObject();
-        if (!obj.value("point").isUndefined())
-        {
-            invisibleObjects.append(obj);
-        }
-        else
-        {
-            sprites.append(obj);
-        }
-    }
-    // Creating invisible objects
-    for (auto &i : invisibleObjects)
-    {
-        if (i.value("point").toBool())
-        {
-            points[i.value("id").toInt()]  = QPointF(i.value("x").toDouble()*GLOBAL::Scale,
-                                                    i.value("y").toDouble()*GLOBAL::Scale);
-        }
-    }
+    QJsonObject s;
+    int mapID = -1;
+
     // Creating sprites and enemies
-    for (auto &s : sprites)
+    for (auto o : objects)
     {
+        mapID = -1;
+        s = o.toObject();
         std::tie(GID,transform) = TileSet::formatGID(s.value("gid").toInteger());
         index = TileSet::findTilesetIndex(GID, m_tilesets);
         sprite = m_tilesets[index]->getInfo(GID);
         if (!s.value("properties").isUndefined() &&
-            s.value("properties").toArray()[0].toObject().value("value").toBool())
+            s.value("properties").toArray()[0].toObject().value("name").toString() == "Enemy")
         {
             m_enemies.append(new Enemy(this));
             m_db->setEnemyData(sprite->m_path, m_enemies.back());
             m_enemies.back()->setTransform(transform);
-            for (const auto h : std::as_const(sprite->m_hitboxes))
+            for (auto h : sprite->m_hitboxes)
             {
                 m_enemies.back()->setHitbox(h);
             }
@@ -149,16 +136,20 @@ void Tilemap::createSpriteLayer(QJsonObject objectGroup, int zValue)
             m_enemies.back()->setPos(s.value("x").toDouble()*GLOBAL::Scale,
                                      (s.value("y").toDouble()-s.value("height").toDouble())*GLOBAL::Scale);
             m_enemies.back()->setZValue(zValue);
-            m_enemies.back()->addFieldKey(s.value("properties").toArray()[1].toObject().value("value").toString(),
-                                          points[s.value("properties").toArray()[2].toObject().value("value").toInt()]);
         }
         else
         {
             m_sprites.append(new Sprite(this));
             m_db->setSpriteData(sprite->m_path, m_sprites.back());
             m_sprites.back()->setTransform(transform);
-            for (const auto h : std::as_const(sprite->m_hitboxes))
+            if (!s.value("properties").isUndefined() &&
+                s.value("properties").toArray()[0].toObject().value("name").toString() == "MapLink")
             {
+                mapID = s.value("properties").toArray()[0].toObject().value("value").toInt();
+            }
+            for (auto h : sprite->m_hitboxes)
+            {
+                h->m_mapLinkID = mapID;
                 m_sprites.back()->setHitbox(h);
             }
             m_sprites.back()->update(0);
@@ -251,7 +242,7 @@ void Tilemap::update(int deltatime)
     while (i < size && !m_enemies.empty())
     {
         m_enemies[i]->update(deltatime);
-        if (m_enemies[i]->HP() <= 0)
+        if (m_enemies[i]->dead())
         {
             m_enemies[i]->hide();
             m_enemyPool.enqueue(m_enemies.takeAt(i));
@@ -260,6 +251,20 @@ void Tilemap::update(int deltatime)
         }
         i++;
     }
+}
+
+QPointF Tilemap::playerStartPos()
+{
+    return m_startPos;
+}
+
+bool Tilemap::enemiesCleared()
+{
+    if (m_enemies.size() == 0)
+    {
+        return true;
+    }
+    return false;
 }
 
 void Tilemap::reset()

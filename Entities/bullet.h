@@ -4,12 +4,14 @@
 #include <QGraphicsPixmapItem>
 #include "gameitem.h"
 #include "../Utils/vectorfield.h"
+#include "../tileset.h"
 
 class Bullet : public GameItem
 {
 public:
-    Bullet(QGraphicsItem* parent = 0);
+    Bullet(TileSet* ts, QGraphicsItem* parent = 0);
     ~Bullet();
+    void setTileset(TileSet* ts);
     void setFriendly(bool value = true);
     virtual void update(int deltaTime) override;
 
@@ -20,8 +22,11 @@ public:
     void addField(VectorField* field, qreal x, qreal y);
     void addField(VectorField *field, GameItem* originItem);
     void hide();
+    void setDmg(int dmg);
 
-    bool collided() const;
+    void setBulletID(int id);
+
+    bool collided();
     bool isFriendly() const;
     qreal unitSpeed() const;
     int dmg() const;
@@ -29,6 +34,8 @@ public:
 private:
     int m_dmg;
     bool m_friendly;
+    bool m_grazed;
+    TileSet* m_ts;
     qreal m_unitSpeed; // scale factor for a unit vector
     QList<VectorField*> m_staticFields;
     QList<QPointF> m_origins;

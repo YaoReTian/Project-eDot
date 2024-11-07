@@ -1,15 +1,13 @@
 #include "bullet.h"
 #include "../Utils/global.h"
 
-#include "../tileset.h"
 #include "enemy.h"
 #include "player.h"
 
-Bullet::Bullet(QGraphicsItem* parent)
-    : GameItem(parent), m_dmg(1), m_friendly(false), m_unitSpeed(4.5f/1000.0f)
+Bullet::Bullet(TileSet* ts, QGraphicsItem* parent)
+    : GameItem(parent), m_dmg(1), m_friendly(false),
+    m_grazed(false), m_ts(ts), m_unitSpeed(4.5f/1000.0f)
 {
-    TileSet t(":/tileset/res/Basic bullets.tsj",1);
-    setPixmap(t.getInfo(182)->m_pixmap);
     hide();
 }
 
@@ -27,7 +25,7 @@ void Bullet::setFriendly(bool value)
 
 void Bullet::update(int deltaTime)
 {
-    if (!m_staticFields.empty())
+    if (!m_staticFields.empty() || !m_dynamicFields.empty())
     {
         Vector v(0,0);
         for (int i = 0; i < m_staticFields.size(); i++)
@@ -35,10 +33,23 @@ void Bullet::update(int deltaTime)
             m_staticFields[i]->setOrigin(m_origins[i]);
             v += m_staticFields[i]->getVector(centre());
         }
-        for (int i = 0; i < m_dynamicFields.size(); i++)
+        int i = 0;
+        int size = m_dynamicFields.size();
+        while ( i < size && !m_dynamicFields.empty())
         {
-            m_dynamicFields[i]->setOrigin(m_originItems[i]->centre());
-            v += m_dynamicFields[i]->getVector(centre());
+            if (m_originItems[i]->isVisible())
+            {
+                m_dynamicFields[i]->setOrigin(m_originItems[i]->centre());
+                v += m_dynamicFields[i]->getVector(centre());
+            }
+            else
+            {
+                m_dynamicFields.removeAt(i);
+                m_originItems.removeAt(i);
+                i--;
+                size--;
+            }
+            i++;
         }
         setVector(v);
     }
@@ -61,6 +72,11 @@ void Bullet::setPos(qreal x, qreal y)
 void Bullet::setUnitSpeed(qreal spd)
 {
     m_unitSpeed = spd;
+}
+
+void Bullet::setDmg(int dmg)
+{
+    m_dmg = dmg;
 }
 
 void Bullet::addField(VectorField *field, QPointF origin)
@@ -91,11 +107,22 @@ void Bullet::hide()
     m_unitSpeed = 4.5f/1000.0f;
     m_dmg = 1;
     m_friendly = false;
+    setBulletID(182);
+    m_grazed = false;
     QGraphicsPixmapItem::hide();
 }
 
-bool Bullet::collided() const
+void Bullet::setBulletID(int id)
 {
+    setPixmap(m_ts->getInfo(id)->m_pixmap);
+}
+
+bool Bullet::collided()
+{
+    if (!collidesWithItem(parentItem()))
+    {
+        return true;
+    }
     QList<QGraphicsItem*> list = collidingItems();
     for (const auto c : list)
     {
@@ -116,6 +143,11 @@ bool Bullet::collided() const
             {
                 p->takeHit();
                 return true;
+            }
+            else if (!m_grazed)
+            {
+                p->graze();
+                m_grazed = true;
             }
         }
     }

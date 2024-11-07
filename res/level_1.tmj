@@ -115,6 +115,12 @@
                  "height":64,
                  "id":1,
                  "name":"",
+                 "properties":[
+                        {
+                         "name":"MapLink",
+                         "type":"int",
+                         "value":4
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
@@ -397,35 +403,49 @@
                          "name":"Enemy",
                          "type":"bool",
                          "value":true
-                        }, 
-                        {
-                         "name":"FieldKey",
-                         "type":"string",
-                         "value":"UniformCircularCW"
-                        }, 
-                        {
-                         "name":"FieldOrigin",
-                         "type":"object",
-                         "value":35
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":72,
-                 "x":747.289817232376,
-                 "y":306.46997389034
+                 "x":724.443864229765,
+                 "y":299.942558746737
                 }, 
                 {
-                 "height":0,
-                 "id":35,
+                 "gid":27,
+                 "height":32,
+                 "id":36,
                  "name":"",
-                 "point":true,
+                 "properties":[
+                        {
+                         "name":"Enemy",
+                         "type":"bool",
+                         "value":true
+                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":0,
-                 "x":737,
-                 "y":317
+                 "width":72,
+                 "x":726.075718015666,
+                 "y":212.45953002611
+                }, 
+                {
+                 "gid":27,
+                 "height":32,
+                 "id":37,
+                 "name":"",
+                 "properties":[
+                        {
+                         "name":"Enemy",
+                         "type":"bool",
+                         "value":true
+                        }],
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":72,
+                 "x":725.259791122716,
+                 "y":383.804177545692
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -536,7 +556,7 @@
          "y":0
         }],
  "nextlayerid":5,
- "nextobjectid":36,
+ "nextobjectid":40,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.0",

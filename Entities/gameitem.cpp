@@ -37,6 +37,11 @@ void GameItem::setZValue(qreal zValue)
     QGraphicsPixmapItem::setZValue(zValue + y() + boundingRect().height());
 }
 
+void GameItem::setEngaged(bool value)
+{
+    m_engaged = value;
+}
+
 QPointF GameItem::centre() const
 {
     return QPointF(x() + boundingRect().width()/2, y()+boundingRect().height()/2);
@@ -60,4 +65,9 @@ qreal GameItem::j() const
 qreal GameItem::angle() const
 {
     return m_vector.angle();
+}
+
+bool GameItem::engaged() const
+{
+    return m_engaged;
 }

@@ -33,6 +33,7 @@ void MainWindow::loop()
 
 void MainWindow::keyPressEvent(QKeyEvent *event)
 {
+    m_keymap->setAnyKeyPressed(true);
     Qt::Key key = static_cast<Qt::Key>(event->key());
     if (m_keymap->contains(key))
     {
@@ -46,7 +47,9 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
 {
     if (!event->isAutoRepeat())
     {
+        m_keymap->setAnyKeyPressed(false);
         Qt::Key key = static_cast<Qt::Key>(event->key());
+        m_keymap->setLastKeystring(event->text());
 
         if (m_keymap->contains(key))
         {
@@ -59,12 +62,14 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event)
 
 void MainWindow::mousePressEvent(QMouseEvent *event)
 {
+    m_keymap->setAnyKeyPressed(true);
     m_keymap->mouseHeld();
     QMainWindow::mousePressEvent(event);
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent *event)
 {
+    m_keymap->setAnyKeyPressed(false);
     m_keymap->mouseReleased();
     QMainWindow::mouseReleaseEvent(event);
 }

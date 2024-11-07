@@ -3,13 +3,13 @@
 #include "Utils/global.h"
 
 Menu::Menu(QGraphicsItem* parent)
-    : QGraphicsRectItem(parent), m_text(new QGraphicsPixmapItem), m_message(new QGraphicsTextItem)
+    : QGraphicsRectItem(parent), m_message(new QGraphicsTextItem), m_text(new QGraphicsPixmapItem)
 {
     hide();
     m_text->setParentItem(this);
     m_message->setParentItem(this);
     m_message->setDefaultTextColor(Qt::white);
-    QFont font("Mono", 10 * GLOBAL::Scale);
+    QFont font("Vermin Vibes 1989", 10 * GLOBAL::Scale);
     font.setBold(true);
     font.setPointSize(8 * GLOBAL::Scale);
     m_message->setFont(font);

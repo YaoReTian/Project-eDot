@@ -1,6 +1,7 @@
 #include "buttonmanager.h"
 
 ButtonManager::ButtonManager(QGraphicsItem *parent)
+    : QObject(), m_hidden(false)
 {
     m_parent = parent;
     for (int i = 0; i < 5; i++)
@@ -81,6 +82,10 @@ void ButtonManager::clear()
 
 void ButtonManager::input(KeyMap* keys)
 {
+    if (m_hidden)
+    {
+        return;
+    }
     if (!m_activeButtons.empty())
     {
         if (keys->keyHeldStatus(GLOBAL::NEXT_OPTION) && m_elapsedTime >= 200)
@@ -97,6 +102,10 @@ void ButtonManager::input(KeyMap* keys)
 
 void ButtonManager::update(int deltatime)
 {
+    if (m_hidden)
+    {
+        return;
+    }
     m_elapsedTime += deltatime;
     int i = 0;
     int size = m_activeButtons.size();
@@ -112,4 +121,28 @@ void ButtonManager::update(int deltatime)
 void ButtonManager::setParentItem(QGraphicsItem *parent)
 {
     m_parent = parent;
+}
+
+int ButtonManager::numActiveButtons()
+{
+    return m_activeButtons.size();
+}
+// SLOTS
+
+void ButtonManager::hide()
+{
+    for (auto b : m_activeButtons)
+    {
+        b->hideStandard();
+    }
+    m_hidden = true;
+}
+
+void ButtonManager::show()
+{
+    m_hidden = false;
+    for (auto b : m_activeButtons)
+    {
+        b->show();
+    }
 }

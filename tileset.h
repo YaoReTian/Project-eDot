@@ -24,11 +24,13 @@ struct HitboxInfo : public Properties
     int m_y;
     qreal m_width;
     qreal m_height;
+    int m_mapLinkID = -1;
 };
 
 struct Hitbox : public QGraphicsRectItem, public Properties
 {
     Hitbox(QGraphicsItem* parent = 0) : QGraphicsRectItem(parent) {}
+    int m_mapLinkID;
 };
 
 struct TileInfo : public Properties

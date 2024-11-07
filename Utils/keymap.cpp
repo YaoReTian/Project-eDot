@@ -3,12 +3,12 @@
 #include <QtGlobal>
 
 KeyMap::KeyMap()
+    : m_mouseStatus(new MouseStatus), m_anyKeyPressed(false)
 {
     for (int n = GLOBAL::MOVE_LEFT; n != GLOBAL::NONE; n++)
     {
         m_keyStatus[static_cast<GLOBAL::Action>(n)] = new KeyStatus;
     }
-    m_mouseStatus = new MouseStatus;
 }
 
 KeyMap::~KeyMap()
@@ -29,8 +29,11 @@ void KeyMap::setWorldBindings()
     m_keys[Qt::Key_Tab]     = GLOBAL::NEXT_OPTION;
     m_keys[Qt::Key_R]       = GLOBAL::SHOW_HITBOX;
     m_keys[Qt::Key_Space]   = GLOBAL::SHOOT;
+    m_keys[Qt::Key_Q]       = GLOBAL::OVERDRIVE;
     m_keys[Qt::Key_Shift]   = GLOBAL::SHOW_PLAYER_HITBOX;
     m_keys[Qt::Key_Escape]  = GLOBAL::PAUSE;
+    m_keys[Qt::Key_Return]  = GLOBAL::ENTER;
+    m_keys[Qt::Key_Backspace]=GLOBAL::DELETE;
 }
 
 void KeyMap::setBinding(Qt::Key key, GLOBAL::Action action)
@@ -64,6 +67,7 @@ void KeyMap::resetStatus()
         m_mouseStatus->m_framesHeld = 0;
     }
     m_mouseStatus->m_released = false;
+    m_lastKey = "";
 }
 
 void KeyMap::keyHeld(GLOBAL::Action action)
@@ -127,4 +131,24 @@ void KeyMap::setMousePos(qreal x, qreal y)
 QPointF KeyMap::mousePos()
 {
     return m_mouseStatus->m_pos;
+}
+
+bool KeyMap::anyKeyPressed()
+{
+    return m_anyKeyPressed;
+}
+
+void KeyMap::setAnyKeyPressed(bool value)
+{
+    m_anyKeyPressed = value;
+}
+
+void KeyMap::setLastKeystring(QString keystring)
+{
+    m_lastKey = keystring;
+}
+
+QString KeyMap::lastKeystring()
+{
+    return m_lastKey;
 }

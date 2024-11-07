@@ -45,10 +45,18 @@ public:
     void setMousePos(qreal x, qreal y);
     QPointF mousePos();
 
+    bool anyKeyPressed();
+    void setAnyKeyPressed(bool value);
+
+    void setLastKeystring(QString keystring);
+    QString lastKeystring();
+
 private:
     QMap<Qt::Key, GLOBAL::Action> m_keys;
     QMap<GLOBAL::Action, KeyStatus*> m_keyStatus;
     MouseStatus* m_mouseStatus;
+    bool m_anyKeyPressed;
+    QString m_lastKey;
 };
 
 #endif // KEYMAP_H

@@ -21,6 +21,7 @@ public:
     void setDatabase(Database* db);
     void setBulletManager(BulletManager* manager);
     void setMap(int MapID);
+    void setPlayerStartPos(QPointF pos);
     int mapID();
     QString getMapName();
     QString getMapDesc();
@@ -28,12 +29,15 @@ public:
     int getMapSizeY();
     qreal getPlayerZ();
     QRgb bgColour();
+    QPointF playerStartPos();
 
     void input(KeyMap* keys, QPointF playerPos);
     virtual void update(int deltatime) override;
 
     void reset();
     void clear();
+
+    bool enemiesCleared();
 
 private:
     // Methods for creating the map
@@ -60,6 +64,7 @@ private:
     bool m_infinite;
     QList<TileLayer*> m_layers;
     QList<TileSet*> m_tilesets;
+    QPointF m_startPos;
 
     // Flags
     bool m_hitboxesVisible;

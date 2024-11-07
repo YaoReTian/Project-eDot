@@ -7,10 +7,13 @@
 
 struct Pattern
 {
+    QList<int> m_bulletIDs;
     QList<QPointF> m_spawnPos;
     QString m_fieldKey;
     int m_spawnRate;
     int m_elapsedTime;
+    QPointF m_fieldOrigin;
+    qreal m_unitSpeed;
 };
 
 struct Phase
@@ -44,6 +47,7 @@ public:
 
     void hide();
     void setFrameSize(QSize frameSize);
+    bool dead();
 
 private:
 
@@ -59,6 +63,7 @@ private:
     bool m_playerDetected;
 
     ProgressBar* m_healthBar;
+    bool m_dead;
 };
 
 #endif // ENEMY_H
