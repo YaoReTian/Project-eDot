@@ -78,8 +78,6 @@ GameScene::GameScene(QObject *parent) :
     start();
 
     m_bulletManager->setPlayer(m_player);
-    connect(m_player, SIGNAL(dead()), this, SLOT(gameOver()));
-    connect(m_player, SIGNAL(collidedWithLink(int)), this, SLOT(nextMapButton(int)));
 
     m_messageBox->setZValue(2);
     addItem(m_messageBox);
@@ -164,7 +162,7 @@ void GameScene::input(KeyMap* keys)
     }
     else
     {
-        if (keys->keyReleasedStatus(GLOBAL::PAUSE))
+        if (keys->keyReleasedStatus(GLOBAL::PAUSE) && !m_messageBox->isVisible())
         {
             if (!m_pause->isVisible())
             {
@@ -258,7 +256,7 @@ void GameScene::start()
 
 void GameScene::newGame()
 {
-    m_tilemap->setMap(3);
+    m_tilemap->setMap(6);
     m_player->setZValue(m_tilemap->getPlayerZ());
     m_player->setPos(m_tilemap->playerStartPos());
     setBackgroundBrush(QBrush(m_tilemap->bgColour()));
@@ -334,13 +332,16 @@ void GameScene::loadGame(int slotID)
     m_tilemap->setMap(s->m_mapID);
     m_player->setPos(s->m_tilePosX*GLOBAL::ObjectLength, s->m_tilePosY*GLOBAL::ObjectLength);
     m_player->setZValue(m_tilemap->getPlayerZ());
-    m_player->heal(s->m_HP);
+    m_player->setHP(s->m_HP);
+    m_player->setUsername(s->m_username);
     m_player->setCharge(s->m_charge);
     setBackgroundBrush(QBrush(m_tilemap->bgColour()));
     m_loadGame->hide();
     m_buttonManager->clear();
     m_buttonManager->setParentItem(m_player);
     m_tilemap->show();
+    connect(m_player, SIGNAL(dead()), this, SLOT(gameOver()));
+    connect(m_player, SIGNAL(collidedWithLink(int)), this, SLOT(nextMapButton(int)));
 }
 
 void GameScene::gameOver()
@@ -412,7 +413,7 @@ void GameScene::unpause()
 {
     m_pause->hide();
     m_buttonManager->clear();
-    m_buttonManager->setParentItem(m_tilemap);
+    m_buttonManager->setParentItem(m_player);
 }
 
 void GameScene::saveMenu()

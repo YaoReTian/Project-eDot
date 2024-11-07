@@ -42,7 +42,7 @@ public:
 private:
     void clearNodes(Node* &parent);
     const QList<QString> functions = {"sin", "cos", "tan", "ln", "log10",
-                                      "acos", "asin", "atan", "sqrt"};
+                                      "acos", "asin", "atan", "sqrt", "abs"};
     const QMap<QString, int> operations = {
         {"+",1},
         {"-",1},

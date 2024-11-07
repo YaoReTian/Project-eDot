@@ -206,6 +206,12 @@ void Player::setBulletManager(BulletManager *manager)
     m_bulletManager = manager;
 }
 
+void Player::setHP(int hp)
+{
+    m_HP = 0;
+    heal(hp);
+}
+
 void Player::heal(int hpToAdd)
 {
     m_HP += hpToAdd;

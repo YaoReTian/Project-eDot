@@ -47,6 +47,7 @@ class TileSet
 public:
     TileSet();
     TileSet(QString tileSetFilepath, int firstGID);
+    ~TileSet();
 
     void setData(QString tileSetFilepath);
     void setFirstGID(int firstGID);

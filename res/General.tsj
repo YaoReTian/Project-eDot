@@ -8,7 +8,7 @@
  "margin":0,
  "name":"General",
  "spacing":0,
- "tilecount":3,
+ "tilecount":4,
  "tiledversion":"1.11.0",
  "tileheight":288,
  "tiles":[
@@ -110,6 +110,46 @@
                      "width":19,
                      "x":6,
                      "y":25
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"Interactable",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"Solid",
+                 "type":"bool",
+                 "value":false
+                }]
+        }, 
+        {
+         "id":3,
+         "image":"..\/..\/Tiled\/Sprites\/General\/BotBoy.png",
+         "imageheight":64,
+         "imagewidth":256,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":9,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":30,
+                     "x":2,
+                     "y":22
                     }],
              "opacity":1,
              "type":"objectgroup",

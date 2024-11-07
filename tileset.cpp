@@ -11,6 +11,12 @@ TileSet::TileSet(QString tileSetFilepath, int firstGID)
     setData(tileSetFilepath);
 }
 
+TileSet::~TileSet()
+{
+    qDeleteAll(m_tiles);
+    m_tiles.clear();
+}
+
 void TileSet::setData(QString tileSetFilepath)
 {
     qDeleteAll(m_tiles);

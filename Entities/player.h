@@ -22,6 +22,7 @@ public:
 
     void setHitboxPixmap(QPixmap p);
 
+    void setHP(int hp);
     void heal(int hpToAdd = 0);
     void reset();
     void takeHit();

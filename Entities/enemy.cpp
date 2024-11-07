@@ -92,7 +92,8 @@ void Enemy::updatePhases(int deltatime)
             for (auto v : p->m_spawnPos)
             {
                 Bullet* b = m_bulletManager->getBulletFromPool();
-                b->setPos(centre().x() + v.x(), centre().y() + v.y());
+                b->setPos(centre().x() + p->m_fieldOrigin.x() + v.x()*GLOBAL::Scale,
+                          centre().y() + p->m_fieldOrigin.y() + v.y()*GLOBAL::Scale);
                 VectorField* f = m_bulletManager->getField(p->m_fieldKey);
                 b->setBulletID(p->m_bulletIDs[i]);
                 b->setUnitSpeed(p->m_unitSpeed);

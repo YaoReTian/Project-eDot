@@ -1,12 +1,17 @@
 #include <QApplication>
 #include <QLocale>
 #include <QTranslator>
+#include <QFontDatabase>
 
 #include "mainwindow.h"
+
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    QFontDatabase::addApplicationFont(":/font/res/rainyhearts.ttf");
+    QFontDatabase::addApplicationFont(":/font/res/Vermin Vibes 1989.ttf");
 
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();

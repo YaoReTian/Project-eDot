@@ -23,6 +23,7 @@
         <file>res/telp-corner-interior(NE).png</file>
         <file>res/hoodGuy.png</file>
         <file>res/pink monster.png</file>
+        <file>res/BotBoy.png</file>
     </qresource>
     <qresource prefix="/image/tile">
         <file>res/test_tile_1.png</file>
@@ -54,6 +55,8 @@
     <qresource prefix="/map">
         <file>res/level_1.tmj</file>
         <file>res/level_2.tmj</file>
+        <file>res/level_3.tmj</file>
+        <file>res/level_4.tmj</file>
     </qresource>
     <qresource prefix="/tileset">
         <file>res/General.tsj</file>
@@ -62,5 +65,9 @@
     </qresource>
     <qresource prefix="/image/bullet">
         <file>res/Basic_bullets.png</file>
+    </qresource>
+    <qresource prefix="/font">
+        <file>res/rainyhearts.ttf</file>
+        <file>res/Vermin Vibes 1989.ttf</file>
     </qresource>
 </RCC>

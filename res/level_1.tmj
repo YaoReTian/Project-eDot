@@ -555,7 +555,7 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":5,
+ "nextlayerid":6,
  "nextobjectid":40,
  "orientation":"orthogonal",
  "renderorder":"right-down",
@@ -569,6 +569,10 @@
         {
          "firstgid":27,
          "source":"..\/..\/Tiled\/Sprites\/General\/General.tsj"
+        }, 
+        {
+         "firstgid":30,
+         "source":"..\/..\/Tiled\/Basic bullets.tsx"
         }],
  "tilewidth":32,
  "type":"map",

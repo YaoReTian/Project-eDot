@@ -239,6 +239,10 @@ void VectorField::findVectorValue(Node *parent)
         {
             m_RPNstack.push(sqrt(m_RPNstack.pop()));
         }
+        else if (parent->m_data == "abs")
+        {
+            m_RPNstack.push(qAbs(m_RPNstack.pop()));
+        }
     }
     else if (parent->m_data.back().isDigit())
     {
