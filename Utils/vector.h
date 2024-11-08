@@ -22,6 +22,8 @@ public:
     qreal j() const;
     qreal angle() const;
     bool null() const;
+    qreal dotProduct(Vector &other) const;
+    qreal dotProduct(qreal i, qreal j) const;
 
     Vector operator+(const Vector &other) const;
     Vector &operator+=(const Vector &other);

@@ -256,7 +256,7 @@ void GameScene::start()
 
 void GameScene::newGame()
 {
-    m_tilemap->setMap(6);
+    m_tilemap->setMap(3);
     m_player->setZValue(m_tilemap->getPlayerZ());
     m_player->setPos(m_tilemap->playerStartPos());
     setBackgroundBrush(QBrush(m_tilemap->bgColour()));

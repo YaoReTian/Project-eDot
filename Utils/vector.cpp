@@ -67,26 +67,28 @@ qreal Vector::j() const
 
 qreal Vector::angle() const
 {
-    if (m_j == 0 && m_i == 0)
+    qreal theta = qAcos(dotProduct(0,1)/magnitude());
+    theta = qRadiansToDegrees(theta);
+    if (m_j > 0)
     {
-        return 0;
+        theta = 180 - theta;
     }
-    else if (m_j == 0)
-    {
-        return (m_i > 0) ? 90 : -90;
-    }
-    else if (m_i == 0)
-    {
-        return (m_j > 0) ? 180 : 0;
-    }
-
-    qreal theta = qRadiansToDegrees(qAtan(qAbs(m_j/m_i)));
     if (m_i > 0)
     {
-        return (m_j > 0) ? 90 + theta : 90 - theta;
+        return theta;
     }
 
-    return (m_j > 0) ? -90 - theta : theta - 90;
+    return -theta;
+}
+
+qreal Vector::dotProduct(Vector &other) const
+{
+    return qAbs(m_i*other.i() + m_j*other.j());
+}
+
+qreal Vector::dotProduct(qreal i, qreal j) const
+{
+    return qAbs(m_i*i + m_j*j);
 }
 
 bool Vector::null() const
