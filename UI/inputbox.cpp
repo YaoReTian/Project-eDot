@@ -30,7 +30,8 @@ void InputBox::input(KeyMap *keys)
 {
     if (keys->keyReleasedStatus(GLOBAL::ENTER))
     {
-        if (m_text.length() < 1)
+        if (m_text.length() < 1 ||
+            m_text[0] == ' ')
         {
             m_warning.show();
             emit invalidInput();

@@ -34,40 +34,6 @@ enum Action
     DELETE,
     NONE
 };
-
-/*
-static QString ActionToString(Action a)
-{
-    switch (a)
-    {
-    case MOVE_LEFT:
-        return "Move left";
-    case MOVE_RIGHT:
-        return "Move right";
-    case MOVE_UP:
-        return "Move up";
-    case MOVE_DOWN:
-        return "Move down";
-    case SELECT:
-        return "Select";
-    case NEXT_OPTION:
-        return "Next option";
-    case OVERDRIVE:
-        return "Quantum Overdrive";
-    case SHOW_HITBOX:
-        return "Show wall collision hitboxes";
-    case SHOW_PLAYER_HITBOX:
-        return "Slow / Show player hitbox";
-    case SHOOT:
-        return "Shoot";
-    case PAUSE:
-        return "Pause";
-    }
-
-    return "ERROR: NO TYPE FOUND";
-};
-*/
-
 }
 
 #endif // GLOBAL_H
